@@ -65,13 +65,13 @@ export const start = () => {
 
   // resize
   const windowResizeHanlder = () => { 
-    const { innerHeight, innerWidth } = window;
+    const { innerHeight, innerWidth, devicePixelRatio } = window;
     renderer.setSize(innerWidth, innerHeight);
     composer.setSize(innerWidth, innerHeight);
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
 
-    rayMarchingPass.uniforms.resolution.value.set( innerWidth, innerHeight );
+    rayMarchingPass.uniforms.resolution.value.set( innerWidth * devicePixelRatio, innerHeight * devicePixelRatio );
   };
   windowResizeHanlder();
   window.addEventListener('resize', windowResizeHanlder);
