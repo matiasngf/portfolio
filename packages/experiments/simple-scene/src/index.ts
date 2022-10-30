@@ -2,8 +2,6 @@ import { WebGLRenderer, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { cube } from './cube';
 import { line } from './lines';
 
-console.log('MODULELOADED')
-
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ground } from './ground';
 
@@ -14,10 +12,9 @@ export const start = () => {
   // scene
   const scene = new Scene();
   scene.add( cube );
-  cube.position.set(0, 0.35, 0);
   scene.add( line );
-  line.position.set(0, 1.5, 0);
   scene.add( ground );
+  ground.position.set(0, -2, 0);
 
   // renderer
   const renderer = new WebGLRenderer({antialias: true});

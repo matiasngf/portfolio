@@ -1,3 +1,5 @@
 import {start} from './src'
 
-start();
+const { canvas } = start();
+document.body.appendChild(canvas);
+document.body.style.margin = '0px';
