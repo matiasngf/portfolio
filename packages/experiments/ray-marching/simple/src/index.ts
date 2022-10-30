@@ -4,11 +4,9 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { RayMarchingShader } from './shaders/ray-marching';
-import { GameCamera, Player } from './objects';
 
 export const start = () => {
 
-  console.log('RAY MATCH')
   let isRunning = true;
 
   // scene
@@ -21,11 +19,6 @@ export const start = () => {
   renderer.shadowMap.enabled = true;
 
   // camera
-  // const player = new Player();
-  // scene.add(player);
-  // const camera = player.camera;
-  // camera.fov = 30;
-
   const camera = new PerspectiveCamera();
   const controls = new OrbitControls( camera, renderer.domElement );
   camera.position.set(6,3,-10);
@@ -56,8 +49,6 @@ export const start = () => {
   const onAnimationFrameHandler = (_timeStamp: number) => {
 
     if(!isRunning) return;
-
-    // player.onFrame();
 
     // update the time uniform of the shader
     rayMarchingPass.uniforms.resolution.value.set( innerWidth, innerHeight );
