@@ -20,21 +20,23 @@ importers:
       autoprefixer: ^10.4.13
       eslint: 7.32.0
       eslint-config-custom: workspace:*
+      experiments-ray-marching-simple: workspace:*
+      experiments-simple-scene: workspace:*
       next: 13.0.0
       postcss: ^8.4.18
       react: 18.2.0
       react-dom: 18.2.0
       react-use: ^17.4.0
-      simple-scene: workspace:*
       tailwindcss: ^3.2.1
       tsconfig: workspace:*
       typescript: ^4.5.3
     dependencies:
+      experiments-ray-marching-simple: link:../../packages/experiments/ray-marching/simple
+      experiments-simple-scene: link:../../packages/experiments/simple-scene
       next: 13.0.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-use: 17.4.0_biqbaboplfbrettd7655fr4n2y
-      simple-scene: link:../../packages/experiments/simple-scene
     devDependencies:
       '@types/node': 17.0.45
       '@types/react': 18.0.24
@@ -63,6 +65,25 @@ importers:
       eslint-plugin-react: 7.31.8_eslint@7.32.0
     devDependencies:
       typescript: 4.8.4
+
+  packages/experiments/ray-marching/simple:
+    specifiers:
+      '@types/three': ^0.140.0
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      three: ^0.140.2
+      tsconfig: workspace:*
+      typescript: ^4.6.4
+      vite: ^2.9.9
+    dependencies:
+      three: 0.140.2
+    devDependencies:
+      '@types/three': 0.140.0
+      eslint: 7.32.0
+      eslint-config-custom: link:../../../eslint-config-custom
+      tsconfig: link:../../../tsconfig
+      typescript: 4.8.4
+      vite: 2.9.15
 
   packages/experiments/simple-scene:
     specifiers:

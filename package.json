@@ -5,7 +5,8 @@
   "workspaces": [
     "apps/*",
     "packages/*",
-    "packages/experiments/*"
+    "packages/experiments/*",
+    "packages/experiments/ray-marching/*"
   ],
   "scripts": {
     "build": "turbo run build",

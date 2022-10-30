@@ -1,5 +1,5 @@
 {
-  "name": "experiments-simple-scene",
+  "name": "experiments-ray-marching-simple",
   "version": "0.0.0",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

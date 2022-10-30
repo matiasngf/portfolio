@@ -2,3 +2,4 @@ packages:
   - "apps/*"
   - "packages/*"
   - "packages/experiments/*"
+  - "packages/experiments/ray-marching/*"
