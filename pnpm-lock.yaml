@@ -20,6 +20,7 @@ importers:
       autoprefixer: ^10.4.13
       eslint: 7.32.0
       eslint-config-custom: workspace:*
+      experiments-ray-marching-boolean-opeartions: workspace:*
       experiments-ray-marching-simple: workspace:*
       experiments-simple-scene: workspace:*
       next: 13.0.0
@@ -31,6 +32,7 @@ importers:
       tsconfig: workspace:*
       typescript: ^4.5.3
     dependencies:
+      experiments-ray-marching-boolean-opeartions: link:../../packages/experiments/ray-marching/boolean-operations
       experiments-ray-marching-simple: link:../../packages/experiments/ray-marching/simple
       experiments-simple-scene: link:../../packages/experiments/simple-scene
       next: 13.0.0_biqbaboplfbrettd7655fr4n2y
@@ -65,6 +67,25 @@ importers:
       eslint-plugin-react: 7.31.8_eslint@7.32.0
     devDependencies:
       typescript: 4.8.4
+
+  packages/experiments/ray-marching/boolean-operations:
+    specifiers:
+      '@types/three': ^0.140.0
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      three: ^0.140.2
+      tsconfig: workspace:*
+      typescript: ^4.6.4
+      vite: ^2.9.9
+    dependencies:
+      three: 0.140.2
+    devDependencies:
+      '@types/three': 0.140.0
+      eslint: 7.32.0
+      eslint-config-custom: link:../../../eslint-config-custom
+      tsconfig: link:../../../tsconfig
+      typescript: 4.8.4
+      vite: 2.9.15
 
   packages/experiments/ray-marching/simple:
     specifiers:

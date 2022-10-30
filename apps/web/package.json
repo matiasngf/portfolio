@@ -14,7 +14,8 @@
     "react-dom": "18.2.0",
     "react-use": "^17.4.0",
     "experiments-simple-scene": "workspace:*",
-    "experiments-ray-marching-simple": "workspace:*"
+    "experiments-ray-marching-simple": "workspace:*",
+    "experiments-ray-marching-boolean-opeartions": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^17.0.12",

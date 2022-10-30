@@ -25,10 +25,10 @@ export const projectsConfig: Projects = {
     load: loadDynamicProject(() => import('experiments-ray-marching-simple')),
     tags: ['open-gl', 'shaders', 'ray-marching']
   },
-  '1another-scene': {
-    name: 'Another Scene',
-    description: 'A simple scene renderer',
-    load: loadDynamicProject(() => import('experiments-simple-scene')),
-    tags: ['open-gl']
+  'ray-marching-boolean-opeartions': {
+    name: 'Boolean operaions',
+    description: 'Operations with objetcs in a ray-marching renderer.',
+    load: loadDynamicProject(() => import('experiments-ray-marching-boolean-opeartions')),
+    tags: ['open-gl', 'shaders', 'ray-marching']
   },
 }

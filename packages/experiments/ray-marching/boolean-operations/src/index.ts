@@ -21,8 +21,8 @@ export const start = () => {
   // camera
   const camera = new PerspectiveCamera();
   const controls = new OrbitControls( camera, renderer.domElement );
-  camera.position.set(6,3,-10);
-  controls.target.set(0, 1, 0)
+  camera.position.set(6,5,-10);
+  controls.target.set(0, 2, 0)
   controls.update();
 
   // add grid helper
@@ -45,9 +45,11 @@ export const start = () => {
   composer.addPass(rayMarchingPass);
 
   // render loop
-  const onAnimationFrameHandler = (_timeStamp: number) => {
+  const onAnimationFrameHandler = (timeStamp: number) => {
 
     if(!isRunning) return;
+
+    // player.onFrame();
 
     // update the time uniform of the shader
     rayMarchingPass.uniforms.resolution.value.set( innerWidth, innerHeight );
@@ -73,8 +75,7 @@ export const start = () => {
   };
   windowResizeHanlder();
   window.addEventListener('resize', windowResizeHanlder);
-
-
+  
   return {
     canvas: renderer.domElement,
     stop: () => {
