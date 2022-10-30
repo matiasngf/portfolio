@@ -30,10 +30,10 @@ export const RayMarchingShader = {
 
 		float getDistance(vec3 p) {
 
-			vec4 sphere = vec4(0.0, 2.0, -15.0, 2.0);
+			vec4 sphere = vec4(0.0, 2.0, -0.0, 2.0);
 			float dist_to_sphere = length(p - sphere.xyz) - sphere.w;
 
-			vec4 sphere2 = vec4(3.0, 4.0, -20.0, 1.5);
+			vec4 sphere2 = vec4(3.0, 4.0, 0.0, 1.5);
 			float dist_to_sphere2 = length(p - sphere2.xyz) - sphere2.w;
 
 			float dist_to_plane = p.y;

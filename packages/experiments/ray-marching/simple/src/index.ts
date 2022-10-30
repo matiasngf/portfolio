@@ -21,10 +21,17 @@ export const start = () => {
   renderer.shadowMap.enabled = true;
 
   // camera
-  const player = new Player();
-  scene.add(player);
-  const camera = player.camera;
-  camera.fov = 30;
+  // const player = new Player();
+  // scene.add(player);
+  // const camera = player.camera;
+  // camera.fov = 30;
+
+  const camera = new PerspectiveCamera();
+  const controls = new OrbitControls( camera, renderer.domElement );
+  camera.position.set(6,3,-10);
+  camera.lookAt(new Vector3(0,0,0));
+  controls.target.set(0, 1, 0)
+  controls.update();
 
   // add grid helper
   const gridHelper = new GridHelper(50, 50);
@@ -50,7 +57,7 @@ export const start = () => {
 
     if(!isRunning) return;
 
-    player.onFrame();
+    // player.onFrame();
 
     // update the time uniform of the shader
     rayMarchingPass.uniforms.resolution.value.set( innerWidth, innerHeight );
