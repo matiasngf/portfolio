@@ -8,6 +8,19 @@ import { RayMarchingShader } from './shaders/ray-marching';
 export const start = () => {
 
   let isRunning = true;
+  
+  const getDeviceSize = () => {
+    const innerWidth = window.innerWidth;
+    const innerHeight = window.innerHeight;
+    const devicePixelRatio = window.devicePixelRatio;
+    return {
+      width: innerWidth * devicePixelRatio,
+      height: innerHeight * devicePixelRatio,
+      innerWidth,
+      innerHeight,
+      devicePixelRatio
+    };
+  }
 
   // scene
   const scene = new Scene();
@@ -29,6 +42,8 @@ export const start = () => {
   const gridHelper = new GridHelper(50, 50);
   scene.add(gridHelper);
 
+  const initDeviceSize = getDeviceSize();
+
   //composer
   const composer = new EffectComposer(renderer);
   const renderPass = new RenderPass(scene, camera);
@@ -37,7 +52,7 @@ export const start = () => {
     ...RayMarchingShader,
     uniforms: {
       cPos: { value: camera.position.clone() },
-      resolution: {value: new Vector2(window.innerWidth, window.innerHeight)},
+      resolution: {value: new Vector2(initDeviceSize.width, initDeviceSize.height)},
       cameraQuaternion: {value: camera.quaternion.clone()},
       fov: {value: camera.fov}
     }
@@ -50,7 +65,6 @@ export const start = () => {
     if(!isRunning) return;
 
     // update the time uniform of the shader
-    rayMarchingPass.uniforms.resolution.value.set( innerWidth, innerHeight );
     const worldPos = new Vector3();
     rayMarchingPass.uniforms.cPos.value.copy(camera.getWorldPosition(worldPos));
     const cameraQuaternion = new Quaternion();
@@ -63,13 +77,12 @@ export const start = () => {
 
   // resize
   const windowResizeHanlder = () => { 
-    const { innerHeight, innerWidth, devicePixelRatio } = window;
+    const { width, height, innerHeight, innerWidth } = getDeviceSize();
     renderer.setSize(innerWidth, innerHeight);
     composer.setSize(innerWidth, innerHeight);
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
-
-    rayMarchingPass.uniforms.resolution.value.set( innerWidth * devicePixelRatio, innerHeight * devicePixelRatio );
+    rayMarchingPass.uniforms.resolution.value.set( width, height );
   };
   windowResizeHanlder();
   window.addEventListener('resize', windowResizeHanlder);
