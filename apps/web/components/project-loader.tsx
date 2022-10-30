@@ -19,7 +19,7 @@ export const ProjectLoader = ({ projectKey }: ProjectLoaderProps) => {
     if(!(isMounted())) return;
 
     if(projectKey in projectsConfig) {
-      const loadModule = projectsConfig['simple-scene'].load();
+      const loadModule = projectsConfig[projectKey].load();
       loadModule.then(module => {
         if(isMounted()) {
           setProjectModule(module)
