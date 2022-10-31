@@ -25,7 +25,7 @@ export const projectsConfig: Projects = {
   },
   'ray-marching-simple': {
     name: 'Ray Marching Basic',
-    description: 'Base ray marching renderer.',
+    description: 'Base setup for ray marching renderer.',
     load: loadDynamicProject(() => import('experiments-ray-marching-simple')),
     source: `${baseExperiment}/ray-marching/simple`,
     tags: ['open-gl', 'shaders', 'ray-marching']
