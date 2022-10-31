@@ -5,7 +5,7 @@ export interface TagProps {
   tag: TagKey;
 }
 export const Tag = ({tag}:TagProps) => (
-  <Link href={`/tag/${tag}`}>
+  <Link href={`/tags/${tag}`}>
     <div className='text-xs p-1 rounded-md border border-slate-50 transition-all hover:bg-slate-800'>
       {tags[tag]}
     </div>
