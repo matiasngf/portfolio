@@ -17,21 +17,21 @@ export interface Projects {
 
 export const projectsConfig: Projects = {
   'simple-scene': {
-    name: 'ThreeJS Simple Scene',
-    description: 'A simple scene renderer with vanilla threeJs.',
+    name: 'ThreeJS simple scene',
+    description: 'A simple scene with vanilla three.js.',
     load: loadDynamicProject(() => import('experiments-simple-scene')),
     source: `${baseExperiment}/simple-scene`,
     tags: ['open-gl']
   },
   'ray-marching-simple': {
-    name: 'Ray Marching Basic',
-    description: 'Base setup for ray marching renderer.',
+    name: 'Ray-marching renderer',
+    description: 'Base setup for a ray marching renderer.',
     load: loadDynamicProject(() => import('experiments-ray-marching-simple')),
     source: `${baseExperiment}/ray-marching/simple`,
     tags: ['open-gl', 'shaders', 'ray-marching']
   },
   'ray-marching-boolean-opeartions': {
-    name: 'Boolean operaions',
+    name: 'Boolean operations',
     description: 'Operations with objetcs in a ray-marching renderer.',
     load: loadDynamicProject(() => import('experiments-ray-marching-boolean-opeartions')),
     source: `${baseExperiment}/ray-marching/boolean-operations`,
