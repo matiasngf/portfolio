@@ -22,6 +22,7 @@ importers:
       '@types/react': ^18.0.22
       '@types/react-dom': ^18.0.7
       autoprefixer: ^10.4.13
+      clsx: ^1.2.1
       eslint: 7.32.0
       eslint-config-custom: workspace:*
       experiments-ray-marching-boolean-opeartions: workspace:*
@@ -41,6 +42,7 @@ importers:
       '@fortawesome/free-brands-svg-icons': 6.2.0
       '@fortawesome/free-solid-svg-icons': 6.2.0
       '@fortawesome/react-fontawesome': 0.2.0_6j2wdqxompc6mcokhxkpep2gqu
+      clsx: 1.2.1
       experiments-ray-marching-boolean-opeartions: link:../../packages/experiments/ray-marching/boolean-operations
       experiments-ray-marching-reflections: link:../../packages/experiments/ray-marching/reflections
       experiments-ray-marching-simple: link:../../packages/experiments/ray-marching/simple
@@ -766,6 +768,11 @@ packages:
 
   /client-only/0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
+    dev: false
+
+  /clsx/1.2.1:
+    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+    engines: {node: '>=6'}
     dev: false
 
   /color-convert/1.9.3:

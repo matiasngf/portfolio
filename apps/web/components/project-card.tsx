@@ -11,7 +11,7 @@ export const ProjectCard = ({
   project
 }: ProjectCardProps) => (
   <Link href={`/projects/${projectKey}`}>
-    <div className=' space-y-1 text-slate-300 p-4 rounded-md border border-slate-600 hover:scale-105 transition-all'>
+    <div className=' space-y-1 text-slate-300 p-4 rounded-md border border-slate-600 md:hover:scale-105 transition-all'>
       <h2 className='text-lg'>{project.name}</h2>
       <p>{project.description}</p>
       <div className='pt-4 flex flex-wrap space-x-4'>

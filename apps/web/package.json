@@ -13,6 +13,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "clsx": "^1.2.1",
     "experiments-ray-marching-boolean-opeartions": "workspace:*",
     "experiments-ray-marching-reflections": "workspace:*",
     "experiments-ray-marching-simple": "workspace:*",
