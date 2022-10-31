@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 export interface RenderCanvasProps {
-  canvas?: HTMLCanvasElement | null
+  canvas?: HTMLElement | HTMLCanvasElement | null
 }
 
 export const RenderCanvas = ({ canvas }: RenderCanvasProps) => {

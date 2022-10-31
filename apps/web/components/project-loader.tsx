@@ -3,6 +3,7 @@ import { projectsConfig } from '../utils/projects-config';
 import { RenderCanvas } from './render-canvas';
 import { useMountedState } from 'react-use'
 import { DynamicProject } from '../utils/load-dynamic-project';
+import { ProjectLayout } from './project-layout';
 
 export interface ProjectLoaderProps {
   projectKey: string;
@@ -39,7 +40,12 @@ export const ProjectLoader = ({ projectKey }: ProjectLoaderProps) => {
     }
   }, [projectModule])
 
+  if(!projectsConfig[projectKey]) return null;
+  if(!projectModule || !canvasEl) return null;
+
   return (
-    <RenderCanvas canvas={canvasEl} />
+    <ProjectLayout projectKey={projectKey} config={projectsConfig[projectKey]} >
+      <RenderCanvas canvas={canvasEl} />
+    </ProjectLayout>
   );
 }

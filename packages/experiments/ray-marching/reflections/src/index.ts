@@ -1,9 +1,10 @@
-import { WebGLRenderer, PerspectiveCamera, Scene, Vector2, Vector3, GridHelper, Quaternion } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { WebGLRenderer, Scene, Vector2, Vector3, GridHelper, Quaternion, TextureLoader, PerspectiveCamera } from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { RayMarchingShader } from './shaders/ray-marching';
+import backgroundMapUrl from './textures/brown_photostudio_02_4k.jpg';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export const start = () => {
 
@@ -34,13 +35,17 @@ export const start = () => {
   // camera
   const camera = new PerspectiveCamera();
   const controls = new OrbitControls( camera, renderer.domElement );
-  camera.position.set(6,5,-10);
-  controls.target.set(0, 2, 0)
+  camera.position.set(0,3,-5);
+  controls.target.set(0, 1.5, 0)
   controls.update();
 
   // add grid helper
   const gridHelper = new GridHelper(50, 50);
   scene.add(gridHelper);
+
+  // background image
+  const imgUrl = typeof backgroundMapUrl === 'string' ? backgroundMapUrl : (backgroundMapUrl as any).src;
+  const backgroundTexture = new TextureLoader().load(imgUrl);
 
   const initDeviceSize = getDeviceSize();
 
@@ -51,6 +56,8 @@ export const start = () => {
   const rayMarchingPass = new ShaderPass({
     ...RayMarchingShader,
     uniforms: {
+      uTime: { value: 0 },
+      hdriMap: { value: backgroundTexture },
       cPos: { value: camera.position.clone() },
       resolution: {value: new Vector2(initDeviceSize.width, initDeviceSize.height)},
       cameraQuaternion: {value: camera.quaternion.clone()},
@@ -65,6 +72,7 @@ export const start = () => {
     if(!isRunning) return;
 
     // update the time uniform of the shader
+    rayMarchingPass.uniforms.uTime.value = timeStamp / 100;
     const worldPos = new Vector3();
     rayMarchingPass.uniforms.cPos.value.copy(camera.getWorldPosition(worldPos));
     const cameraQuaternion = new Quaternion();

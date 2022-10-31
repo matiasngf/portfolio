@@ -14,6 +14,10 @@ importers:
 
   apps/web:
     specifiers:
+      '@fortawesome/fontawesome-svg-core': ^6.2.0
+      '@fortawesome/free-brands-svg-icons': ^6.2.0
+      '@fortawesome/free-solid-svg-icons': ^6.2.0
+      '@fortawesome/react-fontawesome': ^0.2.0
       '@types/node': ^17.0.12
       '@types/react': ^18.0.22
       '@types/react-dom': ^18.0.7
@@ -21,6 +25,7 @@ importers:
       eslint: 7.32.0
       eslint-config-custom: workspace:*
       experiments-ray-marching-boolean-opeartions: workspace:*
+      experiments-ray-marching-reflections: workspace:*
       experiments-ray-marching-simple: workspace:*
       experiments-simple-scene: workspace:*
       next: 13.0.0
@@ -32,7 +37,12 @@ importers:
       tsconfig: workspace:*
       typescript: ^4.5.3
     dependencies:
+      '@fortawesome/fontawesome-svg-core': 6.2.0
+      '@fortawesome/free-brands-svg-icons': 6.2.0
+      '@fortawesome/free-solid-svg-icons': 6.2.0
+      '@fortawesome/react-fontawesome': 0.2.0_6j2wdqxompc6mcokhxkpep2gqu
       experiments-ray-marching-boolean-opeartions: link:../../packages/experiments/ray-marching/boolean-operations
+      experiments-ray-marching-reflections: link:../../packages/experiments/ray-marching/reflections
       experiments-ray-marching-simple: link:../../packages/experiments/ray-marching/simple
       experiments-simple-scene: link:../../packages/experiments/simple-scene
       next: 13.0.0_biqbaboplfbrettd7655fr4n2y
@@ -69,6 +79,25 @@ importers:
       typescript: 4.8.4
 
   packages/experiments/ray-marching/boolean-operations:
+    specifiers:
+      '@types/three': ^0.140.0
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      three: ^0.140.2
+      tsconfig: workspace:*
+      typescript: ^4.6.4
+      vite: ^2.9.9
+    dependencies:
+      three: 0.140.2
+    devDependencies:
+      '@types/three': 0.140.0
+      eslint: 7.32.0
+      eslint-config-custom: link:../../../eslint-config-custom
+      tsconfig: link:../../../tsconfig
+      typescript: 4.8.4
+      vite: 2.9.15
+
+  packages/experiments/ray-marching/reflections:
     specifiers:
       '@types/three': ^0.140.0
       eslint: ^7.32.0
@@ -186,6 +215,47 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+
+  /@fortawesome/fontawesome-common-types/6.2.0:
+    resolution: {integrity: sha512-rBevIsj2nclStJ7AxTdfsa3ovHb1H+qApwrxcTVo+NNdeJiB9V75hsKfrkG5AwNcRUNxrPPiScGYCNmLMoh8pg==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dev: false
+
+  /@fortawesome/fontawesome-svg-core/6.2.0:
+    resolution: {integrity: sha512-Cf2mAAeMWFMzpLC7Y9H1I4o3wEU+XovVJhTiNG8ZNgSQj53yl7OCJaS80K4YjrABWZzbAHVaoHE1dVJ27AAYXw==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.0
+    dev: false
+
+  /@fortawesome/free-brands-svg-icons/6.2.0:
+    resolution: {integrity: sha512-fm1y4NyZ2qKYNmYhdMz9VAWRw1Et7PMHNunSw3W0SVAwKwv6o0qiJworLH3Y9SnmhHzAymXJwCX1op22FFvGiA==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.0
+    dev: false
+
+  /@fortawesome/free-solid-svg-icons/6.2.0:
+    resolution: {integrity: sha512-UjCILHIQ4I8cN46EiQn0CZL/h8AwCGgR//1c4R96Q5viSRwuKVo0NdQEc4bm+69ZwC0dUvjbDqAHF1RR5FA3XA==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.0
+    dev: false
+
+  /@fortawesome/react-fontawesome/0.2.0_6j2wdqxompc6mcokhxkpep2gqu:
+    resolution: {integrity: sha512-uHg75Rb/XORTtVt7OS9WoK8uM276Ufi7gCzshVWkUJbHhh3svsUUeqXerrM96Wm7fRiDzfKRwSoahhMIkGAYHw==}
+    peerDependencies:
+      '@fortawesome/fontawesome-svg-core': ~1 || ~6
+      react: '>=16.3'
+    dependencies:
+      '@fortawesome/fontawesome-svg-core': 6.2.0
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
 
   /@humanwhocodes/config-array/0.5.0:
     resolution: {integrity: sha512-FagtKFz74XrTl7y6HCzQpwDfXP0yhxe9lHLD1UZxjvZIcbyRz8zTFF/yYNfSfzU414eDwZ1SrO0Qvtyf+wFMQg==}

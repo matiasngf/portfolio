@@ -31,4 +31,10 @@ export const projectsConfig: Projects = {
     load: loadDynamicProject(() => import('experiments-ray-marching-boolean-opeartions')),
     tags: ['open-gl', 'shaders', 'ray-marching']
   },
+  'ray-marching-reflections': {
+    name: 'Real time reflections',
+    description: 'Reflections calculated using ray-marching on real-time.',
+    load: loadDynamicProject(() => import('experiments-ray-marching-reflections')),
+    tags: ['open-gl', 'shaders', 'ray-marching']
+  },
 }
