@@ -35,7 +35,7 @@ export const start = () => {
   // camera
   const camera = new PerspectiveCamera();
   const controls = new OrbitControls( camera, renderer.domElement );
-  camera.position.set(0,3,-5);
+  camera.position.set(0, 3, 5);
   controls.target.set(0, 1.5, 0)
   controls.update();
 
