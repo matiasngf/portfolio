@@ -21,7 +21,7 @@ export const projectsConfig: Projects = {
     description: 'A simple scene renderer with vanilla threeJs.',
     load: loadDynamicProject(() => import('experiments-simple-scene')),
     source: `${baseExperiment}/simple-scene`,
-    tags: ['open-gl', 'shaders']
+    tags: ['open-gl']
   },
   'ray-marching-simple': {
     name: 'Ray Marching Basic',

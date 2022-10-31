@@ -1,6 +1,6 @@
 import { ProjectConfig } from '../utils/projects-config';
 import Link from "next/link";
-import { Tag } from './Tag';
+import { Tag } from './tag';
 
 export interface ProjectCardProps {
   projectKey: string;

@@ -6,3 +6,6 @@ export const tags = {
 
 export type TagKey = keyof typeof tags;
 export type TagName = typeof tags[TagKey];
+export const isTag = (tagKey: string): tagKey is TagKey => {
+  return tagKey in tags;
+}
