@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { ProjectConfig } from "../utils/projects-config";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { faChevronLeft, faHome } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
 interface ProjectLayoutProps {
@@ -13,7 +13,7 @@ interface ProjectLayoutProps {
 const BackButton = () => (
   <Link href='/'>
     <div className="top-4 left-4 rounded-md bg-zinc-800 text-white absolute w-10 h-10 flex items-center justify-center">
-      <FontAwesomeIcon size="xl" icon={faChevronLeft} />
+      <FontAwesomeIcon size="1x" icon={faHome} />
     </div>
   </Link>
 )
@@ -34,7 +34,7 @@ export const ProjectLayout = ({
   return (
     <div>
       <BackButton />
-      <GitHubButton href='/' />
+      <GitHubButton href={config.source} />
       {children}
     </div>
   )
