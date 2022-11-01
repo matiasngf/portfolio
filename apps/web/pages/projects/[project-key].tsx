@@ -1,12 +1,43 @@
 import { ProjectLoader } from "../../components/project-loader";
 
-import { useRouter } from 'next/router'
+import { GetServerSideProps } from "next";
+import { projectsConfig } from "../../utils/projects-config";
+import { NextSeo } from "next-seo";
 
+interface PageProps {
+  projectKey: string;
+  name: string;
+  description: string;
+}
 
-export default function Page() {
-  const router = useRouter()
-  const projectKey = router.query['project-key'] as string;
+export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
+  const projectKey = context.params?.['project-key'] as string;
+  if(!(projectKey in projectsConfig)) {
+    return {
+      notFound: true,
+    }
+  }
 
-  return <ProjectLoader projectKey={projectKey} />;
+  const config = projectsConfig[projectKey];
+
+  return {
+    props: {
+      projectKey,
+      name: config.name,
+      description: config.description,
+    }
+  }
+}
+
+export default function Page({projectKey, name, description}: PageProps) {
+  return (
+    <>
+      <NextSeo
+        title={name}
+        description={description}
+      />
+      <ProjectLoader projectKey={projectKey} />
+    </>
+  );
 }
 

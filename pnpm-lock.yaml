@@ -30,6 +30,7 @@ importers:
       experiments-ray-marching-simple: workspace:*
       experiments-simple-scene: workspace:*
       next: 13.0.0
+      next-seo: ^5.13.0
       postcss: ^8.4.18
       react: 18.2.0
       react-dom: 18.2.0
@@ -48,6 +49,7 @@ importers:
       experiments-ray-marching-simple: link:../../packages/experiments/ray-marching/simple
       experiments-simple-scene: link:../../packages/experiments/simple-scene
       next: 13.0.0_biqbaboplfbrettd7655fr4n2y
+      next-seo: 5.13.0_r5sq4deac3rmm2d5onhwvomqve
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-use: 17.4.0_biqbaboplfbrettd7655fr4n2y
@@ -2011,6 +2013,18 @@ packages:
 
   /natural-compare/1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
+
+  /next-seo/5.13.0_r5sq4deac3rmm2d5onhwvomqve:
+    resolution: {integrity: sha512-3n6cOjXydxXlrbMIWcU+D6TllKj72C2rg7IdgoxoKOnfC8ah3U0VUIGRApKXK0wi5ME1m+TBq9isAFFbFdbWXQ==}
+    peerDependencies:
+      next: ^8.1.1-canary.54 || >=9.0.0
+      react: '>=16.0.0'
+      react-dom: '>=16.0.0'
+    dependencies:
+      next: 13.0.0_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
 
   /next/13.0.0_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-puH1WGM6rGeFOoFdXXYfUxN9Sgi4LMytCV5HkQJvVUOhHfC1DoVqOfvzaEteyp6P04IW+gbtK2Q9pInVSrltPA==}

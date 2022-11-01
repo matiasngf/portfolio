@@ -19,6 +19,7 @@
     "experiments-ray-marching-simple": "workspace:*",
     "experiments-simple-scene": "workspace:*",
     "next": "13.0.0",
+    "next-seo": "^5.13.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-use": "^17.4.0"
