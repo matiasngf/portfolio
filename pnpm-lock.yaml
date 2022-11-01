@@ -29,6 +29,7 @@ importers:
       experiments-ray-marching-reflections: workspace:*
       experiments-ray-marching-simple: workspace:*
       experiments-ray-marching-voxels: workspace:*
+      experiments-ray-marching-voxels-campfire: workspace:*
       experiments-simple-scene: workspace:*
       next: 13.0.0
       next-seo: ^5.13.0
@@ -49,6 +50,7 @@ importers:
       experiments-ray-marching-reflections: link:../../packages/experiments/ray-marching/reflections
       experiments-ray-marching-simple: link:../../packages/experiments/ray-marching/simple
       experiments-ray-marching-voxels: link:../../packages/experiments/ray-marching/voxels
+      experiments-ray-marching-voxels-campfire: link:../../packages/experiments/ray-marching/voxels-campfire
       experiments-simple-scene: link:../../packages/experiments/simple-scene
       next: 13.0.0_biqbaboplfbrettd7655fr4n2y
       next-seo: 5.13.0_r5sq4deac3rmm2d5onhwvomqve
@@ -151,6 +153,27 @@ importers:
       typescript: ^4.6.4
       vite: ^2.9.9
     dependencies:
+      three: 0.140.2
+    devDependencies:
+      '@types/three': 0.140.0
+      eslint: 7.32.0
+      eslint-config-custom: link:../../../eslint-config-custom
+      tsconfig: link:../../../tsconfig
+      typescript: 4.8.4
+      vite: 2.9.15
+
+  packages/experiments/ray-marching/voxels-campfire:
+    specifiers:
+      '@types/three': ^0.140.0
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      lil-gui: ^0.17.0
+      three: ^0.140.2
+      tsconfig: workspace:*
+      typescript: ^4.6.4
+      vite: ^2.9.9
+    dependencies:
+      lil-gui: 0.17.0
       three: 0.140.2
     devDependencies:
       '@types/three': 0.140.0
@@ -1950,6 +1973,10 @@ packages:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  /lil-gui/0.17.0:
+    resolution: {integrity: sha512-MVBHmgY+uEbmJNApAaPbtvNh1RCAeMnKym82SBjtp5rODTYKWtM+MXHCifLe2H2Ti1HuBGBtK/5SyG4ShQ3pUQ==}
+    dev: false
 
   /lilconfig/2.0.6:
     resolution: {integrity: sha512-9JROoBW7pobfsx+Sq2JsASvCo6Pfo6WWoUW79HuB1BCoBXD4PLWJPqDF6fNj67pqBYTbAHkE57M1kS/+L1neOg==}

@@ -44,11 +44,18 @@ export const projectsConfig: Projects = {
     source: `${baseExperiment}/ray-marching/reflections`,
     tags: ['open-gl', 'shaders', 'ray-marching']
   },
-  'experiments-ray-marching-voxels': {
+  'ray-marching-voxels': {
     name: 'Voxels',
     description: 'Voxels renderer made with ray-marching.',
     load: loadDynamicProject(() => import('experiments-ray-marching-voxels')),
     source: `${baseExperiment}/ray-marching/voxels`,
+    tags: ['open-gl', 'shaders', 'ray-marching']
+  },
+  'ray-marching-voxels-campfire': {
+    name: 'Voxels campfire',
+    description: 'Dynamic voxel size and render optimizations. (Better to open on desktop)',
+    load: loadDynamicProject(() => import('experiments-ray-marching-voxels-campfire')),
+    source: `${baseExperiment}/ray-marching/voxels-campfire`,
     tags: ['open-gl', 'shaders', 'ray-marching']
   }
 }
