@@ -1,4 +1,4 @@
-import { WebGLRenderer, Scene, Vector2, Vector3, GridHelper, Quaternion, TextureLoader, PerspectiveCamera } from 'three';
+import { WebGLRenderer, Scene, Vector2, Vector3, GridHelper, Quaternion, TextureLoader, PerspectiveCamera } from '../node_modules/three';
 import { EffectComposer } from '../node_modules/three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from '../node_modules/three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from '../node_modules/three/examples/jsm/postprocessing/ShaderPass';
@@ -44,8 +44,7 @@ export const start = () => {
   scene.add(gridHelper);
 
   // background image
-  const imgUrl = typeof backgroundMapUrl === 'string' ? backgroundMapUrl : (backgroundMapUrl as any).src;
-  const backgroundTexture = new TextureLoader().load(imgUrl);
+  const backgroundTexture = new TextureLoader().load(backgroundMapUrl);
 
   const initDeviceSize = getDeviceSize();
 
