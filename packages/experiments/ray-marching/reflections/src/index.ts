@@ -1,10 +1,10 @@
 import { WebGLRenderer, Scene, Vector2, Vector3, GridHelper, Quaternion, TextureLoader, PerspectiveCamera } from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { EffectComposer } from '../node_modules/three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from '../node_modules/three/examples/jsm/postprocessing/RenderPass.js';
+import { ShaderPass } from '../node_modules/three/examples/jsm/postprocessing/ShaderPass';
+import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
 import { RayMarchingShader } from './shaders/ray-marching';
 import backgroundMapUrl from './textures/brown_photostudio_02_4k.jpg';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export const start = () => {
 
