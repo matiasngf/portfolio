@@ -82,61 +82,24 @@ export const RayMarchingShader = {
 			vec3 rayDirection = rd;
 			vec3 result = vec3(0.0);
 
-			RayLightResult lightResults[MAX_BOUNCES];
+			RayConfig rayConfig = RayConfig(
+				MAX_DISTANCE,
+				SURFACE_DIST,
+				MAX_STEPS
+			);
 
-			bool finishedRay = false;
-
-			for(int i = 0; i < MAX_BOUNCES; i++) {
-				if(finishedRay) {
-					lightResults[i] = RayLightResult(vec3(1.0), 1.0);
-					break;
-				}
-				RayConfig rayConfig;
-				// First ray with max quality, then reflections with lower quality
-				if(i == 0) {
-					rayConfig = RayConfig(
-						MAX_DISTANCE,
-						SURFACE_DIST,
-						MAX_STEPS
-					);
-				} else {
-					rayConfig = RayConfig(
-						REFLECTION_MAX_DISTANCE,
-						REFLECTION_SURFACE_DIST,
-						REFLECTION_MAX_STEPS
-					);
-				}
-				RayResult hit = castRay(
-					rayPosition,
-					rayDirection,
-					rayConfig.maxDistance,
-					rayConfig.surfaceDistance,
-					rayConfig.maxSteps
-				);
-				if(hit.hit) {
-					finishedRay = true;
-
-					LightResult objectLight = getLight(hit.position, rayDirection, hit.rayHit);
-					float objectAO = getAmbientOcclusion(hit.position, objectLight.normal);
-					float objectShadow = getShadowHit(hit.position, objectLight.normal, rayConfig);
-					lightResults[i] = RayLightResult(objectLight.color * objectAO * objectShadow , objectLight.reflectFactor);
-					// if(objectLight.reflectFactor < 0.05) {
-					// 	finishedRay = true;
-					// } else {
-					// 	rayDirection = reflect(rayDirection, objectLight.normal);
-					// 	rayPosition = hit.position + (rayDirection * REFLECTION_SURFACE_DIST * 20.0);
-					// }
-
-				} else {
-					lightResults[i] = RayLightResult(getBackgroundColor(rayDirection), 0.0);
-					finishedRay = true;
-				}
-			}
-
-			// combine all light results
-			for(int i = 0; i < MAX_BOUNCES; i++) {
-				int index = MAX_BOUNCES - i - 1;
-				result = mix(lightResults[index].color, result, lightResults[index].reflectFactor);
+			RayResult hit = castRay(
+				rayPosition,
+				rayDirection,
+				rayConfig.maxDistance,
+				rayConfig.surfaceDistance,
+				rayConfig.maxSteps
+			);
+			if(hit.hit) {
+				LightResult objectLight = getLight(hit.position, rayDirection, hit.rayHit);
+				result = objectLight.color;
+			} else {
+				result = getBackgroundColor(rayDirection);
 			}
 
 			return result;
