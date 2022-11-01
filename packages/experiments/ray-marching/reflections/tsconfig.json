@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "declaration": true,
-    "declarationDir": "dist",
+    "declarationDir": "dist/cjs",
     "module": "esnext",
     "target": "es5",
     "lib": ["es6", "dom", "es2016", "es2017"],
@@ -11,7 +11,7 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "rootDir": "."
+    "rootDir": "src"
   },
   "include": ["src/**/*"],
   "exclude": [
