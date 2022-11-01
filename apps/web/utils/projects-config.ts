@@ -44,4 +44,11 @@ export const projectsConfig: Projects = {
     source: `${baseExperiment}/ray-marching/reflections`,
     tags: ['open-gl', 'shaders', 'ray-marching']
   },
+  'experiments-ray-marching-voxels': {
+    name: 'Voxels',
+    description: 'Voxels renderer made with ray-marching.',
+    load: loadDynamicProject(() => import('experiments-ray-marching-voxels')),
+    source: `${baseExperiment}/ray-marching/voxels`,
+    tags: ['open-gl', 'shaders', 'ray-marching']
+  }
 }
