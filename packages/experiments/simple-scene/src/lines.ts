@@ -1,4 +1,4 @@
-import { BufferGeometry, Line, LineBasicMaterial, Vector3 } from "three";
+import { BufferGeometry, Line, LineBasicMaterial, Vector3 } from "../node_modules/three";
 
 const material = new LineBasicMaterial( { color: 0xf000f0 } );
 
