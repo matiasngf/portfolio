@@ -25,6 +25,7 @@ importers:
       clsx: ^1.2.1
       eslint: 7.32.0
       eslint-config-custom: workspace:*
+      experiments-ray-marching-ambient-occlusion: workspace:*
       experiments-ray-marching-boolean-opeartions: workspace:*
       experiments-ray-marching-reflections: workspace:*
       experiments-ray-marching-simple: workspace:*
@@ -46,6 +47,7 @@ importers:
       '@fortawesome/free-solid-svg-icons': 6.2.0
       '@fortawesome/react-fontawesome': 0.2.0_6j2wdqxompc6mcokhxkpep2gqu
       clsx: 1.2.1
+      experiments-ray-marching-ambient-occlusion: link:../../packages/experiments/ray-marching/ambient-occlusion
       experiments-ray-marching-boolean-opeartions: link:../../packages/experiments/ray-marching/boolean-operations
       experiments-ray-marching-reflections: link:../../packages/experiments/ray-marching/reflections
       experiments-ray-marching-simple: link:../../packages/experiments/ray-marching/simple
@@ -85,6 +87,39 @@ importers:
       eslint-plugin-react: 7.31.8_eslint@7.32.0
     devDependencies:
       typescript: 4.8.4
+
+  packages/experiments/ray-marching/ambient-occlusion:
+    specifiers:
+      '@rollup/plugin-commonjs': ^23.0.2
+      '@rollup/plugin-image': ^3.0.1
+      '@rollup/plugin-node-resolve': ^15.0.1
+      '@types/three': ^0.140.0
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      rollup: ^3.2.5
+      rollup-plugin-peer-deps-external: ^2.2.4
+      rollup-plugin-typescript2: ^0.34.1
+      three: ^0.146.0
+      tsconfig: workspace:*
+      tslib: ^2.4.1
+      typescript: ^4.6.4
+      vite: ^2.9.9
+    dependencies:
+      three: 0.146.0
+    devDependencies:
+      '@rollup/plugin-commonjs': 23.0.2_rollup@3.2.5
+      '@rollup/plugin-image': 3.0.1_rollup@3.2.5
+      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.2.5
+      '@types/three': 0.140.0
+      eslint: 7.32.0
+      eslint-config-custom: link:../../../eslint-config-custom
+      rollup: 3.2.5
+      rollup-plugin-peer-deps-external: 2.2.4_rollup@3.2.5
+      rollup-plugin-typescript2: 0.34.1_oa2candk7eitu7usnsurwiyuuu
+      tsconfig: link:../../../tsconfig
+      tslib: 2.4.1
+      typescript: 4.8.4
+      vite: 2.9.15
 
   packages/experiments/ray-marching/boolean-operations:
     specifiers:
