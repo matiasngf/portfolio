@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.title {
+  font-family: metalista-web, serif;
+  font-weight: 400;
+  font-style: normal;
+  @apply text-7xl text-center text-black tracking-wide;
+  text-shadow: -1px 0 #FF00B8, 0 1px #FF00B8, 1px 0 #FF00B8, 0 -1px #FF00B8;
+}
+.cool-profile-pic {
+  @apply  fixed top-0 w-full left-0 md:hidden transition-all duration-300;
+  top: -17.5vw;
+}
+.cool-profile-pic.blurred {
+  @apply filter blur-2xl opacity-50;
+}
+
+/**
+font-family: metalista-speed, sans-serif;
+font-weight: 400;
+font-style: normal;
+
+font-family: metalista-death, sans-serif;
+font-weight: 400;
+font-style: normal;
+*/

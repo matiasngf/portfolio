@@ -10,6 +10,13 @@ module.exports = {
       center: true,
       padding: "1rem",
     },
+    fontFamily: {
+      'sans': ['Coda', 'system-ui'],
+      'serif': ['ui-serif', 'Georgia'],
+      'mono': ['ui-monospace', 'SFMono-Regular'],
+      'display': ['Oswald'],
+      'body': ['Coda'],
+    }
   },
   plugins: [],
 }
