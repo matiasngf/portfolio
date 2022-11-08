@@ -16,32 +16,11 @@ export interface Projects {
 }
 
 export const projectsConfig: Projects = {
-  'simple-scene': {
-    name: 'ThreeJS simple scene',
-    description: 'A simple scene with vanilla three.js.',
-    load: loadDynamicProject(() => import('experiments-simple-scene')),
-    source: `${baseExperiment}/simple-scene`,
-    tags: ['open-gl']
-  },
-  'ray-marching-simple': {
-    name: 'Ray-marching renderer',
-    description: 'Base setup for a ray marching renderer.',
-    load: loadDynamicProject(() => import('experiments-ray-marching-simple')),
-    source: `${baseExperiment}/ray-marching/simple`,
-    tags: ['open-gl', 'shaders', 'ray-marching']
-  },
-  'ray-marching-boolean-opeartions': {
-    name: 'Boolean operations',
-    description: 'Operations with objetcs in a ray-marching renderer.',
-    load: loadDynamicProject(() => import('experiments-ray-marching-boolean-opeartions')),
-    source: `${baseExperiment}/ray-marching/boolean-operations`,
-    tags: ['open-gl', 'shaders', 'ray-marching']
-  },
-  'ray-marching-reflections': {
-    name: 'Real time reflections',
-    description: 'Reflections calculated using ray-marching on real time.',
-    load: loadDynamicProject(() => import('experiments-ray-marching-reflections')),
-    source: `${baseExperiment}/ray-marching/reflections`,
+  'experiments-ray-marching-ambient-occlusion': {
+    name: 'Ambient occlusion',
+    description: 'Real time ambient-occlusion with ray-marching.',
+    load: loadDynamicProject(() => import('experiments-ray-marching-ambient-occlusion')),
+    source: `${baseExperiment}/ray-marching/ambient-occlusion`,
     tags: ['open-gl', 'shaders', 'ray-marching']
   },
   'ray-marching-voxels': {
@@ -51,13 +30,34 @@ export const projectsConfig: Projects = {
     source: `${baseExperiment}/ray-marching/voxels`,
     tags: ['open-gl', 'shaders', 'ray-marching']
   },
-  'experiments-ray-marching-ambient-occlusion': {
-    name: 'Ambient occlusion',
-    description: 'Real time ambient-occlusion with ray-marching.',
-    load: loadDynamicProject(() => import('experiments-ray-marching-ambient-occlusion')),
-    source: `${baseExperiment}/ray-marching/ambient-occlusion`,
+  'ray-marching-reflections': {
+    name: 'Real time reflections',
+    description: 'Reflections calculated using ray-marching on real time.',
+    load: loadDynamicProject(() => import('experiments-ray-marching-reflections')),
+    source: `${baseExperiment}/ray-marching/reflections`,
     tags: ['open-gl', 'shaders', 'ray-marching']
-  }
+  },
+  'ray-marching-boolean-opeartions': {
+    name: 'Boolean operations',
+    description: 'Operations with objetcs in a ray-marching renderer.',
+    load: loadDynamicProject(() => import('experiments-ray-marching-boolean-opeartions')),
+    source: `${baseExperiment}/ray-marching/boolean-operations`,
+    tags: ['open-gl', 'shaders', 'ray-marching']
+  },
+  'ray-marching-simple': {
+    name: 'Ray-marching renderer',
+    description: 'Base setup for a ray marching renderer.',
+    load: loadDynamicProject(() => import('experiments-ray-marching-simple')),
+    source: `${baseExperiment}/ray-marching/simple`,
+    tags: ['open-gl', 'shaders', 'ray-marching']
+  },
+  'simple-scene': {
+    name: 'ThreeJS simple scene',
+    description: 'A simple scene with vanilla three.js.',
+    load: loadDynamicProject(() => import('experiments-simple-scene')),
+    source: `${baseExperiment}/simple-scene`,
+    tags: ['open-gl']
+  },
   // 'ray-marching-voxels-campfire': {
   //   name: 'Voxels campfire',
   //   description: 'Dynamic voxel size and render optimizations. (Better to open on desktop)',
