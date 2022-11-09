@@ -1,14 +1,12 @@
-import { faVial } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useContext } from 'react';
+import React from 'react';
 import { ProjectCard } from '../components/project-card';
 import { RepoButton } from '../components/repo-button';
 import { BaseLayout } from '../layouts/base-layout';
 import { projectsConfig } from '../utils/projects-config';
 
-import profileUrl from '../assets/fotito.jpg';
+import profileUrl from '../assets/edited-fotito.jpg';
 import clsx from 'clsx';
 import { useScrollPosition } from '../utils/hooks/use-scroll-position';
 
@@ -27,12 +25,9 @@ export default function Web() {
         />
         <div className='absolute w-full top-0 h-full object-cover' style={{background: 'linear-gradient(rgb(255 255 255 / 6%) 5%, rgb(23 171 0 / 12%) 35%, rgb(0, 0, 0) 100%)'}}/>
       </div>
-      <div className='absolute top-4 right-4'>
-        <RepoButton />
-      </div>
-      <div className='container pb-32 space-y-8 max-w-4xl relative' style={{paddingTop: '70vw'}}>
+      <div className='index-container'>
         <h2 className='title'>
-          <span>EXPERIMENTS</span>
+          EXPERIMENTS
         </h2>
         <div className='space-y-6 text-center'>
           <h3 className='text-2xl'>👋 hi</h3>
@@ -45,7 +40,7 @@ export default function Web() {
             </Link>.
           </p>
         </div>
-        <div className='space-y-4'>
+        <div className='space-y-4 pt-8'>
           {Object.entries(projectsConfig).map(([key, config]) => {
             return(
               <div className='' key={key}>
@@ -57,6 +52,9 @@ export default function Web() {
             )
           }) }
         </div>
+      </div>
+      <div className='absolute top-4 right-4'>
+        <RepoButton />
       </div>
    </BaseLayout>
   )
