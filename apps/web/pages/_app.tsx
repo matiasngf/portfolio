@@ -25,8 +25,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           ]
         }}
       />
-      <meta content='https://matiasgf.dev/og-image-1500-1000.jpg' name='twitter:image' />
-      <meta content="summary_large_image" name="twitter:card" />
       <Component {...pageProps} />
     </>
   )
