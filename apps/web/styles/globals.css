@@ -17,6 +17,7 @@
   text-shadow: -1px 0 #FF00B8, 0 1px #FF00B8, 1px 0 #FF00B8, 0 -1px #FF00B8;
   cursor: default;
 }
+
 .cool-profile-pic {
   @apply  fixed w-full top-0 left-0 transition-all duration-300;
 }
@@ -33,13 +34,3 @@
     @apply pt-64;
   }
 }
-
-/**
-font-family: metalista-speed, sans-serif;
-font-weight: 400;
-font-style: normal;
-
-font-family: metalista-death, sans-serif;
-font-weight: 400;
-font-style: normal;
-*/

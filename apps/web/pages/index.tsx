@@ -16,11 +16,10 @@ export default function Web() {
   const y = useScrollPosition();
   return (
     <BaseLayout>
-      <div ref={scrollRef} className={clsx('cool-profile-pic', {'blurred': y > 50})}>
+      <div ref={scrollRef} className={clsx('cool-profile-pic', {'blurred': y > 120})}>
         <Image
           src={profileUrl}
           alt='Profile picture'
-          className='grayscale'
           priority
         />
         <div className='absolute w-full top-0 h-full object-cover' style={{background: 'linear-gradient(rgb(255 255 255 / 6%) 5%, rgb(23 171 0 / 12%) 35%, rgb(0, 0, 0) 100%)'}}/>
@@ -29,12 +28,12 @@ export default function Web() {
         <h2 className='title'>
           EXPERIMENTS
         </h2>
-        <div className='space-y-6 text-center'>
+        <div className='space-y-4 text-center'>
           <h3 className='text-2xl'>👋 hi</h3>
           <p>I{"'"}m matias, a front end dev with a background in graphic design and passionate about AI.</p>
-          <p>This site contains some web experiments using OpenGl, Webpack, React, Compilers, etc.</p>
+          <p>This site contains web experiments using OpenGl, Webpack, React, Compilers, etc.</p>
           <p>
-            I{"'"}l keep adding projects to this site, if you want to see more, chech out my{' '}
+            I{"'"}ll keep adding projects here, if you want to see more, check out my{' '}
             <Link href='https://github.com/matiasngf/' target='_blank'>
               <span className='text-blue-400'>GitHub</span>
             </Link>.
