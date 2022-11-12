@@ -21,6 +21,7 @@ importers:
       '@types/node': ^17.0.12
       '@types/react': ^18.0.22
       '@types/react-dom': ^18.0.7
+      '@vercel/analytics': ^0.1.4
       autoprefixer: ^10.4.13
       clsx: ^1.2.1
       eslint: 7.32.0
@@ -46,6 +47,7 @@ importers:
       '@fortawesome/free-brands-svg-icons': 6.2.0
       '@fortawesome/free-solid-svg-icons': 6.2.0
       '@fortawesome/react-fontawesome': 0.2.0_6j2wdqxompc6mcokhxkpep2gqu
+      '@vercel/analytics': 0.1.4_react@18.2.0
       clsx: 1.2.1
       experiments-ray-marching-ambient-occlusion: link:../../packages/experiments/ray-marching/ambient-occlusion
       experiments-ray-marching-boolean-opeartions: link:../../packages/experiments/ray-marching/boolean-operations
@@ -771,6 +773,14 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.41.0
       eslint-visitor-keys: 3.3.0
+    dev: false
+
+  /@vercel/analytics/0.1.4_react@18.2.0:
+    resolution: {integrity: sha512-6xI1kozfgigwmDTQCrtj+m0yQnzhLGa/l0yE8BjTbUQ2vF9b88CEXF3dXjZl48ESfjssCur3FkK3jOwZm4emrw==}
+    peerDependencies:
+      react: ^16.8||^17||^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@xobotyi/scrollbar-width/1.9.5:
