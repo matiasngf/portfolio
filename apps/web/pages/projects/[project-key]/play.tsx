@@ -1,7 +1,7 @@
-import { ProjectLoader } from "../../components/project-loader";
+import { ProjectLoader } from "../../../components/project-loader";
 
 import { GetServerSideProps } from "next";
-import { projectsConfig } from "../../utils/projects-config";
+import { projectsConfig } from "../../../utils/projects-config";
 import { NextSeo } from "next-seo";
 
 interface PageProps {
@@ -19,6 +19,12 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
   }
 
   const config = projectsConfig[projectKey];
+
+  if(!config.load) {
+    return {
+      notFound: true,
+    }
+  }
 
   return {
     props: {
