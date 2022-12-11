@@ -20,13 +20,11 @@ export const ProjectLayout = ({
     <div>
       <IconButton
         icon={faHome}
-        iconSize='1x'
         href='/'
         className='absolute top-4 left-4'
       />
       <IconButton
         icon={faGithub}
-        iconSize='xl'
         href={config.source}
         target='_blank'
         className='absolute bottom-4 left-4'

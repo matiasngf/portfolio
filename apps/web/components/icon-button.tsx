@@ -6,7 +6,6 @@ import clsx from "clsx";
 export interface IconButtonProps {
   target?: HTMLAttributeAnchorTarget;
   href?: string;
-  iconSize?: FontAwesomeIconProps['size']
   icon: FontAwesomeIconProps['icon'];
   className?: string;
 }
@@ -14,18 +13,17 @@ export interface IconButtonProps {
 export const IconButton = ({
   target,
   href,
-  iconSize,
   icon,
   className,
 }: IconButtonProps) => {
   const IconRender = useMemo(() => {
     const Comp = () => (
       <div className={clsx("rounded-md bg-zinc-800 text-white flex items-center justify-center w-10 h-10", className)}>
-        <FontAwesomeIcon size={iconSize} icon={icon} />
+        <FontAwesomeIcon className="w-6 h-6" icon={icon} />
       </div>
     )
     return Comp;
-  }, [iconSize, icon, className]);
+  }, [icon, className]);
   if(href) {
     return (
       <Link href={href} target={target}>
