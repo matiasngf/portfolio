@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 .index-container {
-  @apply container pb-32 space-y-8 max-w-4xl relative;
-  padding-top: 70vw;
+  @apply container pb-32 space-y-8 max-w-4xl relative pt-28;
+  /* padding-top: 20vw; */
 }
 
-.title {
+.app-title {
   font-family: metalista-web, serif;
   font-weight: 400;
   font-style: normal;
@@ -31,6 +31,6 @@
     transform: translateX(-50%);
   }
   .index-container {
-    @apply pt-64;
+    @apply pt-52;
   }
 }

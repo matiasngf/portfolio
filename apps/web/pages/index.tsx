@@ -16,16 +16,16 @@ export default function Web() {
   const y = useScrollPosition();
   return (
     <BaseLayout>
-      <div ref={scrollRef} className={clsx('cool-profile-pic', {'blurred': y > 120})}>
+      {/* <div ref={scrollRef} className={clsx('cool-profile-pic', {'blurred': y > 120})}>
         <Image
           src={profileUrl}
           alt='Profile picture'
           priority
         />
         <div className='absolute w-full top-0 h-full object-cover' style={{background: 'linear-gradient(rgb(255 255 255 / 6%) 5%, rgb(23 171 0 / 12%) 35%, rgb(0, 0, 0) 100%)'}}/>
-      </div>
+      </div> */}
       <div className='index-container'>
-        <h2 className='title'>
+        <h2 className='app-title'>
           EXPERIMENTS
         </h2>
         <div className='space-y-4 text-center'>
