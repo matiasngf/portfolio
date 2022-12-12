@@ -1,0 +1,11 @@
+Model Information:
+* title:	Groovy Lava Lamp
+* source:	https://sketchfab.com/3d-models/groovy-lava-lamp-f2377c043ec1447d8e5e9cab0b9db20e
+* author:	thelaughingdingo (https://sketchfab.com/thelaughingdingo)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Groovy Lava Lamp" (https://sketchfab.com/3d-models/groovy-lava-lamp-f2377c043ec1447d8e5e9cab0b9db20e) by thelaughingdingo (https://sketchfab.com/thelaughingdingo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -9,7 +9,7 @@ importers:
       turbo: latest
     devDependencies:
       eslint-config-custom: link:packages/eslint-config-custom
-      prettier: 2.7.1
+      prettier: 2.8.1
       turbo: 1.6.3
 
   apps/web:
@@ -32,6 +32,7 @@ importers:
       experiments-ray-marching-simple: workspace:*
       experiments-ray-marching-voxels: workspace:*
       experiments-ray-marching-voxels-campfire: workspace:*
+      experiments-ray-marching-voxels-lava-lamp: workspace:*
       experiments-simple-scene: workspace:*
       next: 13.0.2
       next-seo: ^5.13.0
@@ -55,6 +56,7 @@ importers:
       experiments-ray-marching-simple: link:../../packages/experiments/ray-marching/simple
       experiments-ray-marching-voxels: link:../../packages/experiments/ray-marching/voxels
       experiments-ray-marching-voxels-campfire: link:../../packages/experiments/ray-marching/voxels-campfire
+      experiments-ray-marching-voxels-lava-lamp: link:../../packages/experiments/ray-marching/voxels-lava-lamp
       experiments-simple-scene: link:../../packages/experiments/simple-scene
       next: 13.0.2_biqbaboplfbrettd7655fr4n2y
       next-seo: 5.13.0_pknogjuzx4bv7zxtatcb2ahtsq
@@ -85,7 +87,7 @@ importers:
       eslint: 7.32.0
       eslint-config-next: 12.3.1_3rubbgt5ekhqrcgx4uwls3neim
       eslint-config-prettier: 8.5.0_eslint@7.32.0
-      eslint-config-turbo: 0.0.4_eslint@7.32.0
+      eslint-config-turbo: 0.0.7_eslint@7.32.0
       eslint-plugin-react: 7.31.8_eslint@7.32.0
     devDependencies:
       typescript: 4.8.4
@@ -256,6 +258,41 @@ importers:
       vite: 2.9.15
 
   packages/experiments/ray-marching/voxels-campfire:
+    specifiers:
+      '@rollup/plugin-commonjs': ^23.0.2
+      '@rollup/plugin-image': ^3.0.1
+      '@rollup/plugin-node-resolve': ^15.0.1
+      '@types/three': ^0.140.0
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      lil-gui: ^0.17.0
+      rollup: ^3.2.5
+      rollup-plugin-peer-deps-external: ^2.2.4
+      rollup-plugin-typescript2: ^0.34.1
+      three: ^0.146.0
+      tsconfig: workspace:*
+      tslib: ^2.4.1
+      typescript: ^4.6.4
+      vite: ^2.9.9
+    dependencies:
+      lil-gui: 0.17.0
+      three: 0.146.0
+    devDependencies:
+      '@rollup/plugin-commonjs': 23.0.2_rollup@3.2.5
+      '@rollup/plugin-image': 3.0.1_rollup@3.2.5
+      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.2.5
+      '@types/three': 0.140.0
+      eslint: 7.32.0
+      eslint-config-custom: link:../../../eslint-config-custom
+      rollup: 3.2.5
+      rollup-plugin-peer-deps-external: 2.2.4_rollup@3.2.5
+      rollup-plugin-typescript2: 0.34.1_oa2candk7eitu7usnsurwiyuuu
+      tsconfig: link:../../../tsconfig
+      tslib: 2.4.1
+      typescript: 4.8.4
+      vite: 2.9.15
+
+  packages/experiments/ray-marching/voxels-lava-lamp:
     specifiers:
       '@rollup/plugin-commonjs': ^23.0.2
       '@rollup/plugin-image': ^3.0.1
@@ -1528,13 +1565,13 @@ packages:
       eslint: 7.32.0
     dev: false
 
-  /eslint-config-turbo/0.0.4_eslint@7.32.0:
-    resolution: {integrity: sha512-HErPS/wfWkSdV9Yd2dDkhZt3W2B78Ih/aWPFfaHmCMjzPalh+5KxRRGTf8MOBQLCebcWJX0lP1Zvc1rZIHlXGg==}
+  /eslint-config-turbo/0.0.7_eslint@7.32.0:
+    resolution: {integrity: sha512-WbrGlyfs94rOXrhombi1wjIAYGdV2iosgJRndOZtmDQeq5GLTzYmBUCJQZWtLBEBUPCj96RxZ2OL7Cn+xv/Azg==}
     peerDependencies:
-      eslint: ^7.23.0 || ^8.0.0
+      eslint: '>6.6.0'
     dependencies:
       eslint: 7.32.0
-      eslint-plugin-turbo: 0.0.4_eslint@7.32.0
+      eslint-plugin-turbo: 0.0.7_eslint@7.32.0
     dev: false
 
   /eslint-import-resolver-node/0.3.6:
@@ -1679,10 +1716,10 @@ packages:
       string.prototype.matchall: 4.0.7
     dev: false
 
-  /eslint-plugin-turbo/0.0.4_eslint@7.32.0:
-    resolution: {integrity: sha512-dfmYE/iPvoJInQq+5E/0mj140y/rYwKtzZkn3uVK8+nvwC5zmWKQ6ehMWrL4bYBkGzSgpOndZM+jOXhPQ2m8Cg==}
+  /eslint-plugin-turbo/0.0.7_eslint@7.32.0:
+    resolution: {integrity: sha512-iajOH8eD4jha3duztGVBD1BEmvNrQBaA/y3HFHf91vMDRYRwH7BpHSDFtxydDpk5ghlhRxG299SFxz7D6z4MBQ==}
     peerDependencies:
-      eslint: ^7.23.0 || ^8.0.0
+      eslint: '>6.6.0'
     dependencies:
       eslint: 7.32.0
     dev: false
@@ -2692,8 +2729,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  /prettier/2.7.1:
-    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
+  /prettier/2.8.1:
+    resolution: {integrity: sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true

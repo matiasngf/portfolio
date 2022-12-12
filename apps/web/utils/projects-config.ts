@@ -16,6 +16,13 @@ export interface Projects {
 }
 
 export const projectsConfig: Projects = {
+  'experiments-ray-marching-voxels-lava-lamp': {
+    name: 'Lava lamp',
+    description: 'Lava lamp made with ray-marching.',
+    load: loadDynamicProject(() => import('experiments-ray-marching-voxels-lava-lamp')),
+    source: `${baseExperiment}/ray-marching/voxels-lava-lamp`,
+    tags: ['open-gl', 'shaders', 'ray-marching']
+  },
   'experiments-ray-marching-ambient-occlusion': {
     name: 'Ambient occlusion',
     description: 'Real time ambient-occlusion with ray-marching.',
