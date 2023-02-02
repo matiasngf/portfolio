@@ -13,6 +13,9 @@
     "@fortawesome/free-brands-svg-icons": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mdx-js/loader": "^2.2.1",
+    "@mdx-js/react": "^2.2.1",
+    "@next/mdx": "^13.1.6",
     "@vercel/analytics": "^0.1.4",
     "clsx": "^1.2.1",
     "experiments-ray-marching-ambient-occlusion": "workspace:*",
@@ -30,6 +33,7 @@
     "react-use": "^17.4.0"
   },
   "devDependencies": {
+    "@types/mdx": "^2.0.3",
     "@types/node": "^17.0.12",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",

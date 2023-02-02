@@ -7,6 +7,7 @@ export interface ProjectConfig {
   load: DynamicProjectLoader
   source: string;
   tags: TagKey[]
+  post?: () => Promise<typeof import("*.mdx")>;
 }
 
 const baseExperiment = 'https://github.com/matiasngf/portfolio/tree/main/packages/experiments'
@@ -54,6 +55,7 @@ export const projectsConfig: Projects = {
   'ray-marching-simple': {
     name: 'Ray-marching renderer',
     description: 'Base setup for a ray marching renderer.',
+    post: () => import('../posts/ray-marching-simple.mdx'),
     load: loadDynamicProject(() => import('experiments-ray-marching-simple')),
     source: `${baseExperiment}/ray-marching/simple`,
     tags: ['open-gl', 'shaders', 'ray-marching']
