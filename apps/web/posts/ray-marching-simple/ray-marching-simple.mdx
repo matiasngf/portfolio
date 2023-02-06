@@ -2,6 +2,7 @@ import catPlant from "./cat-plant.jpg";
 import catDistances from "./cat-distances.jpg";
 import catJumping from "./cat-jumping.jpg";
 import catEyes from "./cat-eyes.jpg";
+import endResult from "./preview.png";
 import Image from "next/image";
 
 This experiment is a simple setup for a ray marching renderer that will help in future projects. This post will help you understand how it is built.
@@ -177,7 +178,10 @@ void main() {
 
 This function will use the returned distance to color the image, creating a depth field. The result should look like this:
 
-[image]
+<Image
+  src={endResult}
+  alt=""
+/>
 
 Since we are cloning the properties from our ThreeJs camera, we can use the `orbitControls` to move through the scene.
 

@@ -1,10 +1,9 @@
 import { loadDynamicProject, DynamicProjectLoader } from './load-dynamic-project';
 import { TagKey } from './tags';
 
-import RayMarchingSimple from "@/posts/ray-marching-simple/ray-marching-simple.mdx";
+import { Posts, Previews } from "@/posts";
 import { MDXComponent } from '@/components/posts/types';
-
-type PreviewFormats = typeof import("*.jpg") | typeof import("*.png")
+import { StaticImageData } from 'next/image';
 
 export interface ProjectConfig {
   name: string;
@@ -13,7 +12,7 @@ export interface ProjectConfig {
   source: string;
   tags: TagKey[]
   post?: MDXComponent;
-  preview?: () => Promise<PreviewFormats>;
+  preview?: StaticImageData;
 }
 
 const baseExperiment = 'https://github.com/matiasngf/portfolio/tree/main/packages/experiments'
@@ -61,8 +60,8 @@ export const projectsConfig: Projects = {
   'ray-marching-simple': {
     name: 'Ray-marching renderer',
     description: 'Base setup for a ray marching renderer.',
-    preview: () => import("../posts/ray-marching-simple/preview.png"),
-    post: RayMarchingSimple,
+    preview: Previews.RayMarchingSimple,
+    post: Posts.RayMarchingSimple,
     load: loadDynamicProject(() => import('experiments-ray-marching-simple')),
     source: `${baseExperiment}/ray-marching/simple`,
     tags: ['open-gl', 'shaders', 'ray-marching']
