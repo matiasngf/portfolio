@@ -3,7 +3,8 @@ import { ProjectLoader } from "../../../components/project-loader";
 import { GetServerSideProps } from "next";
 import { projectsConfig } from "../../../utils/projects-config";
 import { NextSeo } from "next-seo";
-import dynamic from "next/dynamic";
+import { PostRenderer } from "../../../components/posts/PostRenderer";
+import React from "react";
 
 interface PageProps {
   projectKey: string;
@@ -21,6 +22,15 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
 
   const config = projectsConfig[projectKey];
 
+  if(!config.post) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/projects/${projectKey}`,
+      }
+    }
+  }
+
   return {
     props: {
       projectKey,
@@ -30,25 +40,20 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
   }
 }
 
-interface PostRendererProps {
-  post: () => Promise<typeof import("*.mdx")>;
-}
-
-const PostRenderer = ({ post }: PostRendererProps) => {
-  const DynamicComponent = dynamic(post);
-  return <DynamicComponent priority={"eager"} />;
-}
-
 export default function Page({projectKey, name, description}: PageProps) {
-  const { post } = projectsConfig[projectKey];
+  const project = projectsConfig[projectKey];
+  const { post } = project;
   return (
     <>
       <NextSeo
         title={name}
         description={description}
       />
-      {post ? 
-        <PostRenderer post={post} />
+      {post ? (
+        <div className="container max-w-screen-md">
+          <PostRenderer post={post} />
+        </div>
+      )
         :
         <ProjectLoader projectKey={projectKey} />
       }
