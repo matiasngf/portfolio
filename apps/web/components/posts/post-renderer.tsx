@@ -1,4 +1,4 @@
-import { PostContainer } from "./PostContainer";
+import { PostContainer } from "./post-container";
 import { MDXComponent } from "./types";
 
 export interface PostRendererProps {

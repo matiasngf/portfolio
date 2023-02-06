@@ -1,10 +1,9 @@
-import { ProjectLoader } from "../../../components/project-loader";
-
 import { GetServerSideProps } from "next";
 import { projectsConfig } from "../../../utils/projects-config";
 import { NextSeo } from "next-seo";
-import { PostRenderer } from "../../../components/posts/PostRenderer";
+import { PostRenderer } from "../../../components/posts/post-renderer";
 import React from "react";
+import { PostHeader } from "@/components/posts/post-header";
 
 interface PageProps {
   projectKey: string;
@@ -44,20 +43,16 @@ export default function Page({projectKey, name, description}: PageProps) {
   const project = projectsConfig[projectKey];
   const { post } = project;
   return (
-    <>
+    <div className="bg-slate-900 text-white">
       <NextSeo
         title={name}
         description={description}
       />
-      {post ? (
-        <div className="container max-w-screen-md">
-          <PostRenderer post={post} />
-        </div>
-      )
-        :
-        <ProjectLoader projectKey={projectKey} />
-      }
-    </>
+      <PostHeader projectKey={projectKey} project={project} />
+      <div className="container max-w-screen-md">
+        {post && <PostRenderer post={post} />}
+      </div>
+    </div>
   );
 }
 
