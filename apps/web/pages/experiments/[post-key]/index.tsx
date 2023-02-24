@@ -19,6 +19,12 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
     }
   }
 
+  if(projectsConfig[projectKey].type !== 'experiment') {
+    return {
+      notFound: true,
+    }
+  }
+
   const config = projectsConfig[projectKey];
 
   return {

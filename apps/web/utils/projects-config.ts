@@ -32,6 +32,14 @@ export interface Projects {
 }
 
 export const projectsConfig: Projects = {
+  'creating-ray-marching-renderer': {
+    type: 'post',
+    name: 'Creating a ray-marching renderer in Three.js',
+    description: 'How to create a ray-marching renderer from scratch using ThreeJs.',
+    preview: Previews.CreatingRayMarchingRenderer,
+    post: Posts.CreatingRayMarchingRenderer,
+    tags: ['open-gl', 'shaders', 'ray-marching']
+  },
   'experiments-ray-marching-voxels-lava-lamp': {
     type: 'experiment',
     name: 'Voxels Lava lamp',

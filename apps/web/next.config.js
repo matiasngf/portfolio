@@ -17,6 +17,15 @@ const nextConfig = {
   experimental: {
     transpilePackages: ["ui"],
   },
+  async redirects() {
+    return [
+      {
+        source: "/projects/:slug",
+        destination: "/experiments/:slug",
+        permanent: true,
+      }
+    ]
+  }
 };
 
 module.exports = withMDX(nextConfig);
