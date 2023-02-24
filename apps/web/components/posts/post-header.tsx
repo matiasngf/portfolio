@@ -25,14 +25,14 @@ export const PostHeader = ({ projectKey, project }: PostHeaderProps) => {
       <div className="flex flex-col items-center container relative text-white space-y-7">
         <h1 className="text-4xl font-bold">{name}</h1>
         <div className="flex space-x-7">
-          {(project.load) && (
+          {(project.type === 'experiment' && project.load) && (
             <div>
-              <Link target="_blank" href={`/posts/${projectKey}/play`}>
+              <Link target="_blank" href={`/experiments/${projectKey}/play`}>
                 <button>Play project</button>
               </Link>
             </div>
           )}
-          {(project.source) && (
+          {(project.type === 'experiment' && project.source) && (
             <div>
               <Link target="_blank" href={project.source}>
                 <button>View source</button>

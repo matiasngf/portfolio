@@ -11,7 +11,7 @@ const MyDocument = () => {
           <link href="https://fonts.googleapis.com/css2?family=Coda:wght@400;800&display=swap" rel="stylesheet"/>
           <meta name='twitter:image' content='https://matiasgf.dev/og-image-1500-1000.jpg' />
         </Head>
-        <body>
+        <body className='min-h-screen'>
             <Main />
             <NextScript />
         </body>
