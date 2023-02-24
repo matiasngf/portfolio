@@ -1,43 +1,47 @@
-import { GetServerSideProps } from "next";
-import { projectsConfig } from "../../../utils/projects-config";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
-import { PostRenderer } from "../../../components/posts/post-renderer";
-import React from "react";
+import { projectsConfig } from "@/utils/projects-config";
+import { PostRenderer } from "@/components/posts/post-renderer";
 import { PostHeader } from "@/components/posts/post-header";
 
 interface PageProps {
-  projectKey: string;
+  experimentKey: string;
   name: string;
   description: string;
 }
 
-export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
-  const projectKey = context.params?.['post-key'] as string;
-  if(!(projectKey in projectsConfig)) {
+export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
+  const experimentKey = context.params?.['post-key'] as string;
+  const experiment = projectsConfig[experimentKey];
+
+  if(!experiment || experiment.type !== 'experiment') {
     return {
       notFound: true,
     }
   }
-
-  if(projectsConfig[projectKey].type !== 'experiment') {
-    return {
-      notFound: true,
-    }
-  }
-
-  const config = projectsConfig[projectKey];
 
   return {
     props: {
-      projectKey,
-      name: config.name,
-      description: config.description,
+      experimentKey,
+      name: experiment.name,
+      description: experiment.description,
     }
   }
 }
 
-export default function Page({projectKey, name, description}: PageProps) {
-  const project = projectsConfig[projectKey];
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = Object.keys(projectsConfig)
+    .filter((key) => projectsConfig[key].type === 'experiment')
+    .map((key) => ({params: { 'post-key': key }}));
+
+  return {
+    paths,
+    fallback: false,
+  }
+}
+
+export default function Page({experimentKey, name, description}: PageProps) {
+  const project = projectsConfig[experimentKey];
   const { post } = project;
   return (
     <div className="bg-slate-900 text-white">
@@ -45,7 +49,7 @@ export default function Page({projectKey, name, description}: PageProps) {
         title={name}
         description={description}
       />
-      <PostHeader projectKey={projectKey} project={project} />
+      <PostHeader projectKey={experimentKey} project={project} />
       <div className="container max-w-screen-md">
         {post && <PostRenderer post={post} />}
       </div>

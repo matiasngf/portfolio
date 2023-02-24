@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { projectsConfig } from '../utils/projects-config';
+import { ExperimentConfig, projectsConfig } from '@/utils/projects-config';
 import { RenderCanvas } from './render-canvas';
 import { useMountedState } from 'react-use'
 import { DynamicProject } from '../utils/load-dynamic-project';
@@ -10,6 +10,7 @@ export interface ProjectLoaderProps {
 }
 
 export const ProjectLoader = ({ projectKey }: ProjectLoaderProps) => {
+  const project = projectsConfig[projectKey] as any as ExperimentConfig;
   const [canvasEl , setCanvasEl] = useState<HTMLCanvasElement | null>(null)
   const [projectModule, setProjectModule] = useState<DynamicProject | null>(null)
 
@@ -19,15 +20,15 @@ export const ProjectLoader = ({ projectKey }: ProjectLoaderProps) => {
     if(typeof window === "undefined")  return;
     if(!(isMounted())) return;
 
-    if(projectKey in projectsConfig) {
-      const loadModule = projectsConfig[projectKey].load();
+    if(project && project.load) {
+      const loadModule = project.load();
       loadModule.then(module => {
         if(isMounted()) {
           setProjectModule(module)
         }
       })
     }
-  }, [isMounted, projectKey])
+  }, [isMounted, projectKey, project])
 
   useEffect(() => {
     if(!projectModule) return;
@@ -40,11 +41,11 @@ export const ProjectLoader = ({ projectKey }: ProjectLoaderProps) => {
     }
   }, [projectModule])
 
-  if(!projectsConfig[projectKey]) return null;
+  if(!project) return null;
   if(!projectModule || !canvasEl) return null;
 
   return (
-    <ProjectLayout projectKey={projectKey} config={projectsConfig[projectKey]} >
+    <ProjectLayout projectKey={projectKey} config={project} >
       <RenderCanvas canvas={canvasEl} />
     </ProjectLayout>
   );

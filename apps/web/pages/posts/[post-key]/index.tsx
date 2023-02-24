@@ -1,8 +1,7 @@
-import { GetServerSideProps } from "next";
-import { projectsConfig } from "../../../utils/projects-config";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
-import { PostRenderer } from "../../../components/posts/post-renderer";
-import React from "react";
+import { projectsConfig } from "@/utils/projects-config";
+import { PostRenderer } from "@/components/posts/post-renderer";
 import { PostHeader } from "@/components/posts/post-header";
 
 interface PageProps {
@@ -11,22 +10,33 @@ interface PageProps {
   description: string;
 }
 
-export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
+export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const projectKey = context.params?.['post-key'] as string;
-  if(!(projectKey in projectsConfig)) {
+  const project = projectsConfig[projectKey];
+
+  if(!project || project.type !== 'post') {
     return {
       notFound: true,
     }
   }
 
-  const config = projectsConfig[projectKey];
-
   return {
     props: {
       projectKey,
-      name: config.name,
-      description: config.description,
+      name: project.name,
+      description: project.description,
     }
+  }
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = Object.keys(projectsConfig)
+    .filter((key) => projectsConfig[key].type === 'post')
+    .map((key) => ({params: { 'post-key': key }}));
+
+  return {
+    paths,
+    fallback: false,
   }
 }
 

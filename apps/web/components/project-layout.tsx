@@ -1,14 +1,12 @@
-import Link from "next/link";
 import React from "react";
-import { ProjectConfig } from "../utils/projects-config";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronLeft, faHome } from '@fortawesome/free-solid-svg-icons'
+import { ExperimentConfig } from "../utils/projects-config";
+import { faHome } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { IconButton } from "./icon-button";
 
 interface ProjectLayoutProps {
   projectKey: string;
-  config: ProjectConfig;
+  config: ExperimentConfig;
 }
 
 export const ProjectLayout = ({
@@ -25,7 +23,7 @@ export const ProjectLayout = ({
       />
       <IconButton
         icon={faGithub}
-        href={config.source}
+        href={ config.source}
         target='_blank'
         className='absolute bottom-4 left-4'
       />
