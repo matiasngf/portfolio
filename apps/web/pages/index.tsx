@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { ProjectCard } from '../components/project-card';
@@ -6,26 +5,12 @@ import { RepoButton } from '../components/repo-button';
 import { BaseLayout } from '../layouts/base-layout';
 import { projectsConfig } from '../utils/projects-config';
 
-import profileUrl from '../assets/edited-fotito.jpg';
-import clsx from 'clsx';
-import { useScrollPosition } from '../utils/hooks/use-scroll-position';
-
 export default function Web() {
-  
-  const scrollRef = React.useRef(null);
-  const y = useScrollPosition();
   return (
     <BaseLayout>
-      {/* <div ref={scrollRef} className={clsx('cool-profile-pic', {'blurred': y > 120})}>
-        <Image
-          src={profileUrl}
-          alt='Profile picture'
-          priority
-        />
-        <div className='absolute w-full top-0 h-full object-cover' style={{background: 'linear-gradient(rgb(255 255 255 / 6%) 5%, rgb(23 171 0 / 12%) 35%, rgb(0, 0, 0) 100%)'}}/>
-      </div> */}
       <div className='index-container'>
-        <h2 className='app-title'>
+        <p className='text-primary'>Test</p>
+        <h2 className='font-display text-center text-black text-[6rem] tracking-wide text-shadow-line shadow-primary cursor-default'>
           EXPERIMENTS
         </h2>
         <div className='space-y-4 text-center'>

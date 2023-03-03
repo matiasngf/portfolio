@@ -3,7 +3,7 @@ import React from 'react';
 
 const MyDocument = () => {
     return (
-      <Html lang="en">
+      <Html className='theme-light' lang="en">
         <Head>
           <link rel="stylesheet" href="https://use.typekit.net/wdp8lui.css" />
           <link rel="preconnect" href="https://fonts.googleapis.com"/>
