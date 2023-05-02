@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./codeblock-vscode-dark.css";
+
 html, html.theme-light {
   --color-primary: 255 0 184;
   --color-text-primary: 0 0 0;

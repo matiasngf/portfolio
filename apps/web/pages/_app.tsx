@@ -1,8 +1,12 @@
 import { DefaultSeo } from 'next-seo'
 import type { AppProps } from 'next/app'
 import { Analytics } from '@vercel/analytics/react';
+import { MDXProvider } from '@mdx-js/react'
 
 import '../styles/globals.css'
+import { mdxCustomComponents } from '@/components/mdx';
+
+
 
 
 export default function MyApp({ Component, pageProps }: AppProps) {
@@ -26,7 +30,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           ]
         }}
       />
-      <Component {...pageProps} />
+      <MDXProvider components={mdxCustomComponents}>
+        <Component {...pageProps} />
+      </MDXProvider>
       <Analytics />
     </>
   )
