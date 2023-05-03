@@ -27,7 +27,7 @@ export const ProjectCard = ({
             alt={project.name}
           />
         </div>
-        <div className='p-4 grow'>
+        <div className='p-6 grow'>
           <h2 className='text-2xl font-normal'>{project.name}</h2>
           <p className='text-slate-400'>{project.description}</p>
           <div className='pt-4 flex flex-wrap space-x-4'>

@@ -44,7 +44,7 @@ export default function Page({experimentKey, name, description}: PageProps) {
   const project = projectsConfig[experimentKey];
   const { post } = project;
   return (
-    <div className="bg-slate-900 text-white">
+    <div className="">
       <NextSeo
         title={name}
         description={description}

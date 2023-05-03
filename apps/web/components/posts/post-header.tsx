@@ -19,10 +19,10 @@ export const PostHeader = ({ projectKey, project }: PostHeaderProps) => {
             fill
             alt=""
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
         </div>
       )}
-      <div className="flex flex-col items-center container relative text-white space-y-7">
+      <div className="flex flex-col items-center container relative space-y-7">
         <h1 className="text-4xl font-bold">{name}</h1>
         <div className="flex space-x-7">
           {(project.type === 'experiment' && project.load) && (
