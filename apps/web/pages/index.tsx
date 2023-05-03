@@ -1,16 +1,13 @@
 import Link from 'next/link';
 import React from 'react';
 import { ProjectCard } from '../components/project-card';
-import { RepoButton } from '../components/repo-button';
-import { BaseLayout } from '../layouts/base-layout';
 import { projectsConfig } from '../utils/projects-config';
 
 export default function Web() {
   return (
-    <BaseLayout>
-      <div className='index-container'>
-        <p className='text-primary'>Test</p>
-        <h2 className='font-display text-center text-black text-[6rem] tracking-wide text-shadow-line shadow-primary cursor-default'>
+    <>
+      <div className='container pb-32 space-y-8 max-w-4xl relative pt-28 md:pt-52'>
+        <h2 className='font-display text-center text-background text-5xl lg:text-8xl tracking-wide text-shadow-line shadow-primary cursor-default'>
           EXPERIMENTS
         </h2>
         <div className='space-y-4 text-center'>
@@ -20,11 +17,11 @@ export default function Web() {
           <p>
             I{"'"}ll keep adding projects here, if you want to see more, check out my{' '}
             <Link href='https://github.com/matiasngf/' target='_blank'>
-              <span className='text-blue-400'>GitHub</span>
+              <span className='text-link'>GitHub</span>
             </Link>.
           </p>
         </div>
-        <div className='space-y-4 pt-8'>
+        <div className='space-y-8 lg:space-y-4 pt-8'>
           {Object.entries(projectsConfig).map(([key, config]) => {
             return(
               <div className='' key={key}>
@@ -37,9 +34,6 @@ export default function Web() {
           }) }
         </div>
       </div>
-      <div className='absolute top-4 right-4'>
-        <RepoButton />
-      </div>
-   </BaseLayout>
+   </>
   )
 }

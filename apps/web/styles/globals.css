@@ -9,27 +9,15 @@ html, html.theme-light {
   --color-text-primary: 0 0 0;
   --color-text-secondary: 148 163 184;
   --color-background: 255 255 255;
+  --color-link: 96 165 250;
+  --color-token: 220 220 170;
 }
 
 html.theme-dark {
   --color-primary: 255 0 184;
   --color-text-primary: 255 255 255;
   --color-text-secondary: 148 163 184;
-  --color-background: 0 0 0;
-}
-
-.index-container {
-  @apply container pb-32 space-y-8 max-w-4xl relative pt-28;
-  /* padding-top: 20vw; */
-}
-
-.app-title {
-  font-size: clamp(4.5rem, 10vw, 7rem);
-  line-height: clamp(4.5rem, 10vw, 7rem);
-}
-
-@media screen(md) {
-  .index-container {
-    @apply pt-52;
-  }
+  --color-background: 17 17 17;
+  --color-link: 96 165 250;
+  --color-token: 220 220 170;
 }
