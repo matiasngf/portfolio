@@ -1,0 +1,11 @@
+This experiment diferentiates of the others because the renderer is running inside the texture of an object. Take a look at [this file](https://github.com/matiasngf/portfolio/blob/main/packages/experiments/ray-marching/voxels-lava-lamp/src/objects/lamp/Lamp.ts) to see how it is implemented.
+
+This experiment uses the [Voxels renderer](/experiments/ray-marching-voxels) to create a pixelated lava lamp.
+
+First, the `getScene` function creates a bunch of spheres combined with the `SmoothMin` function. Then, the renderer uses that surface to simulate the voxels in 3D. To read more about this effect, take a look at the [Voxels experiment](/experiments/ray-marching-voxels).
+
+To calculate colors, the `getLight` function uses the position of the hit to determine the color of the lava lamp.
+
+### 3D model credits
+
+This work is based on "Groovy Lava Lamp" (https://sketchfab.com/3d-models/groovy-lava-lamp-f2377c043ec1447d8e5e9cab0b9db20e) by thelaughingdingo (https://sketchfab.com/thelaughingdingo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
