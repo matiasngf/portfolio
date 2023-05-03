@@ -2,6 +2,7 @@ import { ProjectLoader } from "@/components/project-loader";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { ExperimentConfig, projectsConfig } from "@/utils/projects-config";
 import { NextSeo } from "next-seo";
+import { PageWithLayout } from "@/types";
 
 interface PageProps {
   experimentKey: string;
@@ -39,7 +40,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export default function Page({experimentKey, name, description}: PageProps) {
+const Page: PageWithLayout = ({experimentKey, name, description}: PageProps) => {
   return (
     <>
       <NextSeo
@@ -51,3 +52,6 @@ export default function Page({experimentKey, name, description}: PageProps) {
   );
 }
 
+Page.Layout = ({children}) => <>{children}</>
+
+export default Page
