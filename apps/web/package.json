@@ -27,7 +27,7 @@
     "experiments-ray-marching-voxels-campfire": "workspace:*",
     "experiments-ray-marching-voxels-lava-lamp": "workspace:*",
     "experiments-simple-scene": "workspace:*",
-    "next": "13.0.2",
+    "next": "13.3.4",
     "next-seo": "^5.13.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
