@@ -2,35 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-.index-container {
-  @apply container pb-32 space-y-8 max-w-4xl relative pt-28;
-  /* padding-top: 20vw; */
+@import "./codeblock-vscode-dark.css";
+
+html, html.theme-light {
+  --color-primary: 255 0 184;
+  --color-text-primary: 0 0 0;
+  --color-text-secondary: 148 163 184;
+  --color-background: 255 255 255;
+  --color-link: 96 165 250;
+  --color-token: 220 220 170;
 }
 
-.app-title {
-  font-family: metalista-web, serif;
-  font-weight: 400;
-  font-style: normal;
-  @apply text-center text-black tracking-wide;
-  font-size: clamp(4.5rem, 10vw, 7rem);
-  line-height: clamp(4.5rem, 10vw, 7rem);
-  text-shadow: -1px 0 #FF00B8, 0 1px #FF00B8, 1px 0 #FF00B8, 0 -1px #FF00B8;
-  cursor: default;
-}
-
-.cool-profile-pic {
-  @apply  fixed w-full top-0 left-0 transition-all duration-300;
-}
-.cool-profile-pic.blurred {
-  @apply filter blur-2xl opacity-50;
-}
-
-@media screen(md) {
-  .cool-profile-pic {
-    @apply absolute top-32 w-48 left-1/2;
-    transform: translateX(-50%);
-  }
-  .index-container {
-    @apply pt-52;
-  }
+html.theme-dark {
+  --color-primary: 255 0 184;
+  --color-text-primary: 255 255 255;
+  --color-text-secondary: 148 163 184;
+  --color-background: 17 17 17;
+  --color-link: 96 165 250;
+  --color-token: 220 220 170;
 }

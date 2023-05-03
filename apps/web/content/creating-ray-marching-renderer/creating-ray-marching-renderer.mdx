@@ -1,0 +1,210 @@
+import catPlant from "./cat-plant.jpg";
+import catDistances from "./cat-distances.jpg";
+import catJumping from "./cat-jumping.jpg";
+import catEyes from "./cat-eyes.jpg";
+import endResult from "./preview.png";
+import Image from "next/image";
+
+In this post we will create a simple setup for a ray marching renderer that will help in future projects. It will help you understand how it is built.
+
+OK but, why? But what is ray marching exactly?
+
+**A simple definition:** Ray marching is a method of rendering a scene by shooting rays from each pixel and determining if the ray collided with an object by evaluating a distance function along the ray's path.
+
+If you want to deep dive into what ray marching is, I recommend watching this two videos:
+
+* <a className="text-link" href="https://www.youtube.com/watch?v=Cp5WWtMoeKg&t=1s&ab_channel=SebastianLague" target="_blank">Coding Adventure: Ray Marching (by SebastianLague)</a>
+* <a className="text-link" href="https://www.youtube.com/watch?v=BNZtUB7yhX4&t=164s&ab_channel=SimonDev" target="_blank">Ray Marching, and making 3D Worlds with Math (by SimonDev)</a>
+
+The following sections will showcase how I applied this rendering technique in ThreeJs.
+
+## 1 - Project setup
+
+<Image
+  src={catPlant}
+  alt=""
+/>
+
+If you want to implement this experiment on your own, I recommend you
+<a className="text-link" href="https://github.com/matiasngf/ray-marching-tutorial-starter" target="_blank">download this repository.</a> 
+It has a basic ViteJs app setup.
+
+To clone it, run
+```bash
+git clone git@github.com:matiasngf/ray-marching-tutorial-starter.git
+
+// OR 
+
+git clone https://github.com/matiasngf/ray-marching-tutorial-starter.git
+
+```
+
+To start development, run:
+
+```bash
+npm i
+npm run dev
+```
+
+Go to `http://localhost:3000` to see your app.
+
+Open the file `src/shaders/ray-marching.ts`. You will see an empty string variable called `fragmentShader`. Add the following code to it:
+
+```glsl
+uniform vec2 resolution;
+uniform vec3 cPos;
+uniform vec4 cameraQuaternion;
+uniform float fov;
+
+#define MAX_STEPS 200
+#define SURFACE_DIST 0.01
+#define MAX_DISTANCE 100.0
+```
+
+Let's see what each variable means:
+
+* `resolution` = Screen resolution in px.
+* `cPos` = Camera position.
+* `cameraQuaternion` = Camera rotation in quaternion.
+* `fov` = Field of view.
+* `MAX_STEPS` = How many steps each ray can handle per pixel.
+* `SURFACE_DISTANCE` = If a ray gets that close to a surface, it will be considered a hit.
+* `MAX_DISTANCE` = How much distance each ray can travel.
+
+## 2 - Calculating distances
+
+<Image
+  src={catDistances}
+  alt=""
+/>
+
+Ray-marching is about a ray that travels through a scene until it hits something. But how do we know if we hit something? We will first create a function called `getDistance`:
+
+```glsl
+float getDistance(vec3 p) {
+  // xPos, yPos, zPos, size
+  vec4 sphere = vec4(0.0, 2.0, -0.0, 2.0);
+  float dist_to_sphere = length(p - sphere.xyz) - sphere.w;
+  return dist_to_sphere;
+}
+```
+This function takes any point in space `p` and returns the distance from it to a sphere. We can use this function to know how far our ray is from the surface of the sphere.
+
+### Adding more objects to the scene: 
+
+If we want to place more objects in the scene, we can use the `min()` function to return the minimum distance of two objects. Just for fun, let's add another sphere and a plane:
+
+```glsl
+float getDistance(vec3 p) {
+
+  vec4 sphere = vec4(0.0, 2.0, -0.0, 2.0);
+  float dist_to_sphere = length(p - sphere.xyz) - sphere.w;
+
+  vec4 sphere2 = vec4(3.0, 4.0, 0.0, 1.5);
+  float dist_to_sphere2 = length(p - sphere2.xyz) - sphere2.w;
+
+  float dist_to_plane = p.y;
+
+  float d = min(dist_to_sphere, dist_to_plane);
+  d = min(d, dist_to_sphere2);
+  return d;
+}
+```
+
+## 3 - Traversing the scene
+
+<Image
+  src={catJumping}
+  alt=""
+/>
+
+Now that we have a getDistance function, we can know how much our ray can travel without hitting any object. Also, if the distance between the ray and the surface is less than SURFACE_DIST, we can consider it a `hit`.
+
+Using that information, we can create the `rayMarch` function:
+
+```glsl
+// ro: ray origin
+// rd: ray direction
+// ds: distance to the surface
+// d0: distance from origin
+float rayMarch(vec3 ro, vec3 rd) {
+  float d0 = 0.0;
+  for(int i = 0; i < MAX_STEPS; i++) {
+    // Calculate the ray's current position
+    vec3 p = ro + d0 * rd;
+    // Get the distance from p to the closest object in the scene
+    float ds = getDistance(p);
+    // Move the ray
+    d0 += ds;
+    // Evaluate if we need to break the loop
+    if(ds < SURFACE_DIST || d0 > MAX_DISTANCE) break;
+  }
+  // Return the ray distance
+  return clamp(d0, 0.0, MAX_DISTANCE);
+}
+```
+
+This function will traverse the scene until it hits an object (or reaches the max distance), and it will just return the distance from the camera to the end of the ray. We can then use that distance to color our scene like a depth map. (We can add colors and lights, but more on that later).
+
+## 4 - Shooting the rays
+
+<Image
+  src={catEyes}
+  alt=""
+/>
+
+Now that we have our rayMarch function, we need to calculate a `cameraOrigin` and a `rayDirection`, in other words, placing our camera in the scene.
+
+To make our life easy, we want to mimic our camera from ThreeJs. If you followed the project setup, you should have some basic variables defined at the top of your fragment shader.
+
+We can now use those variables to calculate where each ray should go. The following code will calculate each pixel's `cameraOrigin` and `rayDirection`. Then, those variables will be used in the `rayMarch` function that will **traverse the scene** until it hits an object.
+
+```glsl
+vec3 quaterion_rotate(vec3 v, vec4 q) {
+  return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
+}
+
+void main() {
+  float aspectRatio = resolution.x / resolution.y;
+  vec3 cameraOrigin = cPos;
+
+  float fovMult = fov / 90.0;
+  
+  vec2 screenPos = ( gl_FragCoord.xy * 2.0 - resolution ) / resolution;
+  // Place the vector along the x-axis using the aspectRatio
+  screenPos.x *= aspectRatio;
+  // Move the vector using the field of view to match the ThreeCamera
+  screenPos *= fovMult;
+  vec3 ray = vec3( screenPos.xy, -1.0 );
+  // Rotate the camera
+  ray = quaterion_rotate(ray, cameraQuaternion);
+  ray = normalize( ray );
+  
+  // Run the rayMarch function
+  float d = rayMarch(cameraOrigin, ray);
+  float normal_d = d / MAX_DISTANCE;
+
+  gl_FragColor = vec4(vec3(normal_d), 1.0);
+}
+```
+
+This function will use the returned distance to color the image, creating a depth field. The result should look like this:
+
+<Image
+  src={endResult}
+  alt=""
+/>
+
+Your code should look something like <a className="text-link" href="https://github.com/matiasngf/ray-marching-tutorial-starter/blob/solution/src/shaders/ray-marching.ts" target="_blank">this</a>.
+
+Since we are cloning the properties from our ThreeJs camera, we can use the `orbitControls` to move through the scene.
+
+🥳 Congratulations! You just rendered your first scene using ray-marching. This is a solid start. There are some other topics you can research to expand your knowledge:
+
+* Colors
+* Boolean functions
+* Lights and normals
+* Shadows
+* Reflections
+
+Most of those are experiments on my blog; you can see them at: https://matiasgf.dev.

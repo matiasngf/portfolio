@@ -1,31 +1,13 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { ProjectCard } from '../components/project-card';
-import { RepoButton } from '../components/repo-button';
-import { BaseLayout } from '../layouts/base-layout';
 import { projectsConfig } from '../utils/projects-config';
 
-import profileUrl from '../assets/edited-fotito.jpg';
-import clsx from 'clsx';
-import { useScrollPosition } from '../utils/hooks/use-scroll-position';
-
 export default function Web() {
-  
-  const scrollRef = React.useRef(null);
-  const y = useScrollPosition();
   return (
-    <BaseLayout>
-      {/* <div ref={scrollRef} className={clsx('cool-profile-pic', {'blurred': y > 120})}>
-        <Image
-          src={profileUrl}
-          alt='Profile picture'
-          priority
-        />
-        <div className='absolute w-full top-0 h-full object-cover' style={{background: 'linear-gradient(rgb(255 255 255 / 6%) 5%, rgb(23 171 0 / 12%) 35%, rgb(0, 0, 0) 100%)'}}/>
-      </div> */}
-      <div className='index-container'>
-        <h2 className='app-title'>
+    <>
+      <div className='container pb-32 space-y-8 max-w-4xl relative pt-28 md:pt-52'>
+        <h2 className='font-display text-center text-background text-5xl lg:text-8xl tracking-wide text-shadow-line shadow-primary cursor-default'>
           EXPERIMENTS
         </h2>
         <div className='space-y-4 text-center'>
@@ -35,11 +17,11 @@ export default function Web() {
           <p>
             I{"'"}ll keep adding projects here, if you want to see more, check out my{' '}
             <Link href='https://github.com/matiasngf/' target='_blank'>
-              <span className='text-blue-400'>GitHub</span>
+              <span className='text-link'>GitHub</span>
             </Link>.
           </p>
         </div>
-        <div className='space-y-4 pt-8'>
+        <div className='space-y-8 lg:space-y-4 pt-8'>
           {Object.entries(projectsConfig).map(([key, config]) => {
             return(
               <div className='' key={key}>
@@ -52,9 +34,6 @@ export default function Web() {
           }) }
         </div>
       </div>
-      <div className='absolute top-4 right-4'>
-        <RepoButton />
-      </div>
-   </BaseLayout>
+   </>
   )
 }

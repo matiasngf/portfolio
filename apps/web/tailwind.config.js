@@ -1,3 +1,5 @@
+const { textShadowPlugin } = require('./utils/tw-plugins/text-shadow-plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -11,12 +13,25 @@ module.exports = {
       padding: "1rem",
     },
     fontFamily: {
-      'sans': ['Coda', 'system-ui'],
+      'sans': ['var(--font-sans)', 'system-ui'],
       'serif': ['ui-serif', 'Georgia'],
-      'mono': ['ui-monospace', 'SFMono-Regular'],
-      'display': ['Oswald'],
-      'body': ['Coda'],
+      'mono': ['var(--font-mono)', 'SFMono-Regular'],
+      'display': ['metalista-web'],
+      'body': ['var(--font-sans)'],
+    },
+    extend: {
+      spacing: {
+        "line": "1px"
+      },
+      colors: {
+        primary: "rgb(var(--color-primary) / <alpha-value>)",
+        "t-primary": "rgb(var(--color-text-primary) / <alpha-value>)",
+        "t-secondary": "rgb(var(--color-text-secondary) / <alpha-value>)",
+        token: "rgb(var(--color-token) / <alpha-value>)",
+        background: "rgb(var(--color-background) / <alpha-value>)",
+        link: "rgb(var(--color-link) / <alpha-value>)",
+      }
     }
   },
-  plugins: [],
+  plugins: [textShadowPlugin],
 }
