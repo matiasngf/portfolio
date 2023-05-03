@@ -5,9 +5,9 @@ import catEyes from "./cat-eyes.jpg";
 import endResult from "./preview.png";
 import Image from "next/image";
 
-This experiment is a simple setup for a ray marching renderer that will help in future projects. This post will help you understand how it is built.
+In this post we will create a simple setup for a ray marching renderer that will help in future projects. It will help you understand how it is built.
 
-Ray marching is my favorite render technique. It is also the first technique I used when I learned how to write my own shaders. But what is it exactly?
+OK but, why? But what is ray marching exactly?
 
 **A simple definition:** Ray marching is a method of rendering a scene by shooting rays from each pixel and determining if the ray collided with an object by evaluating a distance function along the ray's path.
 
@@ -25,7 +25,19 @@ The following sections will showcase how I applied this rendering technique in T
   alt=""
 />
 
-If you want to implement this experiment on your own, I recommend you download this folder. It has a basic ViteJs app setup.
+If you want to implement this experiment on your own, I recommend you
+<a className="text-link" href="https://github.com/matiasngf/ray-marching-tutorial-starter" target="_blank">download this repository.</a> 
+It has a basic ViteJs app setup.
+
+To clone it, run
+```bash
+git clone git@github.com:matiasngf/ray-marching-tutorial-starter.git
+
+// OR 
+
+git clone https://github.com/matiasngf/ray-marching-tutorial-starter.git
+
+```
 
 To start development, run:
 
@@ -36,7 +48,7 @@ npm run dev
 
 Go to `http://localhost:3000` to see your app.
 
-Open the src/shaders/ray-marching.ts. You will see an empty string variable `fragmentShader`. Add the following variables to it:
+Open the file `src/shaders/ray-marching.ts`. You will see an empty string variable called `fragmentShader`. Add the following code to it:
 
 ```glsl
 uniform vec2 resolution;
@@ -51,13 +63,13 @@ uniform float fov;
 
 Let's see what each variable means:
 
-* resolution = Screen resolution in px.
-* cPos = Camera position.
-* cameraQuaternion = Camera rotation in quaternion.
-* fov = Field of view.
-* MAX_STEPS = How many steps each ray can handle per pixel.
-* SURFACE_DISTANCE = If a ray gets that close to a surface, it will be considered a hit.
-* MAX_DISTANCE = How much distance each ray can travel.
+* `resolution` = Screen resolution in px.
+* `cPos` = Camera position.
+* `cameraQuaternion` = Camera rotation in quaternion.
+* `fov` = Field of view.
+* `MAX_STEPS` = How many steps each ray can handle per pixel.
+* `SURFACE_DISTANCE` = If a ray gets that close to a surface, it will be considered a hit.
+* `MAX_DISTANCE` = How much distance each ray can travel.
 
 ## 2 - Calculating distances
 
@@ -183,14 +195,16 @@ This function will use the returned distance to color the image, creating a dept
   alt=""
 />
 
+Your code should look something like <a className="text-link" href="https://github.com/matiasngf/ray-marching-tutorial-starter/blob/solution/src/shaders/ray-marching.ts" target="_blank">this</a>.
+
 Since we are cloning the properties from our ThreeJs camera, we can use the `orbitControls` to move through the scene.
 
 🥳 Congratulations! You just rendered your first scene using ray-marching. This is a solid start. There are some other topics you can research to expand your knowledge:
 
 * Colors
 * Boolean functions
-* Lights, normals
-* Shadors
+* Lights and normals
+* Shadows
 * Reflections
 
 Most of those are experiments on my blog; you can see them at: https://matiasgf.dev.
