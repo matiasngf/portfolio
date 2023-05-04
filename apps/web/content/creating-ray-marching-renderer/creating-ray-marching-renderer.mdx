@@ -6,7 +6,7 @@ import endResult from "./preview.png";
 import Image from "next/image";
 import { MdxLink } from '@/components/mdx/link'
 
-In this post, we'll dive into the exciting world of ray marching - a powerful rendering technique that lets you create stunning visuals by shooting rays from each pixel and evaluating a distance function along their path. To make all this possible, we will start by creating a simple renderer to help help you understand how it works and how to build your own. Click [here](/experiments/ray-marching-simple/play) to see the final result of this tutorial.
+In this post, we'll dive into the exciting world of ray marching - a powerful rendering technique that lets you create stunning visuals by shooting rays from each pixel and evaluating a distance function along their path. To make all this possible, we will start by creating a simple renderer to help you understand how it works and how to build your own. Click [here](/experiments/ray-marching-simple/play) to see the final result of this tutorial.
 
 OK but, what is ray marching exactly?
 
@@ -17,7 +17,7 @@ The following sections will showcase how I applied this rendering technique in T
 * <MdxLink href="https://www.youtube.com/watch?v=Cp5WWtMoeKg&t=1s&ab_channel=SebastianLague" target="_blank">Coding Adventure: Ray Marching (by SebastianLague)</MdxLink>
 * <MdxLink href="https://www.youtube.com/watch?v=BNZtUB7yhX4&t=164s&ab_channel=SimonDev" target="_blank">Ray Marching, and making 3D Worlds with Math (by SimonDev)</MdxLink>
 
-For this post, I'll assume some basic knowledge in ThreeJs and shaders, but if you are new to this, I recommend you check out this video first:
+For this post, I'll assume you have some basic knowledge in ThreeJs and shaders, but if you are new to this, I recommend you check out this video first:
 
 * <MdxLink href="https://www.youtube.com/watch?v=C8Cuwq1eqDw" target="_blank">Three.js Tutorial on Shaders (beginners) - (by SimonDev)</MdxLink>
 
@@ -28,7 +28,7 @@ For this post, I'll assume some basic knowledge in ThreeJs and shaders, but if y
   alt=""
 />
 
-<MdxLink href="https://github.com/matiasngf/ray-marching-tutorial-starter" target="_blank">This repository</MdxLink> has a basic Vite setup with threejs with a custom shader. To clone it, run:
+<MdxLink href="https://github.com/matiasngf/ray-marching-tutorial-starter" target="_blank">This repository</MdxLink> has a basic Vite setup with ThreeJs with a custom shader. To clone it, run:
 
 ```bash
 git clone git@github.com:matiasngf/ray-marching-tutorial-starter.git
@@ -123,7 +123,7 @@ Let's see what each variable means:
   alt=""
 />
 
-Ray-marching is about a ray that travels through a scene until it hits something. But how do we know if we hit something? We will first create a function called `getDistance`:
+Ray-marching is about a ray that travels through a scene until it hits something. But how do we know when it hits something? We will first create a function called `getDistance`:
 
 ```glsl
 float getDistance(vec3 p) {
@@ -163,7 +163,7 @@ float getDistance(vec3 p) {
   alt=""
 />
 
-Now that we have a getDistance function, we know how much our ray can travel without hitting any object. Also, if the distance between the ray and the surface is less than SURFACE_DIST, we can consider it a `hit`.
+Now that we have a `getDistance` function, we know how much our ray can travel without hitting any object. Also, if the distance between the ray and the surface is less than `SURFACE_DIST`, we can consider it a `hit`.
 
 Using that information, we can create the `rayMarch` function:
 
@@ -198,7 +198,7 @@ This function will traverse the scene until it hits an object (or reaches the ma
   alt=""
 />
 
-Now that we have our rayMarch function, we need to calculate a `cameraOrigin` and a `rayDirection`, in other words, placing our camera in the scene.
+Now that we have our `rayMarch` function, we need to calculate a `cameraOrigin` and a `rayDirection`, in other words, placing our camera in the scene.
 
 To make our life easy, we want to mimic our camera from ThreeJs. If you followed the project setup, you should have some basic variables defined at the top of your fragment shader.
 
@@ -240,11 +240,9 @@ This function will use the returned distance to color the image, creating a dept
   alt=""
 />
 
-Your code should look something like <a className="text-link" href="https://github.com/matiasngf/ray-marching-tutorial-starter/blob/solution/src/shaders/ray-marching.ts" target="_blank">this</a>.
+And your code should look something like <a className="text-link" href="https://github.com/matiasngf/ray-marching-tutorial-starter/blob/solution/src/shaders/ray-marching.ts" target="_blank">this</a>.
 
-Since we are cloning the properties from our ThreeJs camera, we can use the `orbitControls` to move through the scene.
-
-🥳 Congratulations! You just rendered your first scene using ray-marching. This is a solid start. There are some other topics you can research to expand your knowledge:
+🥳 Congratulations! You just rendered your first scene using ray-marching. This is a solid start. There are some other topics that you can research to expand your knowledge:
 
 * Colors
 * Boolean functions
