@@ -27,7 +27,7 @@ export const PostHeader = ({ projectKey, project }: PostHeaderProps) => {
         <div className="flex space-x-7">
           {(project.type === 'experiment' && project.load) && (
             <div>
-              <Link target="_blank" href={`/experiments/${projectKey}/play`}>
+              <Link href={`/experiments/${projectKey}/play`}>
                 <button>Play project</button>
               </Link>
             </div>

@@ -4,19 +4,22 @@ import catJumping from "./cat-jumping.jpg";
 import catEyes from "./cat-eyes.jpg";
 import endResult from "./preview.png";
 import Image from "next/image";
+import { MdxLink } from '@/components/mdx/link'
 
-In this post we will create a simple setup for a ray marching renderer that will help in future projects. It will help you understand how it is built.
+In this post, we'll dive into the exciting world of ray marching - a powerful rendering technique that lets you create stunning visuals by shooting rays from each pixel and evaluating a distance function along their path. To make all this possible, we will start by creating a simple renderer to help help you understand how it works and how to build your own. Click [here](/experiments/ray-marching-simple/play) to see the final result of this tutorial.
 
-OK but, why? But what is ray marching exactly?
+OK but, what is ray marching exactly?
 
 **A simple definition:** Ray marching is a method of rendering a scene by shooting rays from each pixel and determining if the ray collided with an object by evaluating a distance function along the ray's path.
 
-If you want to deep dive into what ray marching is, I recommend watching this two videos:
+The following sections will showcase how I applied this rendering technique in ThreeJs. If you want to deep dive into what ray marching is, I recommend watching these two videos:
 
-* <a className="text-link" href="https://www.youtube.com/watch?v=Cp5WWtMoeKg&t=1s&ab_channel=SebastianLague" target="_blank">Coding Adventure: Ray Marching (by SebastianLague)</a>
-* <a className="text-link" href="https://www.youtube.com/watch?v=BNZtUB7yhX4&t=164s&ab_channel=SimonDev" target="_blank">Ray Marching, and making 3D Worlds with Math (by SimonDev)</a>
+* <MdxLink href="https://www.youtube.com/watch?v=Cp5WWtMoeKg&t=1s&ab_channel=SebastianLague" target="_blank">Coding Adventure: Ray Marching (by SebastianLague)</MdxLink>
+* <MdxLink href="https://www.youtube.com/watch?v=BNZtUB7yhX4&t=164s&ab_channel=SimonDev" target="_blank">Ray Marching, and making 3D Worlds with Math (by SimonDev)</MdxLink>
 
-The following sections will showcase how I applied this rendering technique in ThreeJs.
+For this post, I'll assume some basic knowledge in ThreeJs and shaders, but if you are new to this, I recommend you check out this video first:
+
+* <MdxLink href="https://www.youtube.com/watch?v=C8Cuwq1eqDw" target="_blank">Three.js Tutorial on Shaders (beginners) - (by SimonDev)</MdxLink>
 
 ## 1 - Project setup
 
@@ -25,11 +28,8 @@ The following sections will showcase how I applied this rendering technique in T
   alt=""
 />
 
-If you want to implement this experiment on your own, I recommend you
-<a className="text-link" href="https://github.com/matiasngf/ray-marching-tutorial-starter" target="_blank">download this repository.</a> 
-It has a basic ViteJs app setup.
+<MdxLink href="https://github.com/matiasngf/ray-marching-tutorial-starter" target="_blank">This repository</MdxLink> has a basic Vite setup with threejs with a custom shader. To clone it, run:
 
-To clone it, run
 ```bash
 git clone git@github.com:matiasngf/ray-marching-tutorial-starter.git
 
@@ -43,12 +43,57 @@ To start development, run:
 
 ```bash
 npm i
-npm run dev
+npm run dev --port 3000
 ```
 
 Go to `http://localhost:3000` to see your app.
 
-Open the file `src/shaders/ray-marching.ts`. You will see an empty string variable called `fragmentShader`. Add the following code to it:
+Let's take a look at the file <MdxLink target="_blank" href="https://github.com/matiasngf/ray-marching-tutorial-starter/blob/main/src/renderer.ts">/src/renderer.ts</MdxLink>. I'd like to focus on three pieces of code:
+
+In this chunk of code, we create a new shader pass and add it to the composer, setting up the variables (uniforms) that the shader will need to render properly:
+
+```tsx
+// line 51
+const rayMarchingPass = new ShaderPass({
+  ...RayMarchingShader,
+  uniforms: {
+    cPos: { value: camera.position.clone() },
+    resolution: {value: new Vector2(initDeviceSize.width, initDeviceSize.height)},
+    cameraQuaternion: {value: camera.quaternion.clone()},
+    fov: {value: camera.fov}
+  }
+});
+composer.addPass(rayMarchingPass);
+```
+
+Then, on each frame, it updates the camera information on the shader:
+
+```tsx
+// line 68
+const worldPos = new Vector3();
+rayMarchingPass.uniforms.cPos.value.copy(camera.getWorldPosition(worldPos));
+const cameraQuaternion = new Quaternion();
+rayMarchingPass.uniforms.cameraQuaternion.value.copy(camera.getWorldQuaternion(cameraQuaternion));
+rayMarchingPass.uniforms.fov.value = camera.fov;
+```
+
+Finally, if the window resizes, it updates the `resolution` uniform of the shader:
+
+```tsx
+// line 79
+const windowResizeHanlder = () => {
+  const { width, height, innerHeight, innerWidth } = getDeviceSize();
+  renderer.setSize(innerWidth, innerHeight);
+  composer.setSize(innerWidth, innerHeight);
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  rayMarchingPass.uniforms.resolution.value.set( width, height );
+};
+windowResizeHanlder();
+window.addEventListener('resize', windowResizeHanlder);
+```
+
+Now that we know how the code provides  variables to the shader, let's start coding. Open the file `src/shaders/ray-marching.ts`. You will see an empty string variable called `fragmentShader`. Add the following code to it:
 
 ```glsl
 uniform vec2 resolution;
@@ -88,7 +133,7 @@ float getDistance(vec3 p) {
   return dist_to_sphere;
 }
 ```
-This function takes any point in space `p` and returns the distance from it to a sphere. We can use this function to know how far our ray is from the surface of the sphere.
+This function takes any point in space `p` and returns the distance from it to a sphere. We can use this function to know how far our ray is from the sphere's surface.
 
 ### Adding more objects to the scene: 
 
@@ -118,7 +163,7 @@ float getDistance(vec3 p) {
   alt=""
 />
 
-Now that we have a getDistance function, we can know how much our ray can travel without hitting any object. Also, if the distance between the ray and the surface is less than SURFACE_DIST, we can consider it a `hit`.
+Now that we have a getDistance function, we know how much our ray can travel without hitting any object. Also, if the distance between the ray and the surface is less than SURFACE_DIST, we can consider it a `hit`.
 
 Using that information, we can create the `rayMarch` function:
 
