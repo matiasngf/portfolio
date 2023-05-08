@@ -11,13 +11,17 @@ interface PageProps {
 }
 
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const experimentKey = context.params?.['post-key'] as string;
+  const experimentKey = context.params?.["post-key"] as string;
   const experiment = projectsConfig[experimentKey];
 
-  if(!experiment || experiment.type !== 'experiment' || (!experiment.load && !experiment.component)) {
+  if (
+    !experiment ||
+    experiment.type !== "experiment" ||
+    (!experiment.load && !experiment.component)
+  ) {
     return {
       notFound: true,
-    }
+    };
   }
 
   return {
@@ -25,37 +29,38 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
       experimentKey,
       name: experiment.name,
       description: experiment.description,
-    }
-  }
-}
+    },
+  };
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = Object.keys(projectsConfig)
-  .filter((key) => {
-    const project = projectsConfig[key];
-    if (project.type !== 'experiment') return false;
-    if (!project.load && !project.component) return false;
-  })
-    .map((key) => ({params: { 'post-key': key }}));
+    .filter((key) => {
+      const project = projectsConfig[key];
+      if (project.type !== "experiment") return false;
+      if (!project.load && !project.component) return false;
+    })
+    .map((key) => ({ params: { "post-key": key } }));
 
   return {
     paths,
     fallback: false,
-  }
-}
+  };
+};
 
-const Page: PageWithLayout = ({experimentKey, name, description}: PageProps) => {
+const Page: PageWithLayout = ({
+  experimentKey,
+  name,
+  description,
+}: PageProps) => {
   return (
     <>
-      <NextSeo
-        title={name}
-        description={description}
-      />
+      <NextSeo title={name} description={description} />
       <ProjectLoader projectKey={experimentKey} />
     </>
   );
-}
+};
 
-Page.Layout = ({children}) => <>{children}</>
+Page.Layout = ({ children }) => <>{children}</>;
 
-export default Page
+export default Page;

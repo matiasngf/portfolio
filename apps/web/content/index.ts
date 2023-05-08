@@ -13,6 +13,8 @@ import RayMarchingAmbientOcclusion from "./ray-marching-ambient-occlusion/ray-ma
 import RayMarchingAmbientOcclusionPreview from "./ray-marching-ambient-occlusion/preview.png";
 import RayMarchingVoxelsLavaLamp from "./ray-marching-voxels-lava-lamp/ray-marching-voxels-lava-lamp.mdx";
 import RayMarchingVoxelsLavaLampPreview from "./ray-marching-voxels-lava-lamp/preview.png";
+import Earth from "./earth/earth.mdx";
+import EarthPreview from "./earth/preview.png";
 
 // posts
 import CreatingRayMarchingRenderer from "./creating-ray-marching-renderer/creating-ray-marching-renderer.mdx";
@@ -27,9 +29,10 @@ export const Posts = {
   RayMarchingVoxels,
   RayMarchingAmbientOcclusion,
   RayMarchingVoxelsLavaLamp,
+  Earth,
   // posts
   CreatingRayMarchingRenderer,
-}
+};
 
 export const Previews = {
   // experiments
@@ -40,6 +43,7 @@ export const Previews = {
   RayMarchingVoxels: RayMarchingVoxelsPreview,
   RayMarchingAmbientOcclusion: RayMarchingAmbientOcclusionPreview,
   RayMarchingVoxelsLavaLamp: RayMarchingVoxelsLavaLampPreview,
+  Earth: EarthPreview,
   // posts
   CreatingRayMarchingRenderer: CreatingRayMarchingRendererPreview,
-}
+};

@@ -11,13 +11,13 @@ interface PageProps {
 }
 
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const experimentKey = context.params?.['post-key'] as string;
+  const experimentKey = context.params?.["post-key"] as string;
   const experiment = projectsConfig[experimentKey];
 
-  if(!experiment || experiment.type !== 'experiment') {
+  if (!experiment || experiment.type !== "experiment") {
     return {
       notFound: true,
-    }
+    };
   }
 
   return {
@@ -25,30 +25,27 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
       experimentKey,
       name: experiment.name,
       description: experiment.description,
-    }
-  }
-}
+    },
+  };
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = Object.keys(projectsConfig)
-    .filter((key) => projectsConfig[key].type === 'experiment')
-    .map((key) => ({params: { 'post-key': key }}));
+    .filter((key) => projectsConfig[key].type === "experiment")
+    .map((key) => ({ params: { "post-key": key } }));
 
   return {
     paths,
     fallback: false,
-  }
-}
+  };
+};
 
-export default function Page({experimentKey, name, description}: PageProps) {
+export default function Page({ experimentKey, name, description }: PageProps) {
   const project = projectsConfig[experimentKey];
   const { post } = project;
   return (
     <div className="">
-      <NextSeo
-        title={name}
-        description={description}
-      />
+      <NextSeo title={name} description={description} />
       <PostHeader projectKey={experimentKey} project={project} />
       <div className="container max-w-screen-md">
         {post && <PostRenderer post={post} />}
@@ -56,4 +53,3 @@ export default function Page({experimentKey, name, description}: PageProps) {
     </div>
   );
 }
-

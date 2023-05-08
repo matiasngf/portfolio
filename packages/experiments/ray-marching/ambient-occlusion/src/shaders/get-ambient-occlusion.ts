@@ -1,5 +1,3 @@
-
-
 export const getAmbientOcclusion = `
 
 vec3 getTangent(vec3 v) {

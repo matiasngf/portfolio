@@ -1,4 +1,7 @@
 module.exports = {
   root: true,
-  extends: ["next/babel", "next"],
+  extends: [
+    "next/core-web-vitals",
+    "eslint-config-custom"
+  ],
 };
