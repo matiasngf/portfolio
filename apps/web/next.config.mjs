@@ -1,5 +1,4 @@
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
 import createMDX from "@next/mdx";
 import rehypePrism from "@mapbox/rehype-prism";
 
@@ -22,8 +21,9 @@ const withMDX = createMDX({
 const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   reactStrictMode: true,
+  transpilePackages: ["ui"],
   experimental: {
-    transpilePackages: ["ui"],
+    esmExternals: 'loose'
   },
   async redirects() {
     return [
