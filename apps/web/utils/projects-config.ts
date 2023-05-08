@@ -1,4 +1,4 @@
-import { loadDynamicProject, DynamicProjectLoader } from './load-dynamic-project';
+import { loadDynamicProject, DynamicProjectLoader, DynamicReactProjectLoader, loadReactProject } from './load-dynamic-project';
 import { TagKey } from './tags';
 
 import { Posts, Previews } from "@/content";
@@ -21,6 +21,7 @@ export interface ExperimentConfig extends ProjectBaseConfig {
   type: 'experiment';
   load?: DynamicProjectLoader
   source?: string;
+  component?: DynamicReactProjectLoader
 }
 
 export type ProjectConfig = PostConfig | ExperimentConfig;
@@ -38,7 +39,7 @@ export const projectsConfig: Projects = {
     description: 'How to create a ray-marching renderer from scratch using ThreeJs.',
     preview: Previews.CreatingRayMarchingRenderer,
     post: Posts.CreatingRayMarchingRenderer,
-    tags: ['open-gl', 'shaders', 'ray-marching']
+    tags: ['shaders', 'ray-marching']
   },
   'experiments-ray-marching-voxels-lava-lamp': {
     type: 'experiment',
@@ -48,7 +49,7 @@ export const projectsConfig: Projects = {
     post: Posts.RayMarchingVoxelsLavaLamp,
     load: loadDynamicProject(() => import('experiments-ray-marching-voxels-lava-lamp')),
     source: `${baseExperiment}/ray-marching/voxels-lava-lamp`,
-    tags: ['open-gl', 'shaders', 'ray-marching']
+    tags: ['shaders', 'ray-marching']
   },
   'experiments-ray-marching-ambient-occlusion': {
     type: 'experiment',
@@ -58,7 +59,7 @@ export const projectsConfig: Projects = {
     post: Posts.RayMarchingAmbientOcclusion,
     load: loadDynamicProject(() => import('experiments-ray-marching-ambient-occlusion')),
     source: `${baseExperiment}/ray-marching/ambient-occlusion`,
-    tags: ['open-gl', 'shaders', 'ray-marching']
+    tags: ['shaders', 'ray-marching']
   },
   'ray-marching-voxels': {
     type: 'experiment',
@@ -68,7 +69,7 @@ export const projectsConfig: Projects = {
     post: Posts.RayMarchingVoxels,
     load: loadDynamicProject(() => import('experiments-ray-marching-voxels')),
     source: `${baseExperiment}/ray-marching/voxels`,
-    tags: ['open-gl', 'shaders', 'ray-marching']
+    tags: ['shaders', 'ray-marching']
   },
   'ray-marching-reflections': {
     type: 'experiment',
@@ -78,7 +79,7 @@ export const projectsConfig: Projects = {
     post: Posts.RayMarchingReflections,
     load: loadDynamicProject(() => import('experiments-ray-marching-reflections')),
     source: `${baseExperiment}/ray-marching/reflections`,
-    tags: ['open-gl', 'shaders', 'ray-marching']
+    tags: ['shaders', 'ray-marching']
   },
   'ray-marching-boolean-opeartions': {
     type: 'experiment',
@@ -88,7 +89,7 @@ export const projectsConfig: Projects = {
     post: Posts.RayMarchingBooleanOperations,
     load: loadDynamicProject(() => import('experiments-ray-marching-boolean-opeartions')),
     source: `${baseExperiment}/ray-marching/boolean-operations`,
-    tags: ['open-gl', 'shaders', 'ray-marching']
+    tags: ['shaders', 'ray-marching']
   },
   'ray-marching-simple': {
     type: 'experiment',
@@ -98,7 +99,7 @@ export const projectsConfig: Projects = {
     post: Posts.RayMarchingSimple,
     load: loadDynamicProject(() => import('experiments-ray-marching-simple')),
     source: `${baseExperiment}/ray-marching/simple`,
-    tags: ['open-gl', 'shaders', 'ray-marching']
+    tags: ['shaders', 'ray-marching']
   },
   'simple-scene': {
     type: 'experiment',
@@ -108,7 +109,7 @@ export const projectsConfig: Projects = {
     post: Posts.SimpleScene,
     load: loadDynamicProject(() => import('experiments-simple-scene')),
     source: `${baseExperiment}/simple-scene`,
-    tags: ['open-gl']
+    tags: []
   },
   // 'ray-marching-voxels-campfire': {
   // type: 'experiment',
@@ -116,6 +117,6 @@ export const projectsConfig: Projects = {
   //   description: 'Dynamic voxel size and render optimizations. (Better to open on desktop)',
   //   load: loadDynamicProject(() => import('experiments-ray-marching-voxels-campfire')),
   //   source: `${baseExperiment}/ray-marching/voxels-campfire`,
-  //   tags: ['open-gl', 'shaders', 'ray-marching']
+  //   tags: ['shaders', 'ray-marching']
   // }
 }

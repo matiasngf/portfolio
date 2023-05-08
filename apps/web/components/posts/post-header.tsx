@@ -9,6 +9,8 @@ export interface PostHeaderProps {
 
 export const PostHeader = ({ projectKey, project }: PostHeaderProps) => {
   const { name, preview } = project
+  const hasLoad = project.type === 'experiment' && (project.load || project.component)
+
   return (
     <div className="flex min-h-[400px] items-end relative py-20 text-center">
       {preview && (
@@ -25,7 +27,7 @@ export const PostHeader = ({ projectKey, project }: PostHeaderProps) => {
       <div className="flex flex-col items-center container relative space-y-7">
         <h1 className="text-4xl font-bold">{name}</h1>
         <div className="flex space-x-7">
-          {(project.type === 'experiment' && project.load) && (
+          {hasLoad && (
             <div>
               <Link href={`/experiments/${projectKey}/play`}>
                 <button>Play project</button>

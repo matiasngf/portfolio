@@ -1,7 +1,7 @@
 export const tags = {
-  'open-gl': 'OpenGL',
   'shaders': 'Shaders',
   'ray-marching': 'Ray Marching',
+  'rtf': 'React three fiber'
 } as const;
 
 export type TagKey = keyof typeof tags;
