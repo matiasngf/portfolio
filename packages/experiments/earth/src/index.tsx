@@ -14,6 +14,7 @@ const Scene = () => {
 const App = () => {
   return (
     <Canvas camera={{ fov: 70, position: [0, 0, 3] }}>
+      <color attach="background" args={['black']} />
       <OrbitControls />
       <Scene />
     </Canvas>
