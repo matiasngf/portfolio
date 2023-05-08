@@ -38,7 +38,7 @@ const ReactProjectLoader = ({ projectConfig }: ReactProjectLoader) => {
     projectConfig.component().then((module) => {
       setComponent(() => module.default);
     });
-  }, []);
+  }, [projectConfig]);
 
   if (!Component) return null;
 

@@ -10,7 +10,6 @@ interface ProjectLayoutProps {
 }
 
 export const ProjectLayout = ({
-  projectKey,
   config,
   children,
 }: React.PropsWithChildren<ProjectLayoutProps>) => {

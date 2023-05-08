@@ -40,7 +40,7 @@ export default function Page() {
         </h2>
         <div className="space-y-4">
           {Object.entries(projectsConfig)
-            .filter(([k, c]) => c.tags.includes(tagKey))
+            .filter(([_k, c]) => c.tags.includes(tagKey))
             .map(([key, config]) => {
               return (
                 <div key={key}>

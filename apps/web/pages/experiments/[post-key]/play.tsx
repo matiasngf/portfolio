@@ -1,6 +1,6 @@
 import { ProjectLoader } from "@/components/project-loader";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { ExperimentConfig, projectsConfig } from "@/utils/projects-config";
+import { projectsConfig } from "@/utils/projects-config";
 import { NextSeo } from "next-seo";
 import { PageWithLayout } from "@/types";
 
@@ -61,6 +61,8 @@ const Page: PageWithLayout = ({
   );
 };
 
-Page.Layout = ({ children }) => <>{children}</>;
+Page.Layout = function PlayLayout({ children }) {
+  return(<>{children}</>)
+};
 
 export default Page;
