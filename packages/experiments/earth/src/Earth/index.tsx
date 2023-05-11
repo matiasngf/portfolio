@@ -1,5 +1,5 @@
 import { Sphere } from "@react-three/drei";
-import { Vector3 } from "three";
+import { SRGBColorSpace, Vector3 } from "three";
 import { TextureLoader } from "three/src/loaders/TextureLoader";
 import { useLoader } from "@react-three/fiber";
 
@@ -9,8 +9,9 @@ import cloudMapUrl from "./textures/8k_earth_clouds.jpg";
 
 import { earthFragmentShader, earthVertexShader } from "./shaders";
 
-export const lightDirection = new Vector3(1, 0, 0);
-lightDirection.applyAxisAngle(new Vector3(0, 0, 1), Math.PI * (13 / 180));
+export const lightDirectionRaw = new Vector3(1, 0, 0);
+export const lightDirection = lightDirectionRaw;
+// .applyAxisAngle(new Vector3(0, 0, 1), Math.PI * (13 / 180));
 
 const verteces = Math.pow(2, 9);
 
@@ -20,8 +21,13 @@ export const Earth = () => {
     [earthDayMapUrl, nightMapUrl, cloudMapUrl]
   );
 
+  earthDayTexture.colorSpace =
+    nightTexture.colorSpace =
+    cloudTexture.colorSpace =
+      SRGBColorSpace;
+
   return (
-    <Sphere args={[1, verteces, verteces]} rotation={[0, -0.3, 0]}>
+    <Sphere args={[1, verteces, verteces]}>
       <shaderMaterial
         vertexShader={earthVertexShader}
         fragmentShader={earthFragmentShader}

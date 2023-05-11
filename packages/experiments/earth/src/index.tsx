@@ -1,23 +1,15 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { Earth } from "./Earth";
-
-const Scene = () => {
-  return (
-    <>
-      <Earth />
-      <ambientLight />
-    </>
-  );
-};
+import { PrimaryScene } from "./PrimaryScene";
+import { Effects } from "./Effects";
 
 const App = () => {
   return (
-    <Canvas camera={{ fov: 70, position: [0, 0, 3] }}>
-      <color attach="background" args={['black']} />
-      <OrbitControls />
-      <Scene />
-    </Canvas>
+    <>
+      <Canvas camera={{ fov: 40, position: [0, 0, 8] }}>
+        <Effects />
+        <PrimaryScene />
+      </Canvas>
+    </>
   );
 };
 

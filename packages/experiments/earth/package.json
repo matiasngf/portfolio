@@ -16,9 +16,11 @@
   "devDependencies": {
     "@react-three/drei": "^9.66.4",
     "@react-three/fiber": "^8.13.0",
+    "@react-three/postprocessing": "2.7.0",
     "@rollup/plugin-commonjs": "^23.0.2",
     "@rollup/plugin-image": "^3.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
+    "@types/react": "^18.0.22",
     "@types/three": "^0.152.0",
     "@vitejs/plugin-react": "^4.0.0",
     "eslint": "^7.32.0",
@@ -35,6 +37,7 @@
     "vite": "^4.3.5"
   },
   "peerDependencies": {
+    "@react-three/postprocessing": "2.7.0",
     "@react-three/drei": "^9.66.4",
     "@react-three/fiber": "^8.13.0",
     "react": "18.2.0",

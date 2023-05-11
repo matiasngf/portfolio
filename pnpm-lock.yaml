@@ -171,6 +171,9 @@ importers:
       '@react-three/fiber':
         specifier: ^8.13.0
         version: 8.13.0(react-dom@18.2.0)(react@18.2.0)(three@0.152.2)
+      '@react-three/postprocessing':
+        specifier: 2.7.0
+        version: 2.7.0(@react-three/fiber@8.13.0)(react@18.2.0)(three@0.152.2)
       '@rollup/plugin-commonjs':
         specifier: ^23.0.2
         version: 23.0.2(rollup@3.2.5)
@@ -180,6 +183,9 @@ importers:
       '@rollup/plugin-node-resolve':
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.2.5)
+      '@types/react':
+        specifier: ^18.0.22
+        version: 18.0.24
       '@types/three':
         specifier: ^0.152.0
         version: 0.152.0
@@ -1474,6 +1480,22 @@ packages:
       suspend-react: 0.0.8(react@18.2.0)
       three: 0.152.2
       zustand: 3.7.2(react@18.2.0)
+
+  /@react-three/postprocessing@2.7.0(@react-three/fiber@8.13.0)(react@18.2.0)(three@0.152.2):
+    resolution: {integrity: sha512-lJfV8GYp+L1SlGRcl8QPUg9QMdO+8ojW2kfaEc/MuvoI4rX3TRhVd3qFjjF++0bBmzt8LeQpDHCOHFAaT3MNYA==}
+    peerDependencies:
+      '@react-three/fiber': '>=7.0'
+      react: '>=17.0'
+      three: '>=0.136.0'
+    dependencies:
+      '@react-three/fiber': 8.13.0(react-dom@18.2.0)(react@18.2.0)(three@0.152.2)
+      postprocessing: 6.31.0(three@0.152.2)
+      react: 18.2.0
+      react-merge-refs: 1.1.0
+      screen-space-reflections: 2.5.0(postprocessing@6.31.0)(three@0.152.2)
+      three: 0.152.2
+      three-stdlib: 2.21.11(three@0.152.2)
+    dev: true
 
   /@rollup/plugin-commonjs@23.0.2(rollup@3.2.5):
     resolution: {integrity: sha512-e9ThuiRf93YlVxc4qNIurvv+Hp9dnD+4PjOqQs5vAYfcZ3+AXSrcdzXnVjWxcGQOa6KGJFcRZyUI3ktWLavFjg==}
@@ -5910,6 +5932,15 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
+  /postprocessing@6.31.0(three@0.152.2):
+    resolution: {integrity: sha512-h1g2KDVrTS6QB4AHP55opp8FYzq66jJHh4JIFCptaj283RUX1y/tPkv8FBB2oK4WYrdPgqvElnKrXZwgiLWeHQ==}
+    engines: {node: '>= 0.13.2'}
+    peerDependencies:
+      three: '>= 0.138.0 < 0.153.0'
+    dependencies:
+      three: 0.152.2
+    dev: true
+
   /potpack@1.0.2:
     resolution: {integrity: sha512-choctRBIV9EMT9WGAZHn3V7t0Z2pMQyl0EZE6pFc/6ml3ssw7Dlf/oAOvFwjm1HVsqfQN8GfeFyJ+d8tRzqueQ==}
 
@@ -6404,6 +6435,16 @@ packages:
       ajv: 6.12.6
       ajv-keywords: 3.5.2(ajv@6.12.6)
     dev: false
+
+  /screen-space-reflections@2.5.0(postprocessing@6.31.0)(three@0.152.2):
+    resolution: {integrity: sha512-fWSDMhJS0xwD3LTxRRch7Lb9NzxsR66sCmtDmAA7i+OGnghUrBBsrha85ng7StnCBaLq/BKmZ97dLxWd1XgWdQ==}
+    peerDependencies:
+      postprocessing: '>=6.28.0'
+      three: '>=0.141.0'
+    dependencies:
+      postprocessing: 6.31.0(three@0.152.2)
+      three: 0.152.2
+    dev: true
 
   /screenfull@5.2.0:
     resolution: {integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==}

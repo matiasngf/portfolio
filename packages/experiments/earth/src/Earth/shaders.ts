@@ -36,6 +36,13 @@ ${perturbNormalArb}
 ${curveUp}
 ${simplexNoise}
 
+vec3 ACESFilmicToneMapping2( vec3 color ) {
+
+  color *= toneMappingExposure;
+  return saturate( ( color * ( 2.51 * color + 0.03 ) ) / ( color * ( 2.43 * color + 0.59 ) + 0.14 ) );
+
+}
+
 void main() {
 
   //setup
@@ -67,7 +74,7 @@ void main() {
   // sunset
   float sunsetFactor = clamp(valueRemap(rawSunLightFactor, -0.1, 0.85, -1.0, 1.0), -1.0, 1.0);
   sunsetFactor = cos(sunsetFactor * PI) * 0.5 + 0.5;
-  vec3 sunsetColor = clamp(vec3(0.525, 0.273, 0.249) * 2.5, 0.0, 1.0);
+  vec3 sunsetColor = vec3(0.525, 0.273, 0.249);
 
   // noise
   float noiseFactor = valueRemap(simplex3d_fractal(wPos * 100.0), -1.0, 1.0, 0.0, 1.0);
@@ -104,13 +111,16 @@ void main() {
   result = mix(result, cloudColor, cloudFactor);
 
   // fresnel
-  float fresnelFactor = pow((1.0 - dot(normal, viewDirection)), 2.0) * 0.5;
-  fresnelFactor += (1.0 - dot(normal, viewDirection)) * 0.2 + 0.3;
-  vec3 athmosphereColor = vec3(0.459, 0.647, 1.0);
+  float fresnelBias = 0.1;
+  float fresnelScale = 0.5;
+  float fresnelFactor = fresnelBias + fresnelScale * pow(1.0 - dot(normal, normalize(viewDirection)), 3.0);
+  // fresnelFactor += (1.0 - dot(normal, viewDirection)) * 0.1 + 0.0;
+  vec3 athmosphereColor = vec3(0.51,0.714,1.);
 
   result = mix(result, athmosphereColor, fresnelFactor * sunLightFactor);
 
-  result = clamp(result, 0.0, 1.0);
+  result = clamp(result * 0.9, 0.0, 0.7);
+  // result = ACESFilmicToneMapping2( result );
   gl_FragColor = vec4(vec3(result), 1.0);
 }
 
