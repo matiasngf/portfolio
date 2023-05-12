@@ -3,7 +3,7 @@ import { MeshProps } from "@react-three/fiber";
 export const Sun = (props: MeshProps) => {
   return (
     <mesh {...props}>
-      <sphereGeometry args={[0.3, 32, 32]} />
+      <sphereGeometry args={[0.2, 32, 32]} />
       <meshStandardMaterial
         color="#ffffff"
         emissive="orange"

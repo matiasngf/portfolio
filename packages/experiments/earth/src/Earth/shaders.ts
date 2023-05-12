@@ -75,14 +75,13 @@ void main() {
   vec3 sunsetColor = vec3(0.525, 0.273, 0.249);
 
   // noise
-  // rotate the wPos along the y axis
   float rotation = uTime * 0.005;
   vec3 wPosOffset = wPos * mat3( cos(rotation), 0, sin(rotation), 0, 1, 0, -sin(rotation), 0, cos(rotation) );
   float noiseFactor = valueRemap(simplex3d_fractal(wPosOffset * 100.0), -1.0, 1.0, 0.0, 1.0);
   float distanceFactor = autoClamp(
     - distanceToCamera + 1.0
   );
-  noiseFactor = noiseFactor * 0.7 * distanceFactor;
+  noiseFactor = noiseFactor * 0.5 * distanceFactor;
 
   // clouds
   float cloudFactor = length(texture2D(cloudMap, vUv).rgb);
@@ -91,7 +90,7 @@ void main() {
   vec3 cloudColor = vec3(0.9);
 
   // clouds normals
-  float cloudNormalScale = 0.01; 
+  float cloudNormalScale = 0.01;
   vec3 cloudNormal = perturbNormalArb( wPos, normal, dHdxy_fwd(vUv, cloudMap, cloudNormalScale) );
   float cloudNormalFactor = dot(cloudNormal, vLightDirection);
   float cloudShadowFactor = clamp(
@@ -116,6 +115,14 @@ void main() {
   float fresnelScale = 0.5;
   float fresnelFactor = fresnelBias + fresnelScale * pow(1.0 - dot(normal, normalize(viewDirection)), 3.0);
   vec3 athmosphereColor = vec3(0.51,0.714,1.);
+
+  // fresnel sunset
+  vec3 athmosphereSunsetColor = vec3(1.0, 0.373, 0.349);
+  float fresnelSunsetFactor = dot(-vLightDirection, viewDirection);
+  fresnelSunsetFactor = valueRemap(fresnelSunsetFactor, 0.97, 1.0, 0.0, 1.0);
+  fresnelSunsetFactor = autoClamp(fresnelSunsetFactor);
+  athmosphereColor = mix(athmosphereColor, athmosphereSunsetColor, fresnelSunsetFactor);
+
 
   result = mix(result, athmosphereColor, fresnelFactor * sunLightFactor);
 
