@@ -30,17 +30,15 @@ const float PI = 3.141592653;
 uniform sampler2D dayMap;
 uniform sampler2D nightMap;
 uniform sampler2D cloudMap;
+uniform float uTime;
 
 ${valueRemap}
 ${perturbNormalArb}
 ${curveUp}
 ${simplexNoise}
 
-vec3 ACESFilmicToneMapping2( vec3 color ) {
-
-  color *= toneMappingExposure;
-  return saturate( ( color * ( 2.51 * color + 0.03 ) ) / ( color * ( 2.43 * color + 0.59 ) + 0.14 ) );
-
+float autoClamp(float value) {
+  return clamp(value, 0.0, 1.0);
 }
 
 void main() {
@@ -56,17 +54,17 @@ void main() {
   // diffuse color
   vec3 dayColor = texture2D(dayMap, vUv).rgb;
   float rawLambertFactor = dot(normal, vLightDirection);
-  float lambertFactor = clamp(rawLambertFactor, 0.0, 1.0);
+  float lambertFactor = autoClamp(rawLambertFactor);
 
   // sun light
   float rawSunLightFactor = valueRemap(rawLambertFactor, -0.1, 0.1, 0.0, 1.0);
-  float sunLightFactor = clamp(rawSunLightFactor, 0.0, 1.0);
+  float sunLightFactor = autoClamp(rawSunLightFactor);
 
   result = dayColor * sunLightFactor;
 
   // night map
   vec3 nightColor = texture2D(nightMap, vUv).rgb;
-  float nightLightsFactor = clamp(valueRemap(rawSunLightFactor, 0.0, 0.15, 0.0, 1.0), 0.0, 1.0);
+  float nightLightsFactor = autoClamp(valueRemap(rawSunLightFactor, 0.0, 0.15, 0.0, 1.0));
   nightColor = nightColor * (1.0 - nightLightsFactor); // lights only at night
 
   result += nightColor;
@@ -77,14 +75,17 @@ void main() {
   vec3 sunsetColor = vec3(0.525, 0.273, 0.249);
 
   // noise
-  float noiseFactor = valueRemap(simplex3d_fractal(wPos * 100.0), -1.0, 1.0, 0.0, 1.0);
-  float distanceFactor = clamp(
-    valueRemap(distanceToCamera, 0.0, 1.0, 1.0, 0.0)
-  , 0.0, 1.0);
-  noiseFactor = noiseFactor * 0.5 * distanceFactor;
+  // rotate the wPos along the y axis
+  float rotation = uTime * 0.005;
+  vec3 wPosOffset = wPos * mat3( cos(rotation), 0, sin(rotation), 0, 1, 0, -sin(rotation), 0, cos(rotation) );
+  float noiseFactor = valueRemap(simplex3d_fractal(wPosOffset * 100.0), -1.0, 1.0, 0.0, 1.0);
+  float distanceFactor = autoClamp(
+    - distanceToCamera + 1.0
+  );
+  noiseFactor = noiseFactor * 0.7 * distanceFactor;
 
   // clouds
-  float cloudFactor = texture2D(cloudMap, vUv).r;
+  float cloudFactor = length(texture2D(cloudMap, vUv).rgb);
   float cloudNoiseFactor = clamp(valueRemap(cloudFactor, 0.0, 0.5, 0.5, 1.0) * noiseFactor, 0.0, 1.0);
   cloudFactor = clamp(cloudFactor - cloudNoiseFactor, 0.0, 1.0);
   vec3 cloudColor = vec3(0.9);
@@ -114,13 +115,11 @@ void main() {
   float fresnelBias = 0.1;
   float fresnelScale = 0.5;
   float fresnelFactor = fresnelBias + fresnelScale * pow(1.0 - dot(normal, normalize(viewDirection)), 3.0);
-  // fresnelFactor += (1.0 - dot(normal, viewDirection)) * 0.1 + 0.0;
   vec3 athmosphereColor = vec3(0.51,0.714,1.);
 
   result = mix(result, athmosphereColor, fresnelFactor * sunLightFactor);
 
   result = clamp(result * 0.9, 0.0, 0.7);
-  // result = ACESFilmicToneMapping2( result );
   gl_FragColor = vec4(vec3(result), 1.0);
 }
 
