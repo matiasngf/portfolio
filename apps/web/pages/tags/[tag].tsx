@@ -1,32 +1,40 @@
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { ProjectCard } from "../../components/project-card";
 import { BaseLayout } from "../../layouts/base-layout";
 import { projectsConfig } from "../../utils/projects-config";
-import { tags, isTag } from "../../utils/tags";
+import { tags, TagKey } from "../../utils/tags";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const tagKey = context.params?.tag as string;
+interface PageProps {
+  tagKey: TagKey;
+}
+
+export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
+  const tagKey = context.params?.tag as TagKey;
   if (!(tagKey in tags)) {
     return {
       notFound: true,
     };
   }
   return {
-    props: {},
+    props: {
+      tagKey,
+    },
   };
 };
 
-export default function Page() {
-  const router = useRouter();
-  const tagKey = router.query["tag"] as string;
-  if (!isTag(tagKey)) {
-    return null;
-  }
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = Object.keys(tags).map((key) => ({ params: { tag: key } }));
 
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export default function Page({ tagKey }: PageProps) {
   const tagName = tags[tagKey];
 
   return (
