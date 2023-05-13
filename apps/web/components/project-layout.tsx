@@ -15,6 +15,7 @@ export const ProjectLayout = ({
 }: React.PropsWithChildren<ProjectLayoutProps>) => {
   return (
     <div>
+      {children}
       <IconButton icon={faHome} href="/" className="absolute top-4 left-4" />
       <IconButton
         icon={faGithub}
@@ -22,7 +23,6 @@ export const ProjectLayout = ({
         target="_blank"
         className="absolute bottom-4 left-4"
       />
-      {children}
     </div>
   );
 };

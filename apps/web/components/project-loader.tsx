@@ -40,7 +40,12 @@ const ReactProjectLoader = ({ projectConfig }: ReactProjectLoader) => {
     });
   }, [projectConfig]);
 
-  if (!Component) return null;
+  if (!Component)
+    return (
+      <div className="h-screen bg-black text-white flex items-center justify-center">
+        <h2>Loading app</h2>
+      </div>
+    );
 
   return (
     <div className="h-screen">
