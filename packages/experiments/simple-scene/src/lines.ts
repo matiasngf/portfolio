@@ -1,10 +1,15 @@
-import { BufferGeometry, Line, LineBasicMaterial, Vector3 } from "../node_modules/three";
+import {
+  BufferGeometry,
+  Line,
+  LineBasicMaterial,
+  Vector3,
+} from "../node_modules/three";
 
-const material = new LineBasicMaterial( { color: 0xf000f0 } );
+const material = new LineBasicMaterial({ color: 0xf000f0 });
 
 const size = 1.2;
 
-const points = []
+const points = [];
 points.push(new Vector3(-size, 0, 0));
 points.push(new Vector3(0, size, 0));
 points.push(new Vector3(size, 0, 0));

@@ -5,11 +5,17 @@ import { getShadowHit } from "./get-shadow-hit";
 import { rotate } from "./rotate";
 import { getSceneHit } from "./scene";
 import { shaderObjects } from "./shader-objects";
-import { distanceFunctions, getLight, getNormal, structs, transformations, valueRemap } from "./utils";
+import {
+  distanceFunctions,
+  getLight,
+  getNormal,
+  structs,
+  transformations,
+  valueRemap,
+} from "./utils";
 
 export const RayMarchingShader = {
-
-	vertexShader: /* glsl */`
+  vertexShader: /* glsl */ `
 	varying vec2 vUv;
 	varying vec3 wPos;
 	varying vec3 vPosition;
@@ -21,7 +27,7 @@ export const RayMarchingShader = {
 			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 		}`,
 
-	fragmentShader: /* glsl */`
+  fragmentShader: /* glsl */ `
 		uniform vec2 resolution;
 
 		// custom uniforms
@@ -179,6 +185,5 @@ export const RayMarchingShader = {
 
 			gl_FragColor = vec4(color, 1.0);
 		}
-    `
-
+    `,
 };

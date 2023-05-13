@@ -7,5 +7,5 @@ export const mdxCustomComponents: MDXComponents = {
   ...Headings,
   code: Code,
   a: MdxLink,
-  ul: (props) => <ul className='list-disc list-inside' {...props} />,
-}
+  ul: (props) => <ul className="list-disc list-inside" {...props} />,
+};

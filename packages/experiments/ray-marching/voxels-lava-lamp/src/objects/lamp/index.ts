@@ -1,1 +1,1 @@
-export * from './Lamp';
+export * from "./Lamp";

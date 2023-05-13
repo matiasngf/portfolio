@@ -1,6 +1,6 @@
 import { ShaderMaterial } from "three";
 
-const LavaVertexShader = /*glsl*/`
+const LavaVertexShader = /*glsl*/ `
 varying vec3 vNormal;
 varying vec2 vUv;
 varying vec3 wPos;
@@ -16,7 +16,7 @@ void main() {
 }
 `;
 
-const LavaFragmentShader = /*glsl*/`
+const LavaFragmentShader = /*glsl*/ `
 
 // UNIFORMS
 uniform float uTime;
@@ -282,9 +282,9 @@ void main() {
 
 export const LavaMaterial = new ShaderMaterial({
   uniforms: {
-    uTime: {value: 0},
-    uVoxelSize: {value: 0.04},
-    uVoxels: {value: true},
+    uTime: { value: 0 },
+    uVoxelSize: { value: 0.04 },
+    uVoxels: { value: true },
   },
   vertexShader: LavaVertexShader,
   fragmentShader: LavaFragmentShader,

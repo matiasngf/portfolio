@@ -1,4 +1,11 @@
 module.exports = {
   root: true,
-  extends: ["next/babel", "next"],
+  extends: [
+    "next/core-web-vitals",
+    "eslint-config-custom"
+  ],
+  rules: {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-types": "off",
+  }
 };

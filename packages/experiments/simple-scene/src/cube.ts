@@ -1,6 +1,11 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, Vector3 } from "../node_modules/three";
+import {
+  BoxGeometry,
+  Mesh,
+  MeshBasicMaterial,
+  Vector3,
+} from "../node_modules/three";
 
 const size = 0.7;
-const geometry = new BoxGeometry( size, size, size);
-const material = new MeshBasicMaterial( { color: 0x0000ff } );
-export const cube = new Mesh( geometry, material );
+const geometry = new BoxGeometry(size, size, size);
+const material = new MeshBasicMaterial({ color: 0x0000ff });
+export const cube = new Mesh(geometry, material);

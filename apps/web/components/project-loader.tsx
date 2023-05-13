@@ -1,52 +1,80 @@
-import { useEffect, useState } from 'react';
-import { ExperimentConfig, projectsConfig } from '@/utils/projects-config';
-import { RenderCanvas } from './render-canvas';
-import { useMountedState } from 'react-use'
-import { DynamicProject } from '../utils/load-dynamic-project';
-import { ProjectLayout } from './project-layout';
+import { useEffect, useState } from "react";
+import { ExperimentConfig, projectsConfig } from "@/utils/projects-config";
+import { RenderCanvas } from "./render-canvas";
+import { useMountedState } from "react-use";
+import { ProjectLayout } from "./project-layout";
 
 export interface ProjectLoaderProps {
   projectKey: string;
 }
 
 export const ProjectLoader = ({ projectKey }: ProjectLoaderProps) => {
-  const project = projectsConfig[projectKey] as any as ExperimentConfig;
-  const [canvasEl , setCanvasEl] = useState<HTMLCanvasElement | null>(null)
-  const [projectModule, setProjectModule] = useState<DynamicProject | null>(null)
+  const project = projectsConfig[projectKey] as ExperimentConfig | undefined;
 
+  if (!project) return null;
+
+  return (
+    <ProjectLayout projectKey={projectKey} config={project}>
+      {project.load && <VanillaProjectLoader projectConfig={project as any} />}
+      {project.component && (
+        <ReactProjectLoader projectConfig={project as any} />
+      )}
+    </ProjectLayout>
+  );
+};
+
+type WithRequiredProperty<Type, Key extends keyof Type> = Type & {
+  [Property in Key]-?: Type[Property];
+};
+
+interface ReactProjectLoader {
+  projectConfig: WithRequiredProperty<ExperimentConfig, "component">;
+}
+
+const ReactProjectLoader = ({ projectConfig }: ReactProjectLoader) => {
+  const [Component, setComponent] = useState<React.ComponentType | null>(null);
+
+  useEffect(() => {
+    projectConfig.component().then((module) => {
+      setComponent(() => module.default);
+    });
+  }, [projectConfig]);
+
+  if (!Component)
+    return (
+      <div className="h-screen bg-black text-white flex items-center justify-center">
+        <h2>Loading app</h2>
+      </div>
+    );
+
+  return (
+    <div className="h-screen">
+      <Component />
+    </div>
+  );
+};
+
+interface VanillaProjectLoaderProps {
+  projectConfig: WithRequiredProperty<ExperimentConfig, "load">;
+}
+
+const VanillaProjectLoader = ({ projectConfig }: VanillaProjectLoaderProps) => {
+  const [canvasEl, setCanvasEl] = useState<HTMLCanvasElement | null>(null);
   const isMounted = useMountedState();
 
   useEffect(() => {
-    if(typeof window === "undefined")  return;
-    if(!(isMounted())) return;
-
-    if(project && project.load) {
-      const loadModule = project.load();
-      loadModule.then(module => {
-        if(isMounted()) {
-          setProjectModule(module)
-        }
-      })
-    }
-  }, [isMounted, projectKey, project])
-
-  useEffect(() => {
-    if(!projectModule) return;
-    if(projectModule.start) {
-      const {canvas, stop} = projectModule.start();
-      setCanvasEl(canvas)
-      return () => {
-        stop();
+    if (typeof window === "undefined") return;
+    if (!isMounted()) return;
+    projectConfig.load().then((module) => {
+      if (isMounted() && module.start) {
+        const { canvas, stop } = module.start();
+        setCanvasEl(canvas);
+        return () => {
+          stop();
+        };
       }
-    }
-  }, [projectModule])
+    });
+  }, [isMounted, projectConfig]);
 
-  if(!project) return null;
-  if(!projectModule || !canvasEl) return null;
-
-  return (
-    <ProjectLayout projectKey={projectKey} config={project} >
-      <RenderCanvas canvas={canvasEl} />
-    </ProjectLayout>
-  );
-}
+  return <RenderCanvas canvas={canvasEl} />;
+};

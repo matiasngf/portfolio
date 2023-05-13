@@ -182,4 +182,4 @@ export const valueRemap = `
 float valueRemap(float value, float min, float max, float newMin, float newMax) {
   return newMin + (newMax - newMin) * (value - min) / (max - min);
 }
-`
+`;

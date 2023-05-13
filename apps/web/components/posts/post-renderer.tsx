@@ -6,10 +6,10 @@ export interface PostRendererProps {
 }
 
 export const PostRenderer = ({ post }: PostRendererProps) => {
-  const PostContent = post
+  const PostContent = post;
   return (
     <PostContainer>
       <PostContent />
     </PostContainer>
-  )
-}
+  );
+};

@@ -1,8 +1,14 @@
-import { booleanFunctions, distanceFunctions, getLight, getNormal, structs, transformations } from "./utils";
+import {
+  booleanFunctions,
+  distanceFunctions,
+  getLight,
+  getNormal,
+  structs,
+  transformations,
+} from "./utils";
 
 export const RayMarchingShader = {
-
-	vertexShader: /* glsl */`
+  vertexShader: /* glsl */ `
 	varying vec2 vUv;
 	varying vec3 wPos;
 	varying vec3 vPosition;
@@ -14,7 +20,7 @@ export const RayMarchingShader = {
 			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 		}`,
 
-	fragmentShader: /* glsl */`
+  fragmentShader: /* glsl */ `
 		uniform vec2 resolution;
 
 		// custom uniforms
@@ -235,6 +241,5 @@ export const RayMarchingShader = {
 
 			gl_FragColor = vec4(color, 1.0);
 		}
-    `
-
+    `,
 };
