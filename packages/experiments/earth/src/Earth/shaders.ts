@@ -69,11 +69,6 @@ void main() {
 
   result += nightColor;
 
-  // sunset
-  float sunsetFactor = clamp(valueRemap(rawSunLightFactor, -0.1, 0.85, -1.0, 1.0), -1.0, 1.0);
-  sunsetFactor = cos(sunsetFactor * PI) * 0.5 + 0.5;
-  vec3 sunsetColor = vec3(0.525, 0.273, 0.249);
-
   // noise
   float rotation = uTime * 0.005;
   vec3 wPosOffset = wPos * mat3( cos(rotation), 0, sin(rotation), 0, 1, 0, -sin(rotation), 0, cos(rotation) );
@@ -102,6 +97,11 @@ void main() {
   // clouds with shadows
   cloudColor *= cloudShadowFactor;
 
+  // sunset
+  float sunsetFactor = clamp(valueRemap(rawSunLightFactor, -0.1, 0.85, -1.0, 1.0), -1.0, 1.0);
+  sunsetFactor = cos(sunsetFactor * PI) * 0.5 + 0.5;
+  vec3 sunsetColor = vec3(0.525, 0.273, 0.249);
+
   // clouds with sunset
   float sunsetCloudFactor = pow(cloudFactor, 1.5) * sunsetFactor;
   cloudColor *= clamp(sunLightFactor, 0.1, 1.0);
@@ -122,7 +122,6 @@ void main() {
   fresnelSunsetFactor = valueRemap(fresnelSunsetFactor, 0.97, 1.0, 0.0, 1.0);
   fresnelSunsetFactor = autoClamp(fresnelSunsetFactor);
   athmosphereColor = mix(athmosphereColor, athmosphereSunsetColor, fresnelSunsetFactor);
-
 
   result = mix(result, athmosphereColor, fresnelFactor * sunLightFactor);
 

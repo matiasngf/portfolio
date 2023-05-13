@@ -47,7 +47,6 @@ void main() {
 
   // athmosphere
   float fresnel = dot(-normal, viewDirection);
-  // fresnel = pow(clamp(valueRemap(fresnel, 0.0, 0.17, 0.0, 1.0), 0.0, 1.0), 2.0);
   fresnel = clamp(valueRemap(fresnel, 0.0, 0.25, 0.0, 1.0), 0.0, 1.0);
   fresnel = pow(fresnel, 4.0);
 
@@ -57,10 +56,6 @@ void main() {
   sunsetFactor = autoClamp(sunsetFactor);
 
   vec3 result = mix(athmosphereColor, sunsetColor, sunsetFactor);
-
-
-  // gl_FragColor = vec4(vec3(sunsetFactor), 1.0);
-
 
   gl_FragColor = vec4(vec3(result), 1.0);
   gl_FragColor.a = fresnel * sunLight;

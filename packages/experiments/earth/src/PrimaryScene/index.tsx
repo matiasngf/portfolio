@@ -3,7 +3,7 @@ import { OrbitControls, PerspectiveCamera, useFBO } from "@react-three/drei";
 import { Earth } from "../Earth";
 import { BackgroundScene } from "../BackgroundScene";
 import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
-import { Scene, RGBAFormat, Camera, Vector3 } from "three";
+import { Scene, RGBAFormat, Camera } from "three";
 import { useLightDirection } from "./useLightDirection";
 
 export interface PrimarySceneProps {}
