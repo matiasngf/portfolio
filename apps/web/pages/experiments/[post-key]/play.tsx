@@ -62,7 +62,7 @@ const Page: PageWithLayout = ({
 };
 
 Page.Layout = function PlayLayout({ children }) {
-  return(<>{children}</>)
+  return <>{children}</>;
 };
 
 export default Page;

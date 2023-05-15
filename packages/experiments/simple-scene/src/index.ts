@@ -3,7 +3,7 @@ import {
   PerspectiveCamera,
   Scene,
   Vector3,
-} from "../node_modules/three";
+} from "three";
 import { cube } from "./cube";
 import { line } from "./lines";
 

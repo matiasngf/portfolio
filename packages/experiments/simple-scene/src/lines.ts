@@ -3,7 +3,7 @@ import {
   Line,
   LineBasicMaterial,
   Vector3,
-} from "../node_modules/three";
+} from "three";
 
 const material = new LineBasicMaterial({ color: 0xf000f0 });
 

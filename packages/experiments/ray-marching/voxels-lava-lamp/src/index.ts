@@ -2,14 +2,11 @@ import {
   WebGLRenderer,
   PerspectiveCamera,
   Scene,
-  Vector2,
-  Vector3,
   GridHelper,
-  Quaternion,
-} from "../node_modules/three";
-import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
-import { EffectComposer } from "../node_modules/three/examples/jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "../node_modules/three/examples/jsm/postprocessing/RenderPass.js";
+} from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { editLavaUniform, lavaGroup } from "./objects/lamp";
 import GUI from "lil-gui";
 import { AmbientLight, PointLight } from "three";

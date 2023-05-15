@@ -35,7 +35,8 @@
     "tsconfig": "workspace:*",
     "tslib": "^2.4.1",
     "typescript": "^4.6.4",
-    "vite": "^4.3.5"
+    "vite": "^4.3.5",
+    "framer-motion": "^10.12.10"
   },
   "peerDependencies": {
     "@react-three/drei": "^9.66.4",
@@ -44,9 +45,8 @@
     "leva": "^0.9.34",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "three": "^0.152.2"
-  },
-  "dependencies": {
+    "three": "^0.152.2",
     "framer-motion": "^10.12.10"
-  }
+  },
+  "dependencies": {}
 }

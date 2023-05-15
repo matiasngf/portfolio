@@ -6,11 +6,11 @@ import {
   Vector3,
   GridHelper,
   Quaternion,
-} from "../node_modules/three";
-import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
-import { EffectComposer } from "../node_modules/three/examples/jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "../node_modules/three/examples/jsm/postprocessing/RenderPass.js";
-import { ShaderPass } from "../node_modules/three/examples/jsm/postprocessing/ShaderPass";
+} from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
 import { RayMarchingShader } from "./shaders/ray-marching";
 
 export const start = () => {

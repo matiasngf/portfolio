@@ -38,7 +38,9 @@
     "react-dom": "18.2.0",
     "react-use": "^17.4.0",
     "remark-gfm": "^3.0.1",
-    "three": "^0.152.2"
+    "three": "^0.152.2",
+    "framer-motion": "^10.12.10",
+    "lil-gui": "^0.17.0"
   },
   "devDependencies": {
     "@types/mdx": "^2.0.3",

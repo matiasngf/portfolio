@@ -3,10 +3,6 @@ import { SRGBColorSpace, ShaderMaterial, Vector3 } from "three";
 import { TextureLoader } from "three/src/loaders/TextureLoader";
 import { useFrame, useLoader } from "@react-three/fiber";
 
-import earthDayMapUrl from "./textures/8k_earth_daymap.jpg";
-import nightMapUrl from "./textures/8k_earth_nightmap.jpg";
-import cloudMapUrl from "./textures/8k_earth_clouds.jpg";
-
 import { earthFragmentShader, earthVertexShader } from "./shaders";
 import { useEffect, useRef } from "react";
 import { Atmosphere } from "../Atmosphere";
@@ -25,7 +21,11 @@ export interface EarthProps {
 export const Earth = ({ lightDirection }: EarthProps) => {
   const [earthDayTexture, nightTexture, cloudTexture] = useLoader(
     TextureLoader,
-    [earthDayMapUrl, nightMapUrl, cloudMapUrl]
+    [
+      "/experiment-earth-assets/8k_earth_daymap.jpg",
+      "/experiment-earth-assets/8k_earth_nightmap.jpg",
+      "/experiment-earth-assets/8k_earth_clouds.jpg",
+    ]
   );
 
   earthDayTexture.colorSpace =

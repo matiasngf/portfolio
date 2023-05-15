@@ -1,9 +1,8 @@
 import {
   Mesh,
   MeshBasicMaterial,
-  MeshPhongMaterial,
   PlaneGeometry,
-} from "../node_modules/three";
+} from "three";
 
 export const ground = new Mesh(
   new PlaneGeometry(100, 100),

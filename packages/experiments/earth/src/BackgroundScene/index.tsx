@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { useThree } from "@react-three/fiber";
 import {
-  RepeatWrapping,
   SRGBColorSpace,
   TextureLoader,
-  Vector2,
   Vector3,
   WebGLCubeRenderTarget,
 } from "three";
-import startsTextureUrl from "./starmap_g4k.jpg";
 import { Sun } from "../Sun";
 
 interface BackgroundSceneProps {
@@ -22,7 +19,7 @@ export const BackgroundScene = ({ lightDirection }: BackgroundSceneProps) => {
 
   useEffect(() => {
     const loader = new TextureLoader();
-    loader.load(startsTextureUrl, (texture) => {
+    loader.load("/experiment-earth-assets/starmap_g4k.jpg", (texture) => {
       texture.colorSpace = SRGBColorSpace;
       const cubeRenderTarget = new WebGLCubeRenderTarget(texture.image.height);
       cubeRenderTarget.fromEquirectangularTexture(gl, texture);

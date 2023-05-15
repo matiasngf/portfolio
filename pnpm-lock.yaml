@@ -82,9 +82,15 @@ importers:
       experiments-simple-scene:
         specifier: workspace:*
         version: link:../../packages/experiments/simple-scene
+      framer-motion:
+        specifier: ^10.12.10
+        version: 10.12.10(react-dom@18.2.0)(react@18.2.0)
       leva:
         specifier: ^0.9.34
         version: 0.9.34(react-dom@18.2.0)(react@18.2.0)
+      lil-gui:
+        specifier: ^0.17.0
+        version: 0.17.0
       next:
         specifier: 13.3.4
         version: 13.3.4(react-dom@18.2.0)(react@18.2.0)
@@ -170,10 +176,6 @@ importers:
         version: 4.8.4
 
   packages/experiments/earth:
-    dependencies:
-      framer-motion:
-        specifier: ^10.12.10
-        version: 10.12.10(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@react-three/drei':
         specifier: ^9.66.4
@@ -208,6 +210,9 @@ importers:
       eslint-config-custom:
         specifier: workspace:*
         version: link:../../eslint-config-custom
+      framer-motion:
+        specifier: ^10.12.10
+        version: 10.12.10(react-dom@18.2.0)(react@18.2.0)
       leva:
         specifier: ^0.9.34
         version: 0.9.34(react-dom@18.2.0)(react@18.2.0)
@@ -243,10 +248,6 @@ importers:
         version: 4.3.5
 
   packages/experiments/ray-marching/ambient-occlusion:
-    dependencies:
-      three:
-        specifier: ^0.146.0
-        version: 0.146.0
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^23.0.2
@@ -275,6 +276,9 @@ importers:
       rollup-plugin-typescript2:
         specifier: ^0.34.1
         version: 0.34.1(rollup@3.2.5)(typescript@4.8.4)
+      three:
+        specifier: ^0.146.0
+        version: 0.146.0
       tsconfig:
         specifier: workspace:*
         version: link:../../../tsconfig
@@ -289,10 +293,6 @@ importers:
         version: 2.9.15
 
   packages/experiments/ray-marching/boolean-operations:
-    dependencies:
-      three:
-        specifier: ^0.146.0
-        version: 0.146.0
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^23.0.2
@@ -321,6 +321,9 @@ importers:
       rollup-plugin-typescript2:
         specifier: ^0.34.1
         version: 0.34.1(rollup@3.2.5)(typescript@4.8.4)
+      three:
+        specifier: ^0.146.0
+        version: 0.146.0
       tsconfig:
         specifier: workspace:*
         version: link:../../../tsconfig
@@ -335,10 +338,6 @@ importers:
         version: 2.9.15
 
   packages/experiments/ray-marching/reflections:
-    dependencies:
-      three:
-        specifier: ^0.146.0
-        version: 0.146.0
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^23.0.2
@@ -367,6 +366,9 @@ importers:
       rollup-plugin-typescript2:
         specifier: ^0.34.1
         version: 0.34.1(rollup@3.2.5)(typescript@4.8.4)
+      three:
+        specifier: ^0.146.0
+        version: 0.146.0
       tsconfig:
         specifier: workspace:*
         version: link:../../../tsconfig
@@ -381,10 +383,6 @@ importers:
         version: 2.9.15
 
   packages/experiments/ray-marching/simple:
-    dependencies:
-      three:
-        specifier: ^0.146.0
-        version: 0.146.0
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^23.0.2
@@ -413,6 +411,9 @@ importers:
       rollup-plugin-typescript2:
         specifier: ^0.34.1
         version: 0.34.1(rollup@3.2.5)(typescript@4.8.4)
+      three:
+        specifier: ^0.146.0
+        version: 0.146.0
       tsconfig:
         specifier: workspace:*
         version: link:../../../tsconfig
@@ -427,10 +428,6 @@ importers:
         version: 2.9.15
 
   packages/experiments/ray-marching/voxels:
-    dependencies:
-      three:
-        specifier: ^0.146.0
-        version: 0.146.0
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^23.0.2
@@ -459,6 +456,9 @@ importers:
       rollup-plugin-typescript2:
         specifier: ^0.34.1
         version: 0.34.1(rollup@3.2.5)(typescript@4.8.4)
+      three:
+        specifier: ^0.146.0
+        version: 0.146.0
       tsconfig:
         specifier: workspace:*
         version: link:../../../tsconfig
@@ -477,9 +477,6 @@ importers:
       lil-gui:
         specifier: ^0.17.0
         version: 0.17.0
-      three:
-        specifier: ^0.146.0
-        version: 0.146.0
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^23.0.2
@@ -508,6 +505,9 @@ importers:
       rollup-plugin-typescript2:
         specifier: ^0.34.1
         version: 0.34.1(rollup@3.2.5)(typescript@4.8.4)
+      three:
+        specifier: ^0.146.0
+        version: 0.146.0
       tsconfig:
         specifier: workspace:*
         version: link:../../../tsconfig
@@ -522,13 +522,6 @@ importers:
         version: 2.9.15
 
   packages/experiments/ray-marching/voxels-lava-lamp:
-    dependencies:
-      lil-gui:
-        specifier: ^0.17.0
-        version: 0.17.0
-      three:
-        specifier: ^0.146.0
-        version: 0.146.0
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^23.0.2
@@ -548,6 +541,9 @@ importers:
       eslint-config-custom:
         specifier: workspace:*
         version: link:../../../eslint-config-custom
+      lil-gui:
+        specifier: ^0.17.0
+        version: 0.17.0
       rollup:
         specifier: ^3.2.5
         version: 3.2.5
@@ -557,6 +553,9 @@ importers:
       rollup-plugin-typescript2:
         specifier: ^0.34.1
         version: 0.34.1(rollup@3.2.5)(typescript@4.8.4)
+      three:
+        specifier: ^0.146.0
+        version: 0.146.0
       tsconfig:
         specifier: workspace:*
         version: link:../../../tsconfig
@@ -571,10 +570,6 @@ importers:
         version: 2.9.15
 
   packages/experiments/simple-scene:
-    dependencies:
-      three:
-        specifier: ^0.146.0
-        version: 0.146.0
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^23.0.2
@@ -603,6 +598,9 @@ importers:
       rollup-plugin-typescript2:
         specifier: ^0.34.1
         version: 0.34.1(rollup@3.2.5)(typescript@4.8.4)
+      three:
+        specifier: ^0.146.0
+        version: 0.146.0
       tsconfig:
         specifier: workspace:*
         version: link:../../tsconfig
@@ -889,12 +887,10 @@ packages:
     requiresBuild: true
     dependencies:
       '@emotion/memoize': 0.7.4
-    dev: false
     optional: true
 
   /@emotion/memoize@0.7.4:
     resolution: {integrity: sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==}
-    dev: false
     optional: true
 
   /@esbuild/android-arm64@0.17.18:
@@ -2927,7 +2923,7 @@ packages:
     engines: {node: '>=4'}
     dependencies:
       dot-prop: 4.2.1
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       make-dir: 1.3.0
       unique-string: 1.0.0
       write-file-atomic: 2.4.3
@@ -2939,7 +2935,7 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       dot-prop: 5.3.0
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       make-dir: 3.1.0
       unique-string: 2.0.0
       write-file-atomic: 3.0.3
@@ -4075,7 +4071,6 @@ packages:
       tslib: 2.4.1
     optionalDependencies:
       '@emotion/is-prop-valid': 0.8.8
-    dev: false
 
   /fs-exists-sync@0.1.0:
     resolution: {integrity: sha512-cR/vflFyPZtrN6b38ZyWxpWdhlXrzZEBawlpBQMq7033xVY7/kg0GDMBK5jg8lDYQckdJ5x/YC88lM3C7VMsLg==}
@@ -4095,7 +4090,7 @@ packages:
     resolution: {integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==}
     engines: {node: '>=6 <7 || >=8'}
     dependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jsonfile: 4.0.0
       universalify: 0.1.2
     dev: false
@@ -4326,10 +4321,10 @@ packages:
 
   /graceful-fs@4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
+    dev: true
 
   /graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
-    dev: false
 
   /has-ansi@2.0.0:
     resolution: {integrity: sha512-C8vBJ8DwUCx19vhm7urhTuUsr4/IyP6l4VzNQDv+ryHQObW3TTTp9yB68WpYgRe2bbaGuZ/se74IqFeVnMnLZg==}
@@ -4899,7 +4894,7 @@ packages:
   /jsonfile@4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
     optionalDependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
     dev: false
 
   /jsonfile@6.1.0:
@@ -4907,7 +4902,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
     dev: true
 
   /jsx-ast-utils@3.3.3:
@@ -7351,7 +7346,7 @@ packages:
 
   /three@0.146.0:
     resolution: {integrity: sha512-1lvNfLezN6OJ9NaFAhfX4sm5e9YCzHtaRgZ1+B4C+Hv6TibRMsuBAM5/wVKzxjpYIlMymvgsHEFrrigEfXnb2A==}
-    dev: false
+    dev: true
 
   /three@0.152.2:
     resolution: {integrity: sha512-Ff9zIpSfkkqcBcpdiFo2f35vA9ZucO+N8TNacJOqaEE6DrB0eufItVMib8bK8Pcju/ZNT6a7blE1GhTpkdsILw==}
@@ -8016,7 +8011,7 @@ packages:
   /write-file-atomic@2.4.3:
     resolution: {integrity: sha512-GaETH5wwsX+GcnzhPgKcKjJ6M2Cq3/iZp1WyY/X1CSqrW+jVNM9Y7D8EC2sM4ZG/V8wZlSniJnCKWPmBYAucRQ==}
     dependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       imurmurhash: 0.1.4
       signal-exit: 3.0.7
     dev: false
