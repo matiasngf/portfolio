@@ -21,8 +21,8 @@ import preview from "./preview.png";
 import earthSunrise from "./earth-sunrise.png";
 
 <center>
-  In this experiment I created an Eath created using shaders, react-three-fiber
-  and drei.
+  This experiment showcases how to create an Earth using shaders,
+  react-three-fiber, and drei.
 </center>
 
 <Image src={preview} alt="Final result" />
@@ -31,11 +31,11 @@ import earthSunrise from "./earth-sunrise.png";
 
 ## Creating the earth shaders
 
-The earth material uses a custom shader to switch between day and night textures based on the sun position.
+The earth material uses a custom shader to switch between day and night textures based on the sun's position.
 
-### Sun light
+### Sunlight
 
-The sun light is provided via the `uniform vec3 lightDirection;` to the shader, using that we can caluclate the lambertFactor.
+The sun position is provided via the `uniform vec3 lightDirection;` to the shader. By using that uniform, we can calculate the lambertFactor.
 
 ```glsl
 // we will store the final result in a vec3 variable
@@ -51,19 +51,19 @@ If we visualize the lambertFactor we get something like this:
 
 <Image src={lambertPreview} alt="Lambert" />
 
-But, that is now a verry convincing sun light, so we can remap a bit the values to get a better effect:
+But, that light is not very convincing, so we can remap the values to get a better effect:
 
 ```glsl
-// sun light
+// sunlight
 float rawSunLightFactor = valueRemap(rawLambertFactor, -0.1, 0.1, 0.0, 1.0);
 float sunLightFactor = autoClamp(rawSunLightFactor);
 ```
 
-<Image src={sunLight} alt="Sun light" />
+<Image src={sunLight} alt="Sunlight" />
 
 ### Day and night textures
 
-Now that we have a good `sunLightFactor` to work with, we can use it to switch between the day and night texture:
+Now that we have a better `sunLightFactor` to work with, we can use it to switch between the day and night texture:
 
 ```glsl
 result = dayColor * sunLightFactor;
@@ -82,7 +82,7 @@ Note: refer to the source code to see the `valueRemap` implementation
 
 ### Clouds
 
-The clouds on this project will be a combination of a texture and a noise texture. We want to switch between the two based on the distance between the camera and the earth.
+The clouds on this project are a combination of procedural noise and textures. We want to switch between the two based on the distance between the camera and the Earth.
 
 We can also animate the clouds by rotating the noise texture using the `uTime` uniform.
 
@@ -97,11 +97,11 @@ float distanceFactor = autoClamp(
 noiseFactor = noiseFactor * 0.5 * distanceFactor;
 ```
 
-If we get close to the surface of the earth, we can see the noise factor in action:
+If we get close to the surface of the Earth, we can see the noise factor in action:
 
 <Image src={noiseFactor} alt="Noise factor" />
 
-We can then combine the noise and the clouds texture:
+We can then combine the noise and the cloud texture:
 
 ```glsl
 // clouds
@@ -140,7 +140,7 @@ cloudColor *= cloudShadowFactor;
 
 ### Sunset
 
-A nice touch to add is a bit of sunset color to the clouds. First we need to calculate where the sunset should be:
+A nice touch to add is a sunset color to the clouds. First, we need to calculate where the sunset should be:
 
 ```glsl
 // sunset
@@ -173,7 +173,7 @@ result = mix(result, cloudColor, cloudFactor);
 
 ## Fresnel
 
-The final touch to our earth shader is a bit of fresnel effect to simulate an atmosphere. We can use the `vNormal` to calculate the fresnel effect:
+The final touch to our earth shader is a fresnel effect to simulate an atmosphere. We can use the `vNormal` to calculate the fresnel effect:
 
 ```glsl
 // fresnel
@@ -187,7 +187,7 @@ vec3 athmosphereColor = vec3(0.51,0.714,1.);
 
 <Image src={fresnelFactor} alt="Fresnel factor" />
 
-We could just add the fresnel effect but, we can also add a bit of red color if the sun is setting.
+We can also add a bit of red if the sun is setting. To achieve that, we can use the dot product between the light direction and the view direction:
 
 ```glsl
 // fresnel sunset
@@ -202,7 +202,7 @@ athmosphereColor = mix(athmosphereColor, athmosphereSunsetColor, fresnelSunsetFa
 
 <Image src={fresnelSunsetFactor} alt="Fresnel sunset factor" />
 
-We can use this mask to change the color of the sunset based on the position of the camera and the sun.
+We can use this mask to change the sunset's color based on the camera's position and the sun.
 
 Finally, we can add the fresnel effect to the result:
 
@@ -221,7 +221,7 @@ Final earth shader:
 
 ## Atmosphere
 
-To get a better result, we can add an outer atmosphere to the earth. I added a second sphere with a bigger radius and a different shader:
+We can add an outer atmosphere to the Earth for better results. I added a second sphere with a bigger radius and a different shader:
 
 ```glsl
 //setup
@@ -236,7 +236,7 @@ vec3 sunsetColor = vec3(1.0, 0.373, 0.349);
 float rawLambert = dot(normal, vLightDirection);
 float lambert = clamp(rawLambert, 0.0, 1.0);
 
-// sun light
+// sunlight
 float rawSunLight = valueRemap(rawLambert, 0.0, 0.2, 0.0, 1.0);
 float sunLight = clamp(rawSunLight, 0.0, 1.0);
 
@@ -250,9 +250,9 @@ If we preview `fresnel * sunLight`, this is what we get:
 
 <Image src={atmosphereFresnel} alt="Atmosphere fresnel" />
 
-### Sunset on atmosphere
+### Sunset on the atmosphere
 
-We can add a bit of sunset color to the atmosphere like we did with the earth:
+We can add a bit of sunset color to the atmosphere like we did with the Earth:
 
 ```glsl
 // calculate sunset using dot product of sun direction and view direction
@@ -267,20 +267,20 @@ Preview of `result * sunLight`:
 
 <Image src={atmosphereSunset} alt="Atmosphere sunset" />
 
-Then we can finally use the sunLight to set the alpha of the atmosphere, we do this because we dont want to add atmosphere on the dark side of the earth:
+Then we can finally use the sunLight to set the alpha of the atmosphere. We do this because we do not want to add atmosphere on the dark side of the Earth:
 
 ```glsl
 gl_FragColor = vec4(vec3(result), 1.0);
 gl_FragColor.a = fresnel * sunLight;
 ```
 
-Result of the atmosphere shader with the earth:
+Result of the atmosphere shader with the Earth:
 
-<Image src={earthWithAtmosphere} alt="Final earth with atmosphere" />
+<Image src={earthWithAtmosphere} alt="Final Earth with atmosphere" />
 
 ## Enviroment
 
-Of course we are not finished, we need to add the sun, stars and some post processing effects.
+Of course, we are not finished. We need to add the sun, stars, and some post-processing effects.
 
 <Image src={preview} alt="Final result" />
 
@@ -289,4 +289,4 @@ Of course we are not finished, we need to add the sun, stars and some post proce
 ## Resources
 
 - Sky texture: https://svs.gsfc.nasa.gov/3895
-- Earth textures : https://www.solarsystemscope.com/textures/
+- Earth textures: https://www.solarsystemscope.com/textures/
