@@ -39,6 +39,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
       const project = projectsConfig[key];
       if (project.type !== "experiment") return false;
       if (!project.load && !project.component) return false;
+      return true;
     })
     .map((key) => ({ params: { "post-key": key } }));
 
