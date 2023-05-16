@@ -3,3 +3,4 @@ packages:
   - "packages/*"
   - "packages/experiments/*"
   - "packages/experiments/ray-marching/*"
+  - "packages/experiments/html-shaders/*"
