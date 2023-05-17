@@ -7,8 +7,9 @@ export const useCanvasSize = () => {
   const [height, setHeight] = useState(1080);
 
   useEffect(() => {
-    setWidth(gl.domElement.width);
-    setHeight(gl.domElement.height);
+    const pixelRatio = window.devicePixelRatio;
+    setWidth(gl.domElement.width / pixelRatio);
+    setHeight(gl.domElement.height / pixelRatio);
   }, [gl.domElement.width, gl.domElement.height]);
 
   return { width, height };
