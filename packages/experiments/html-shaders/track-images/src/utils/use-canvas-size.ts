@@ -1,4 +1,4 @@
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 
 export const useCanvasSize = () => {
@@ -6,11 +6,31 @@ export const useCanvasSize = () => {
   const [width, setWidth] = useState(1920);
   const [height, setHeight] = useState(1080);
 
+  const [pixelRatio, setPixelRatio] = useState(1);
+  const domWidth = gl.domElement.width;
+  const domHeight = gl.domElement.height;
+
+  useFrame(() => {
+    const newPixelRatio = gl.getPixelRatio();
+    if (newPixelRatio !== pixelRatio) {
+      setPixelRatio(newPixelRatio);
+    }
+  });
+
+
   useEffect(() => {
-    const pixelRatio = window.devicePixelRatio;
-    setWidth(gl.domElement.width / pixelRatio);
-    setHeight(gl.domElement.height / pixelRatio);
-  }, [gl.domElement.width, gl.domElement.height]);
+
+    const newWidth = domWidth / pixelRatio;
+    const newHeight = domHeight / pixelRatio;
+
+    if (newWidth !== width) {
+      setWidth(newWidth);
+    }
+    if (newHeight !== height) {
+      setHeight(newHeight);
+    }
+
+  }, [domWidth, domHeight, pixelRatio]);
 
   return { width, height };
 };

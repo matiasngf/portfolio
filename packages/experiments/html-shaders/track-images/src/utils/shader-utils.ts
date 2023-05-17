@@ -36,13 +36,13 @@ float voronoise(in vec3 x, float v) {
 }
 `
 
-export const valueRemap = `
+export const valueRemap = /* glsl */`
 float valueRemap(float value, float min, float max, float newMin, float newMax) {
   return newMin + (newMax - newMin) * (value - min) / (max - min);
 }
 `;
 
-export const perturbNormalArb = `
+export const perturbNormalArb = /* glsl */`
 vec2 dHdxy_fwd(vec2 uv, sampler2D map, float scale) {
 
   float scaledBumpScale = scale / 10.0;
@@ -75,13 +75,13 @@ vec3 perturbNormalArb( vec3 surf_pos, vec3 surf_norm, vec2 dHdxy ) {
 }
 `;
 
-export const curveUp = `
+export const curveUp = /* glsl */`
 float curveUp( float x, float factor ) {
   return ( 1.0 - factor / (x + factor) ) * (factor + 1.0);
 }
 `;
 
-export const simplexNoise = `
+export const simpleNoise1 = /* glsl */`
 /* https://www.shadertoy.com/view/XsX3zB */
 
 /* discontinuous pseudorandom uniformly distributed in [-0.5, +0.5]^3 */
@@ -101,7 +101,7 @@ const float SIMPLEX_NOISE_F3 =  0.3333333;
 const float SIMPLEX_NOISE_G3 =  0.1666667;
 
 /* 3d simplex noise */
-float simplex3d(vec3 p) {
+float simpleNoise1(vec3 p) {
 	 /* 1. find current tetrahedron T and it's four vertices */
 	 /* s, s+i1, s+i2, s+1.0 - absolute skewed (integer) coordinates of T vertices */
 	 /* x, x1, x2, x3 - unskewed coordinates of p relative to each of T vertices*/
@@ -160,3 +160,31 @@ float simplex3d_fractal(vec3 m) {
 			+0.0666667*simplex3d(8.0*m);
 }
 `;
+
+export const simpleNoise2 = /* glsl */ `
+float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
+
+float simpleNoise2(vec3 p){
+    vec3 a = floor(p);
+    vec3 d = p - a;
+    d = d * d * (3.0 - 2.0 * d);
+
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy);
+    vec4 k2 = perm(k1.xyxy + b.zzww);
+
+    vec4 c = k2 + a.zzzz;
+    vec4 k3 = perm(c);
+    vec4 k4 = perm(c + 1.0);
+
+    vec4 o1 = fract(k3 * (1.0 / 41.0));
+    vec4 o2 = fract(k4 * (1.0 / 41.0));
+
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+`

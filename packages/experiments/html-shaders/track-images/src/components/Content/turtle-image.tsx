@@ -1,4 +1,4 @@
-import { bubble, voronoi } from "../../utils/shader-utils";
+import { bubble, simpleNoise2, voronoi } from "../../utils/shader-utils";
 import { ThreeImage } from "../ThreeImage";
 
 // https://pixabay.com/photos/sea-turtle-diving-animal-2361247/
@@ -15,19 +15,22 @@ varying vec2 vUv;
 uniform float uTime;
 uniform sampler2D imageTexture;
 
-const float PI = 3.1415926535897932384626433832795;
+const float PI = 3.14159265358;
 
 
-${bubble}
-${voronoi}
+${simpleNoise2}
 
 void main() {
 
-  float noiseScale = 5.0;
-  float timeScale = 0.3;
+  float noiseScale = 6.0;
+  float timeScale = 0.2;
+  float displacementScale = 0.05;
 
-  float displacementFactorX = voronoise(vec3(vUv * noiseScale, uTime * timeScale), 0.1);
-  float displacementFactorY = voronoise(vec3(vUv * noiseScale, uTime * timeScale + 50.0), 0.1);
+  float displacementFactorX = simpleNoise2(vec3(
+    vUv * noiseScale + vec2(uTime * timeScale, 0.0),
+    uTime * timeScale
+  ));
+  float displacementFactorY = simpleNoise2(vec3(vUv * noiseScale, uTime * timeScale + 50.0));
 
   float distanceToEdgeX = abs(vUv.x - 0.5) * 2.0;
   distanceToEdgeX = 1.0 - pow(distanceToEdgeX, 2.0);
@@ -44,8 +47,8 @@ void main() {
   waterFactor = clamp(waterFactor, 0.3, 0.8);
 
   vec2 mirrorUv = vec2(
-    vUv.x + pow(mirrorFactorX, 2.0) * 0.05,
-    vUv.y + pow(mirrorFactorY, 2.0) * 0.05
+    vUv.x + pow(mirrorFactorX, 2.0) * displacementScale,
+    vUv.y + pow(mirrorFactorY, 2.0) * displacementScale
   );
   vec3 displacedTexture = texture2D(imageTexture, mirrorUv).rgb;
   vec3 texture = texture2D(imageTexture, vUv).rgb;
