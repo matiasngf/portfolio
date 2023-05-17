@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { useWindowScroll } from "react-use";
+import { useThreeImageContext } from "./Context";
+import { useClientRect } from "../../utils/use-client-rect";
 
 export interface ThreeImageProps
   extends React.DetailedHTMLProps<
@@ -11,41 +12,33 @@ export const ThreeImage = (props: ThreeImageProps) => {
   const imageId = useId();
   const imageRef = useRef<HTMLImageElement>(null);
   const rect = useClientRect<HTMLImageElement>(imageRef);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
-  // TODO: create a context to push this data
-  console.log(rect);
+  const { register } = useThreeImageContext();
 
-  return <img style={{ opacity: 0.5 }} ref={imageRef} {...props} />;
-};
-
-function useClientRect<T extends HTMLDivElement>(
-  ref: React.MutableRefObject<T>
-) {
-  const [rect, setRect] = useState<DOMRect | null>(null);
-  const scroll = useWindowScroll();
-  const observerRef = useRef(null);
-
+  // Add image to global store
   useEffect(() => {
-    if (!ref.current) return;
-
-    const callback = () => {
-      setRect(ref.current.getBoundingClientRect());
-    };
-    observerRef.current = new MutationObserver(callback);
-    observerRef.current.observe(document.body, {
-      attributes: true,
-      childList: true,
-      subtree: true,
+    if (!imageRef.current || !imageLoaded) return;
+    register({
+      id: imageId,
+      rect,
+      source: imageRef.current.src,
     });
-    callback();
-    return () => {
-      observerRef.current.disconnect();
-    };
-  }, [ref.current, scroll.x, scroll.y]);
+  }, [props.src, rect.top, rect.left, rect.width, rect.height, imageLoaded]);
 
-  return {
-    ...rect,
-    absoluteTop: rect?.top + scroll.y,
-    absoluteLeft: rect?.left + scroll.x,
-  };
-}
+  return (
+    <img
+      style={{
+        opacity: 0,
+      }}
+      ref={imageRef}
+      {...props}
+      onLoad={(e) => {
+        if (typeof props.onLoad === "function") {
+          props.onLoad(e);
+        }
+        setImageLoaded(true);
+      }}
+    />
+  );
+};

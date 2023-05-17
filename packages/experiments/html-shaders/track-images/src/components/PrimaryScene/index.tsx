@@ -5,9 +5,14 @@ import {
 } from "@react-three/drei";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { Color } from "three";
-import { OrthographicCameraProps, useFrame } from "@react-three/fiber";
-import { useWindowSize } from "react-use";
+import {
+  OrthographicCameraProps,
+  useFrame,
+  useThree,
+} from "@react-three/fiber";
 import { useThreeScroll } from "../../utils/use-three-scroll";
+import { useThreeImageContext } from "../ThreeImage/Context";
+import { ShaderImageMesh } from "../ThreeImage/ShaderImage";
 
 const pi = Math.PI;
 
@@ -17,7 +22,7 @@ export function sinInOut(t) {
 
 const useViewportPosition = () => {
   const { delta, fixed } = useScroll();
-  const { width, height } = useWindowSize();
+  const { width, height } = useCanvasSize();
   // console.log(el);
 
   useEffect(() => {
@@ -46,7 +51,9 @@ export const PrimaryScene = ({}: PropsWithChildren<PrimarySceneProps>) => {
     uniformsRef.current.uTime.value += delta;
   });
 
-  const { width, height } = useWindowSize();
+  const { width, height } = useCanvasSize();
+
+  const { shaderImages } = useThreeImageContext();
 
   return (
     <>
@@ -65,15 +72,31 @@ export const PrimaryScene = ({}: PropsWithChildren<PrimarySceneProps>) => {
           <sphereGeometry args={[100, 32, 32]} />
           <meshBasicMaterial color={new Color(0xff0000)} />
         </mesh>
+
+        {Object.values(shaderImages).map((image) => {
+          return <ShaderImageMesh key={image.id} image={image} />;
+        })}
       </mesh>
     </>
   );
 };
 
+const useCanvasSize = () => {
+  const { gl } = useThree();
+  const [width, setWidth] = useState(1920);
+  const [height, setHeight] = useState(1080);
+
+  useEffect(() => {
+    setWidth(gl.domElement.width);
+    setHeight(gl.domElement.height);
+  }, [gl.domElement.width, gl.domElement.height]);
+
+  return { width, height };
+};
+
 const SceneCamera = () => {
   const cameraRef = useRef<OrthographicCameraProps>();
-
-  const { width, height } = useWindowSize();
+  const { width, height } = useCanvasSize();
   const { y } = useThreeScroll();
 
   useEffect(() => {
