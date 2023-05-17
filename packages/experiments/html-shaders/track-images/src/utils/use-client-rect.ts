@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useWindowScroll } from "react-use";
 
 export interface ClientRect {
@@ -34,7 +34,7 @@ export function useClientRect<T extends HTMLDivElement>(
     const { aborted } = signal;
 
     const callback = () => {
-      if (aborted) return;
+      if (aborted || !ref.current) return;
       const currentRect = ref.current.getBoundingClientRect();
       if (
         rect.top !== currentRect.top ||

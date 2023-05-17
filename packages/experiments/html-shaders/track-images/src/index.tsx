@@ -2,9 +2,9 @@ import { Canvas } from "@react-three/fiber";
 import { PrimaryScene } from "./components/PrimaryScene";
 import { Html } from "@react-three/drei";
 import { Suspense } from "react";
-import "./styles.css";
 import { Content } from "./components/Content";
-import { ThreeImageContextProvider } from "./components/ThreeImage/Context";
+import { ElementTrackerContextProvider } from "./components/ElementTracker";
+import "./styles.css";
 
 function Loading() {
   return (
@@ -18,7 +18,7 @@ function Loading() {
         alignItems: "center",
       }}
     >
-      <h2>Loading textures</h2>
+      <h2>Loading...</h2>
     </Html>
   );
 }
@@ -26,16 +26,16 @@ function Loading() {
 const App = () => {
   return (
     <>
-      <ThreeImageContextProvider>
-        <Canvas className="!fixed !w-full !h-screen">
+      <ElementTrackerContextProvider>
+        <div className="relative container w-full min-h-screen z-10">
+          <Content />
+        </div>
+        <Canvas className="top-0 left-0 z-20 !fixed !w-full !h-screen !pointer-events-none">
           <Suspense fallback={<Loading />}>
             <PrimaryScene />
           </Suspense>
         </Canvas>
-        <div className="relative container w-full min-h-screen">
-          <Content />
-        </div>
-      </ThreeImageContextProvider>
+      </ElementTrackerContextProvider>
     </>
   );
 };

@@ -3,6 +3,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import typescript from "rollup-plugin-typescript2";
 import image from "@rollup/plugin-image";
+import postcss from 'rollup-plugin-postcss'
 
 const packageJson = require("./package.json");
 
@@ -21,8 +22,14 @@ export default {
     }
   ],
   plugins: [
-    image(),
     peerDepsExternal(),
+    postcss({
+      config: {
+        path: './postcss.config.js',
+        ctx: null
+      }
+    }),
+    image(),
     resolve({
       rootDir: '.'
     }),
