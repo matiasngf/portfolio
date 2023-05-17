@@ -25,12 +25,16 @@ export function useClientRect<T extends HTMLDivElement>(
     toJSON: () => { },
   });
   const scroll = useWindowScroll();
-  const observerRef = useRef(null);
 
   useEffect(() => {
     if (!ref.current) return;
 
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    const { aborted } = signal;
+
     const callback = () => {
+      if (aborted) return;
       const currentRect = ref.current.getBoundingClientRect();
       if (
         rect.top !== currentRect.top ||
@@ -40,18 +44,15 @@ export function useClientRect<T extends HTMLDivElement>(
       ) {
         setRect(currentRect);
       }
+      requestAnimationFrame(callback);
     };
-    observerRef.current = new MutationObserver(callback);
-    observerRef.current.observe(document.body, {
-      attributes: true,
-      childList: true,
-      subtree: true,
-    });
-    callback();
+    requestAnimationFrame(callback);
     return () => {
-      observerRef.current.disconnect();
+      abortController.abort();
     };
-  }, [ref.current, scroll.x, scroll.y]);
+  }, [ref.current]);
+
+
 
   return {
     top: rect.top,
