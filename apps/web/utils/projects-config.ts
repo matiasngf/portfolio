@@ -16,6 +16,7 @@ export interface ProjectBaseConfig {
   tags: TagKey[];
   post: MDXComponent;
   preview: StaticImageData;
+  noIdex?: boolean;
 }
 
 export interface PostConfig extends ProjectBaseConfig {
