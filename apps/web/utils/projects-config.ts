@@ -40,6 +40,17 @@ export interface Projects {
 }
 
 export const projectsConfig: Projects = {
+  'html-shaders-track-images': {
+    type: "experiment",
+    name: "HTML images to shaders",
+    description: "Track an image element and use it as a texture in a Canvas with ThreeJs.",
+    component: loadReactProject(() => import("experiments-html-shaders-track-images")),
+    preview: Previews.HtmlShadersTrackImages,
+    post: Posts.HtmlShadersTrackImages,
+    source: `${baseExperiment}/html-shaders/track-images`,
+    noIdex: true,
+    tags: ["shaders", "rtf"],
+  },
   earth: {
     type: "experiment",
     name: "Earth with react-three-fiber",
