@@ -26,9 +26,16 @@ void main() {
   float noiseScale = 5.0;
   float timeScale = 0.3;
 
-  float edgeFactor = bubble(vUv.x, 2.0) * bubble(vUv.y, 3.0);
   float displacementFactorX = voronoise(vec3(vUv * noiseScale, uTime * timeScale), 0.1);
   float displacementFactorY = voronoise(vec3(vUv * noiseScale, uTime * timeScale + 50.0), 0.1);
+
+  float distanceToEdgeX = abs(vUv.x - 0.5) * 2.0;
+  distanceToEdgeX = 1.0 - pow(distanceToEdgeX, 2.0);
+  float distanceToEdgeY = abs(vUv.y - 0.5) * 2.0;
+  distanceToEdgeY = 1.0 - pow(distanceToEdgeY, 2.0);
+
+  float edgeFactor = distanceToEdgeX * distanceToEdgeY;
+
   float mirrorFactorX = edgeFactor * displacementFactorX;
   float mirrorFactorY = edgeFactor * displacementFactorY;
 
