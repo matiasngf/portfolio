@@ -24,7 +24,7 @@ void main() {
 
   float noiseScale = 6.0;
   float timeScale = 0.2;
-  float displacementScale = 0.05;
+  float displacementScale = 0.07;
 
   float displacementFactorX = simpleNoise2(vec3(
     vUv * noiseScale + vec2(uTime * timeScale, 0.0),

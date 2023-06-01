@@ -1,10 +1,11 @@
 import { Canvas } from "@react-three/fiber";
 import { PrimaryScene } from "./components/PrimaryScene";
 import { Html } from "@react-three/drei";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Content } from "./components/Content";
 import { ElementTrackerContextProvider } from "./components/ElementTracker";
 import "./styles.css";
+import { SmoothScroll } from "./utils/smooth-scroll";
 
 function Loading() {
   return (
@@ -24,6 +25,9 @@ function Loading() {
 }
 
 const App = () => {
+  useEffect(() => {
+    new SmoothScroll(document, 50, 12);
+  }, []);
   return (
     <>
       <ElementTrackerContextProvider>
