@@ -15,6 +15,8 @@ import RayMarchingVoxelsLavaLamp from "./ray-marching-voxels-lava-lamp/ray-march
 import RayMarchingVoxelsLavaLampPreview from "./ray-marching-voxels-lava-lamp/preview.png";
 import Earth from "./earth/earth.mdx";
 import EarthPreview from "./earth/preview.png";
+import HtmlShadersTrackImages from "./html-shaders-track-images/html-shaders-track-images.mdx";
+import HtmlShadersTrackImagesPreview from "./html-shaders-track-images/preview.png";
 
 // posts
 import CreatingRayMarchingRenderer from "./creating-ray-marching-renderer/creating-ray-marching-renderer.mdx";
@@ -30,6 +32,7 @@ export const Posts = {
   RayMarchingAmbientOcclusion,
   RayMarchingVoxelsLavaLamp,
   Earth,
+  HtmlShadersTrackImages,
   // posts
   CreatingRayMarchingRenderer,
 };
@@ -44,6 +47,7 @@ export const Previews = {
   RayMarchingAmbientOcclusion: RayMarchingAmbientOcclusionPreview,
   RayMarchingVoxelsLavaLamp: RayMarchingVoxelsLavaLampPreview,
   Earth: EarthPreview,
+  HtmlShadersTrackImages: HtmlShadersTrackImagesPreview,
   // posts
   CreatingRayMarchingRenderer: CreatingRayMarchingRendererPreview,
 };
