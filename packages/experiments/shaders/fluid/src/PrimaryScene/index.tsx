@@ -15,6 +15,10 @@ export const PrimaryScene = ({
     <>
       {children}
       <FluidObject />
+      {/* <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[2, 2, 2]} />
+        <meshStandardMaterial transparent opacity={0.5} color="red" />
+      </mesh> */}
       <OrbitControls />
       <ambientLight />
     </>

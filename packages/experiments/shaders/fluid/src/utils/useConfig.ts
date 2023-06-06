@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
-import { Euler, Vector2, Vector3 } from "three";
+import { Color, Euler, Vector2, Vector3 } from "three";
 import { create } from 'zustand'
 import { shallow } from 'zustand/shallow'
 
@@ -15,9 +15,12 @@ interface ConfigStore {
   objectRotationDirection: Vector2
   fluidRotationForce: Vector2
   fluidNoise: number
+  fluidColor: Vector3
+  filledPercentage: number
   objectRotationAxis: Vector3
   objectNewUp: Vector3
   objectPrevUp: Vector3
+  fluidDensity: number
   setObjectRotation: (rotation: Euler) => void
   raf: () => void
 }
@@ -38,6 +41,9 @@ const useConfigStore = create<ConfigStore>((set) => ({
   objectRotationAxis: new Vector3(0, 1, 0),
   objectNewUp: new Vector3(0, 1, 0),
   objectPrevUp: new Vector3(0, 1, 0),
+  fluidColor: new Vector3(0, 0, 0),
+  filledPercentage: 0,
+  fluidDensity: 0,
 
   fluidRotationForce: new Vector2(0, 0),
   fluidNoise: 0,
@@ -77,7 +83,7 @@ const useConfigStore = create<ConfigStore>((set) => ({
   }),
   raf: () => set((prev) => {
     const fluidRotationForce = prev.fluidRotationForce.clone().multiplyScalar(0.9)
-    let fluidNoise = prev.fluidNoise * 0.9
+    let fluidNoise = prev.fluidNoise * 0.98
     if (fluidNoise < 0.0001) {
       fluidNoise = 0
     }
@@ -88,6 +94,11 @@ const useConfigStore = create<ConfigStore>((set) => ({
     }
   })
 }))
+
+const hexToVec3 = (hex: string) => {
+  const color = new Color(hex)
+  return new Vector3(color.r, color.g, color.b)
+}
 
 /** Should be used only once */
 export const useConfigControls = () => {
@@ -105,6 +116,33 @@ export const useConfigControls = () => {
       step: 0.01,
       onChange: (value) => {
         setObjectRotation(new Euler(value.x, value.y, value.z, 'XZY'))
+      }
+    },
+    fluidColor: {
+      label: "Fluid color",
+      value: "#47e5f8",
+      onChange: (value) => {
+        useConfigStore.setState({ fluidColor: hexToVec3(value) })
+      }
+    },
+    filledPercentage: {
+      label: "Filled percentage",
+      value: 0.8,
+      min: 0,
+      max: 1,
+      step: 0.01,
+      onChange: (value) => {
+        useConfigStore.setState({ filledPercentage: value })
+      }
+    },
+    fluidDensity: {
+      label: "Fluid density",
+      value: 0.8,
+      min: 0,
+      max: 1,
+      step: 0.01,
+      onChange: (value) => {
+        useConfigStore.setState({ fluidDensity: value })
       }
     },
     debug: {
@@ -136,6 +174,9 @@ export const useConfig = () => {
 export const useFluid = () => {
   return useConfigStore(state => ({
     fluidRotationForce: state.fluidRotationForce,
-    fluidNoise: state.fluidNoise
+    fluidNoise: state.fluidNoise,
+    fluidColor: state.fluidColor,
+    filledPercentage: state.filledPercentage,
+    fluidDensity: state.fluidDensity
   }), shallow)
 }
