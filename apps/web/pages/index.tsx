@@ -30,13 +30,15 @@ export default function Web() {
           </p>
         </div>
         <div className="space-y-8 lg:space-y-4 pt-8">
-          {Object.entries(projectsConfig).map(([key, config]) => {
-            return (
-              <div className="" key={key}>
-                <ProjectCard projectKey={key} project={config} />
-              </div>
-            );
-          })}
+          {Object.entries(projectsConfig)
+            .filter(([_, e]) => !e.noIdex)
+            .map(([key, config]) => {
+              return (
+                <div className="" key={key}>
+                  <ProjectCard projectKey={key} project={config} />
+                </div>
+              );
+            })}
         </div>
       </div>
     </>

@@ -22,11 +22,13 @@ export const PostHeader = ({ projectKey, project }: PostHeaderProps) => {
       )}
       <div className="flex flex-col items-center container relative space-y-7">
         <h1 className="text-4xl font-bold">{name}</h1>
-        <div className="flex space-x-7">
+        <div className="flex space-x-7 items-center">
           {hasLoad && (
             <div>
               <Link href={`/experiments/${projectKey}/play`}>
-                <button>Play project</button>
+                <button className="bg-green-600 text-white font-bold py-2 px-4 rounded-3xl">
+                  Start live demo
+                </button>
               </Link>
             </div>
           )}

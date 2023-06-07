@@ -16,6 +16,7 @@ export interface ProjectBaseConfig {
   tags: TagKey[];
   post: MDXComponent;
   preview: StaticImageData;
+  noIdex?: boolean;
 }
 
 export interface PostConfig extends ProjectBaseConfig {
@@ -39,6 +40,27 @@ export interface Projects {
 }
 
 export const projectsConfig: Projects = {
+  'shaders-fluid': {
+    type: "experiment",
+    name: "3D fluid shader",
+    description: "Ray marching fluid simulation with shaders.",
+    component: loadReactProject(() => import("experiments-shaders-fluid")),
+    preview: Previews.ShadersFluid,
+    post: Posts.ShadersFluid,
+    source: `${baseExperiment}/shaders/fluid`,
+    tags: ["shaders", "rtf", "ray-marching"],
+  },
+  'html-shaders-track-images': {
+    type: "experiment",
+    name: "HTML images to shaders",
+    description: "Track an image element and use it as a texture in a Canvas with ThreeJs.",
+    component: loadReactProject(() => import("experiments-html-shaders-track-images")),
+    preview: Previews.HtmlShadersTrackImages,
+    post: Posts.HtmlShadersTrackImages,
+    source: `${baseExperiment}/html-shaders/track-images`,
+    noIdex: true,
+    tags: ["shaders", "rtf"],
+  },
   earth: {
     type: "experiment",
     name: "Earth with react-three-fiber",
