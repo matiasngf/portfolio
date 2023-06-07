@@ -40,6 +40,16 @@ export interface Projects {
 }
 
 export const projectsConfig: Projects = {
+  'shaders-fluid': {
+    type: "experiment",
+    name: "3D fluid shader",
+    description: "Ray marching fluid simulation with shaders.",
+    component: loadReactProject(() => import("experiments-shaders-fluid")),
+    preview: Previews.ShadersFluid,
+    post: Posts.ShadersFluid,
+    source: `${baseExperiment}/shaders/fluid`,
+    tags: ["shaders", "rtf", "ray-marching"],
+  },
   'html-shaders-track-images': {
     type: "experiment",
     name: "HTML images to shaders",
