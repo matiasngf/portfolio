@@ -45,7 +45,7 @@ const App = () => {
   return (
     <Canvas
       onCreated={(state) => (state.gl.localClippingEnabled = true)}
-      camera={{ fov: 40, position: [0, 1, 5], far: 50 }}
+      camera={{ fov: 40, position: [0, 0.5, 5], far: 50 }}
     >
       <ThreeApp />
     </Canvas>

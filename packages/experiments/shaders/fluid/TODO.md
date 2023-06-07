@@ -5,7 +5,8 @@
 [x] calculate forces
 [x] write shader using a simple hitbox
 [x] change gitbox to capsule using sdf
-[ ] add model: https://sketchfab.com/3d-models/capsule-cc9762ea8df94875a0c6a925a509366b or this one https://sketchfab.com/3d-models/lightning-capsule-1477900e393d468ebfef7e7540ed69b6
+[x] add model: https://sketchfab.com/3d-models/potion-bottle-d69aa4d74c804a70b026c9239476d5fc
+[x] HDRI
 [ ] docs...
 
 ## check libs

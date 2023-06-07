@@ -82,7 +82,7 @@ float getWave(vec3 p) {
   float distToWave = maxLenght / 2.0 - rotatedP.x;
 
   float vaweHeight = 0.2 * forceLength;
-  float waveAmplitude = 0.5;
+  float waveAmplitude = 0.3;
   float wavePow = pow(distToWave, 0.5) * waveAmplitude;
   float wavePos = wavePow * 10.0 + cutOnPi(fFluidNoise);
   float waveOffset = 1.0;
@@ -148,7 +148,7 @@ vec4 rayMarchFluid(float maxDistance, vec3 viewDirection) {
     float traveledInLiquid = maxDistance - hit.distance;
     float transparency = (traveledInLiquid / (0.5 / fFluidDensity));
     transparency = clamp(transparency, 0.0, 1.0);
-    transparency = pow(transparency, 0.6);
+    transparency = pow(transparency, 1.0);
     return vec4(vFluidColor, transparency);
   }
 

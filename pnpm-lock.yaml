@@ -82,6 +82,9 @@ importers:
       experiments-ray-marching-voxels-lava-lamp:
         specifier: workspace:*
         version: link:../../packages/experiments/ray-marching/voxels-lava-lamp
+      experiments-shaders-fluid:
+        specifier: workspace:*
+        version: link:../../packages/experiments/shaders/fluid
       experiments-simple-scene:
         specifier: workspace:*
         version: link:../../packages/experiments/simple-scene
@@ -115,6 +118,9 @@ importers:
       three:
         specifier: ^0.152.2
         version: 0.152.2
+      three-stdlib:
+        specifier: ^2.23.8
+        version: 2.23.8(three@0.152.2)
     devDependencies:
       '@types/mdx':
         specifier: ^2.0.3
@@ -778,9 +784,6 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      react-use:
-        specifier: ^17.4.0
-        version: 17.4.0(react-dom@18.2.0)(react@18.2.0)
       rollup:
         specifier: ^3.2.5
         version: 3.2.5
@@ -793,6 +796,9 @@ importers:
       three:
         specifier: ^0.152.2
         version: 0.152.2
+      three-stdlib:
+        specifier: ^2.23.8
+        version: 2.23.8(three@0.152.2)
       tsconfig:
         specifier: workspace:*
         version: link:../../../tsconfig
@@ -1921,7 +1927,7 @@ packages:
       suspend-react: 0.0.8(react@18.2.0)
       three: 0.152.2
       three-mesh-bvh: 0.5.23(three@0.152.2)
-      three-stdlib: 2.21.11(three@0.152.2)
+      three-stdlib: 2.23.8(three@0.152.2)
       troika-three-text: 0.47.1(three@0.152.2)
       utility-types: 3.10.0
       zustand: 3.7.2(react@18.2.0)
@@ -1975,7 +1981,7 @@ packages:
       react-merge-refs: 1.1.0
       screen-space-reflections: 2.5.0(postprocessing@6.31.0)(three@0.152.2)
       three: 0.152.2
-      three-stdlib: 2.21.11(three@0.152.2)
+      three-stdlib: 2.23.8(three@0.152.2)
 
   /@rollup/plugin-commonjs@23.0.2(rollup@3.2.5):
     resolution: {integrity: sha512-e9ThuiRf93YlVxc4qNIurvv+Hp9dnD+4PjOqQs5vAYfcZ3+AXSrcdzXnVjWxcGQOa6KGJFcRZyUI3ktWLavFjg==}
@@ -2098,6 +2104,9 @@ packages:
     dependencies:
       '@types/ms': 0.7.31
     dev: false
+
+  /@types/draco3d@1.4.2:
+    resolution: {integrity: sha512-goh23EGr6CLV6aKPwN1p8kBD/7tT5V/bLpToSbarKrwVejqNrspVrv8DhliteYkkhZYrlq/fwKZRRUzH4XN88w==}
 
   /@types/eslint-scope@3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
@@ -2229,6 +2238,9 @@ packages:
 
   /@types/webxr@0.5.1:
     resolution: {integrity: sha512-xlFXPfgJR5vIuDefhaHuUM9uUgvPaXB6GKdXy2gdEh8gBWQZ2ul24AJz3foUd8NNKlSTQuWYJpCb1/pL81m1KQ==}
+
+  /@types/webxr@0.5.2:
+    resolution: {integrity: sha512-szL74BnIcok9m7QwYtVmQ+EdIKwbjPANudfuvDrAF8Cljg9MKUlIoc1w5tjj9PMpeSH3U1Xnx//czQybJ0EfSw==}
 
   /@typescript-eslint/eslint-plugin@5.20.0(@typescript-eslint/parser@5.41.0)(eslint@7.32.0)(typescript@4.8.4):
     resolution: {integrity: sha512-fapGzoxilCn3sBtC6NtXZX6+P/Hef7VDbyfGqTTpzYydwhlkevB+0vE0EnmHPVTVSy68GUncyJ/2PcrFBeCo5Q==}
@@ -2537,9 +2549,6 @@ packages:
       '@webassemblyjs/ast': 1.11.6
       '@xtuc/long': 4.2.2
     dev: false
-
-  /@webgpu/glslang@0.0.15:
-    resolution: {integrity: sha512-niT+Prh3Aff8Uf1MVBVUsaNjFj9rJAKDXuoHIKiQbB+6IUP/3J3JIhBNyZ7lDhytvXxw6ppgnwKZdDJ08UMj4Q==}
 
   /@xobotyi/scrollbar-width@1.9.5:
     resolution: {integrity: sha512-N8tkAACJx2ww8vFMneJmaAgmjAG1tnVBZJRLRcx061tmsLRZHSEZSLuGWnwPtunsSLvSqXQ2wfp7Mgqg1I+2dQ==}
@@ -8290,14 +8299,14 @@ packages:
     dependencies:
       three: 0.152.2
 
-  /three-stdlib@2.21.11(three@0.152.2):
-    resolution: {integrity: sha512-fFeaMOc3lpup4A/FrSKHmp/PNYmyxyV8dzMorJpYyZBdIGAn5BmokGSN9ei8t7Wv9thxCW+VLaxA6csxTl5MYg==}
+  /three-stdlib@2.23.8(three@0.152.2):
+    resolution: {integrity: sha512-dsgh7cyz/zMY6E+b4XsMRuLuY1tD81pgR+VtsRsXaqMKCHdMSjtXOerG5zSwMfjWMd9gbVMHvuhTc5atsG6F/w==}
     peerDependencies:
-      three: '>=0.122.0'
+      three: '>=0.128.0'
     dependencies:
-      '@babel/runtime': 7.20.0
+      '@types/draco3d': 1.4.2
       '@types/offscreencanvas': 2019.7.0
-      '@webgpu/glslang': 0.0.15
+      '@types/webxr': 0.5.2
       chevrotain: 10.5.0
       draco3d: 1.5.6
       fflate: 0.6.10

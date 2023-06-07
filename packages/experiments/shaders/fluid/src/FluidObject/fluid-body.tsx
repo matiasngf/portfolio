@@ -1,28 +1,23 @@
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { useUniforms } from "../utils/uniforms";
 import { useConfig, useFluid } from "../utils/use-config";
 import { fluidFragmentShader, fluidVertexShader } from "./fluid-shaders";
 import { Bounds, useBounds, useFBO } from "@react-three/drei";
 import { useEffect, useMemo } from "react";
-import { RGBAFormat } from "three";
+import { Group, RGBAFormat, ShaderMaterial } from "three";
 import { createDepthMaterial } from "./depth-material";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { PotionBottleGLTF } from "./potion";
 
 const devMode = true;
 
 export const FluidBody = () => (
   <Bounds>
-    <FluidBodyInner key={devMode ? Math.random() : ""} />
+    <FluidBodyInner />
   </Bounds>
 );
 
-// const depthMaterial = new MeshDepthMaterial({
-//   side: FrontSide,
-//   depthWrite: true,
-// });
-
 export const FluidBodyInner = () => {
-  // const groupRef = useRef<Scene>(null);
-  const { objectRotation } = useConfig();
   const {
     fluidNoise,
     fluidRotationForce,
@@ -93,26 +88,45 @@ export const FluidBodyInner = () => {
       farPlane: camera.far,
     });
 
+    const currentBackground = scene.background;
+
     // Render depth map of object only
     scene.overrideMaterial = depthMaterial;
+    scene.background = null;
     gl.setRenderTarget(depthTargetMap);
     gl.render(scene, camera);
     // Reset
     scene.overrideMaterial = null;
+    scene.background = currentBackground;
     gl.setRenderTarget(null);
   });
 
+  // load model
+
+  const bottleModel = useLoader(
+    GLTFLoader,
+    "/experiment-shaders-fluid-assets/potion-bottle.glb"
+  ) as unknown as PotionBottleGLTF;
+
+  const ModelNode = useMemo(() => {
+    const result = new Group();
+
+    const fluid = bottleModel.nodes.Fluid.clone();
+    fluid.renderOrder = 0;
+    fluid.material = new ShaderMaterial({
+      uniforms,
+      vertexShader: fluidVertexShader,
+      fragmentShader: fluidFragmentShader,
+      transparent: true,
+    });
+    result.add(fluid);
+
+    return result;
+  }, [bottleModel, fluidVertexShader, fluidFragmentShader, uniforms]);
+
   return (
-    <group rotation={objectRotation}>
-      <mesh renderOrder={0}>
-        <cylinderGeometry args={[0.5, 0.5, 2, 32, 32]} />
-        <shaderMaterial
-          uniforms={uniforms}
-          vertexShader={fluidVertexShader}
-          fragmentShader={fluidFragmentShader}
-          transparent
-        />
-      </mesh>
+    <group>
+      <primitive object={ModelNode} />
     </group>
   );
 };

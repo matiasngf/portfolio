@@ -33,6 +33,10 @@ export const useDrag = ({
   const draggedXSmooth = useSmooth(draggedX, dampingFactor);
   const draggedYSmooth = useSmooth(draggedY, dampingFactor);
 
+  const maxY = 1.0;
+  const minY = -0.8;
+
+
 
   useEffect(() => {
 
@@ -58,7 +62,12 @@ export const useDrag = ({
       const deltaY = clientY - startY;
 
       setDraggedX((d) => d + deltaX * 0.01 * sensitivity);
-      setDraggedY((d) => d + deltaY * 0.01 * sensitivity);
+      setDraggedY((d) => {
+        const newY = d + deltaY * 0.01 * sensitivity
+        if (newY > maxY || newY < minY) return d
+        return newY
+
+      });
       setDragStart({ x: clientX, y: clientY });
     };
 
