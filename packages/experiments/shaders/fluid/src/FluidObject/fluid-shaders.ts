@@ -19,6 +19,8 @@ void main() {
 
 export const fluidFragmentShader = /*glsl*/`
 
+#define PI 3.1415926535897932384626433832795
+
 /** Percentage of container filled by water from 0 to 1 */
 uniform float fFilled;
 /** Intencity of general waves */
@@ -59,13 +61,11 @@ void main() {
   float objectDepth = linearDepth - distanceToCamera;
 
   // discard the pixel if the depth is negative
-  // if (objectDepth < 0.0) {
-  //   discard;
-  // }
+  if (objectDepth < 0.0) {
+    discard;
+  }
 
   gl_FragColor = rayMarchFluid(objectDepth, viewDirection);
-
-  // gl_FragColor = vec4(vec3(objectDepth), 1.0);
 
 }
 

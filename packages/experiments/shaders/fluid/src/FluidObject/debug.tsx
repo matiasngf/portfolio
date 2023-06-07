@@ -1,5 +1,5 @@
 import { Html, Wireframe } from "@react-three/drei";
-import { useConfig } from "../utils/useConfig";
+import { useConfig } from "../utils/use-config";
 import { Vector3 } from "three";
 
 export const Debug = () => {

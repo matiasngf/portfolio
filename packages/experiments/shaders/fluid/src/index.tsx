@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { PrimaryScene } from "./PrimaryScene";
 import { Html } from "@react-three/drei";
 import { Suspense } from "react";
-import { useConfigControls } from "./utils/useConfig";
+import { useConfigControls, useConfigStore } from "./utils/use-config";
 
 function Loading() {
   return (
@@ -23,10 +23,17 @@ function Loading() {
 
 const ThreeApp = () => {
   useConfigControls();
+
+  const debugGrid = useConfigStore((state) => state.debugGrid);
+
   return (
     <>
-      <gridHelper args={[10, 10]} />
-      <axesHelper args={[10]} />
+      {debugGrid && (
+        <>
+          <gridHelper args={[10, 10]} />
+          <axesHelper args={[10]} />
+        </>
+      )}
       <Suspense fallback={<Loading />}>
         <PrimaryScene />
       </Suspense>
@@ -38,7 +45,7 @@ const App = () => {
   return (
     <Canvas
       onCreated={(state) => (state.gl.localClippingEnabled = true)}
-      camera={{ fov: 40, position: [2, 2, 2], far: 50 }}
+      camera={{ fov: 40, position: [0, 1, 5], far: 50 }}
     >
       <ThreeApp />
     </Canvas>

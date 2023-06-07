@@ -1,10 +1,10 @@
 ## tasks
 
-[ ] do a simple box
-[ ] attach rotation to mouse or device orientation
-[ ] calculate forces
-[ ] write shader using a simple hitbox
-[ ] change gitbox to capsule using sdf
+[x] do a simple box
+[x] attach rotation to mouse or device orientation
+[x] calculate forces
+[x] write shader using a simple hitbox
+[x] change gitbox to capsule using sdf
 [ ] add model: https://sketchfab.com/3d-models/capsule-cc9762ea8df94875a0c6a925a509366b or this one https://sketchfab.com/3d-models/lightning-capsule-1477900e393d468ebfef7e7540ed69b6
 [ ] docs...
 

@@ -1,6 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
 import { Color, Euler, Vector2, Vector3 } from "three";
+import { lerp } from "three/src/math/MathUtils";
 import { create } from 'zustand'
 import { shallow } from 'zustand/shallow'
 
@@ -10,11 +11,13 @@ const upVector = new Vector3(0, 1, 0)
 interface ConfigStore {
   debug: boolean
   setDebug: (debug: boolean) => void
+  debugGrid: boolean
   /** Rotation in quaternion */
   objectRotation: Euler
   objectRotationDirection: Vector2
   fluidRotationForce: Vector2
   fluidNoise: number
+  fluidNoiseTarget: number
   fluidColor: Vector3
   filledPercentage: number
   objectRotationAxis: Vector3
@@ -32,9 +35,10 @@ const getRotationAngle = (prevVector: Vector3, newVector: Vector3) => {
   return rotationAngleRaw > 0.0001 ? rotationAngleRaw : 0
 }
 
-const useConfigStore = create<ConfigStore>((set) => ({
+export const useConfigStore = create<ConfigStore>((set) => ({
   debug: defaultDebug,
   setDebug: (debug: boolean) => set({ debug }),
+  debugGrid: false,
 
   objectRotation: new Euler(0, 0, 0, 'XZY'),
   objectRotationDirection: new Vector2(0, 0),
@@ -47,6 +51,7 @@ const useConfigStore = create<ConfigStore>((set) => ({
 
   fluidRotationForce: new Vector2(0, 0),
   fluidNoise: 0,
+  fluidNoiseTarget: 0,
 
   setObjectRotation: (rotation: Euler) => set((prev) => {
 
@@ -69,7 +74,12 @@ const useConfigStore = create<ConfigStore>((set) => ({
     const rotationDirection = new Vector2(newUp.x, newUp.z)
 
     const fluidRotationForce = prev.fluidRotationForce.clone().add(rotationDirection)
-    const fluidNoise = prev.fluidNoise + fluidRotationForce.length()
+    const fluidNoise = fluidRotationForce.length() / 1;
+
+
+    const fluidNoiseTarget = Math.abs(prev.fluidNoiseTarget - prev.fluidNoise) > 3.0 ? prev.fluidNoiseTarget : prev.fluidNoiseTarget + fluidNoise
+
+
 
     return {
       objectRotation: rotation,
@@ -78,18 +88,25 @@ const useConfigStore = create<ConfigStore>((set) => ({
       objectNewUp: newUp,
       objectPrevUp: prevRUp,
       fluidRotationForce,
-      fluidNoise
+      fluidNoiseTarget
     }
   }),
   raf: () => set((prev) => {
-    let fluidRotationForce = prev.fluidRotationForce.clone().multiplyScalar(0.99)
+    let fluidRotationForce = prev.fluidRotationForce.clone().multiplyScalar(0.97)
     if (fluidRotationForce.length() < 0.0001) {
       fluidRotationForce = new Vector2(0, 0)
     }
-    let fluidNoise = prev.fluidNoise * 0.98
-    if (fluidNoise < 0.0001) {
-      fluidNoise = 0
+    // let fluidNoise = prev.fluidNoise * 0.98
+    // if (fluidNoise < 0.0001) {
+    //   fluidNoise = 0
+    // }
+
+    let fluidNoise = lerp(prev.fluidNoise, prev.fluidNoiseTarget, 0.04)
+
+    if (Math.abs(prev.fluidNoise - prev.fluidNoiseTarget) < 0.0001) {
+      fluidNoise = prev.fluidNoiseTarget
     }
+
 
     return {
       fluidRotationForce,
@@ -109,30 +126,19 @@ export const useConfigControls = () => {
   const raf = useConfigStore(state => state.raf)
 
   useControls(() => ({
-    objectRotation: {
-      label: "Object rotation",
-      value: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
-      step: 0.01,
-      onChange: (value) => {
-        setObjectRotation(new Euler(value.x, value.y, value.z, 'XZY'))
-      }
-    },
     fluidColor: {
       label: "Fluid color",
-      value: "#47e5f8",
+      // value: "#47e5f8", // water
+      value: "#48f78e",
       onChange: (value) => {
         useConfigStore.setState({ fluidColor: hexToVec3(value) })
       }
     },
     filledPercentage: {
       label: "Filled percentage",
-      value: 0.8,
-      min: 0,
-      max: 1,
+      value: 0.65,
+      min: 0.2,
+      max: 0.9,
       step: 0.01,
       onChange: (value) => {
         useConfigStore.setState({ filledPercentage: value })
@@ -140,7 +146,7 @@ export const useConfigControls = () => {
     },
     fluidDensity: {
       label: "Fluid density",
-      value: 0.8,
+      value: 0.44,
       min: 0,
       max: 1,
       step: 0.01,
@@ -152,6 +158,12 @@ export const useConfigControls = () => {
       value: defaultDebug,
       onChange: (value) => {
         useConfigStore.setState({ debug: value })
+      }
+    },
+    debugGrid: {
+      value: false,
+      onChange: (value) => {
+        useConfigStore.setState({ debugGrid: value })
       }
     }
   }));

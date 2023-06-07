@@ -1,4 +1,4 @@
-import { useConfig } from "../utils/useConfig";
+import { useConfig } from "../utils/use-config";
 import { Debug } from "./debug";
 import { FluidBody } from "./fluid-body";
 

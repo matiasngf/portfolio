@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber";
 import { useUniforms } from "../utils/uniforms";
-import { useConfig, useFluid } from "../utils/useConfig";
+import { useConfig, useFluid } from "../utils/use-config";
 import { fluidFragmentShader, fluidVertexShader } from "./fluid-shaders";
 import { Bounds, useBounds, useFBO } from "@react-three/drei";
 import { useEffect, useMemo } from "react";
