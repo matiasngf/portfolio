@@ -26,9 +26,20 @@ vec3 Translate(in vec3 p, in vec3 t) {
 }
 
 float getWave(vec3 p) {
-  float fluidNoise = min(fFluidNoise, 2.0);
+  // config
   float maxWaveHeight = 0.04;
   float waveLength = 0.1;
+
+  // vec2 fluidDirection = vec2(0.5, 0.0);
+  vec2 fluidDirection = vFluidRotationForce;
+  float dist = length(
+    fluidDirection - vec2(p.x, p.z)
+  );
+
+  float fluidNoise = min(fFluidNoise, 2.0);
+
+  return sin(dist * 7.0) * 0.06 * fluidNoise;
+
   float waveHeight = maxWaveHeight * fFluidNoise;
   // calcualte wave height based on sin wave
   // return waveHeight * sin(p.x / waveLength);

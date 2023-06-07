@@ -82,7 +82,10 @@ const useConfigStore = create<ConfigStore>((set) => ({
     }
   }),
   raf: () => set((prev) => {
-    const fluidRotationForce = prev.fluidRotationForce.clone().multiplyScalar(0.9)
+    let fluidRotationForce = prev.fluidRotationForce.clone().multiplyScalar(0.99)
+    if (fluidRotationForce.length() < 0.0001) {
+      fluidRotationForce = new Vector2(0, 0)
+    }
     let fluidNoise = prev.fluidNoise * 0.98
     if (fluidNoise < 0.0001) {
       fluidNoise = 0

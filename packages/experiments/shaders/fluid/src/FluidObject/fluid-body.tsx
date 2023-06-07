@@ -4,7 +4,7 @@ import { useConfig, useFluid } from "../utils/useConfig";
 import { fluidFragmentShader, fluidVertexShader } from "./fluid-shaders";
 import { Bounds, useBounds, useFBO } from "@react-three/drei";
 import { useEffect, useMemo } from "react";
-import { BackSide, FrontSide, MeshDepthMaterial, RGBAFormat } from "three";
+import { RGBAFormat } from "three";
 import { createDepthMaterial } from "./depth-material";
 
 const devMode = true;
@@ -105,7 +105,7 @@ export const FluidBodyInner = () => {
   return (
     <group rotation={objectRotation}>
       <mesh renderOrder={0}>
-        <cylinderGeometry args={[0.3, 0.3, 1, 32, 32]} />
+        <cylinderGeometry args={[0.5, 0.5, 2, 32, 32]} />
         <shaderMaterial
           uniforms={uniforms}
           vertexShader={fluidVertexShader}
