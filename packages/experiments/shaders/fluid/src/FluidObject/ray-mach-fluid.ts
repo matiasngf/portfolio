@@ -1,7 +1,10 @@
 export const rayMarchFluid = /*glsl*/ `
+
+uniform int MAX_STEPS;
+
 // RAYMARCHING VARIABLES
-#define MAX_STEPS 3
-#define SURFACE_DIST 0.1
+// #define MAX_STEPS 10
+#define SURFACE_DIST 0.05
 
 // STRUCTS
 struct RayHit {
@@ -82,7 +85,7 @@ float getWave(vec3 p) {
   float distToWave = maxLenght / 2.0 - rotatedP.x;
 
   float vaweHeight = 0.2 * forceLength;
-  float waveAmplitude = 0.3;
+  float waveAmplitude = 0.4;
   float wavePow = pow(distToWave, 0.5) * waveAmplitude;
   float wavePos = wavePow * 10.0 + cutOnPi(fFluidNoise);
   float waveOffset = 1.0;

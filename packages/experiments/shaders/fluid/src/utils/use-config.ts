@@ -24,6 +24,7 @@ interface ConfigStore {
   objectNewUp: Vector3
   objectPrevUp: Vector3
   fluidDensity: number
+  maxSteps: number
   setObjectRotation: (rotation: Euler) => void
   raf: () => void
 }
@@ -48,6 +49,7 @@ export const useConfigStore = create<ConfigStore>((set) => ({
   fluidColor: new Vector3(0, 0, 0),
   filledPercentage: 0,
   fluidDensity: 0,
+  maxSteps: 3,
 
   fluidRotationForce: new Vector2(0, 0),
   fluidNoise: 0,
@@ -136,7 +138,7 @@ export const useConfigControls = () => {
     },
     filledPercentage: {
       label: "Filled percentage",
-      value: 0.65,
+      value: 0.45,
       min: 0.2,
       max: 0.9,
       step: 0.01,
@@ -152,6 +154,16 @@ export const useConfigControls = () => {
       step: 0.01,
       onChange: (value) => {
         useConfigStore.setState({ fluidDensity: value })
+      }
+    },
+    maxSteps: {
+      label: "Liquid quality",
+      value: 12,
+      min: 1,
+      max: 30,
+      step: 1,
+      onChange: (value) => {
+        useConfigStore.setState({ maxSteps: value })
       }
     },
     debug: {
@@ -192,6 +204,7 @@ export const useFluid = () => {
     fluidNoise: state.fluidNoise,
     fluidColor: state.fluidColor,
     filledPercentage: state.filledPercentage,
-    fluidDensity: state.fluidDensity
+    fluidDensity: state.fluidDensity,
+    maxSteps: state.maxSteps,
   }), shallow)
 }

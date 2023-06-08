@@ -7,8 +7,12 @@ export interface UseDragOptions {
   dampingFactor?: number;
 }
 
+const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent => {
+  return 'touches' in event;
+};
+
 const getClientPosition = (event: MouseEvent | TouchEvent) => {
-  if ('touches' in event) {
+  if (isTouchEvent(event)) {
     return {
       clientX: event.touches[0].clientX,
       clientY: event.touches[0].clientY,
@@ -54,7 +58,9 @@ export const useDrag = ({
     const handleMouseMove = (event: MouseEvent | TouchEvent) => {
       if (!isDragging) return;
 
-      if ('touches' in event) {
+      const isTouch = isTouchEvent(event);
+
+      if (isTouch) {
         // prevent mobile scroll
         event.preventDefault();
       }
@@ -66,9 +72,11 @@ export const useDrag = ({
       const deltaX = clientX - startX;
       const deltaY = clientY - startY;
 
-      setDraggedX((d) => d + deltaX * 0.01 * sensitivity);
+      const multiplyScalar = isTouch ? 0.03 : 0.01;
+
+      setDraggedX((d) => d + deltaX * multiplyScalar * sensitivity);
       setDraggedY((d) => {
-        const newY = d + deltaY * 0.01 * sensitivity
+        const newY = d + deltaY * multiplyScalar * sensitivity
         if (newY > maxY || newY < minY) return d
         return newY
 

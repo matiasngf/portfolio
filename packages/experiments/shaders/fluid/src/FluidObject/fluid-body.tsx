@@ -24,6 +24,7 @@ export const FluidBodyInner = () => {
     fluidColor,
     filledPercentage,
     fluidDensity,
+    maxSteps,
   } = useFluid();
 
   const bounds = useBounds();
@@ -46,6 +47,7 @@ export const FluidBodyInner = () => {
     depthTexture: depthTargetMap.texture,
     nearPlane: 0.1,
     farPlane: 100,
+    MAX_STEPS: maxSteps,
   });
 
   const [depthUniforms, setDepthUniforms] = useUniforms({
@@ -63,8 +65,9 @@ export const FluidBodyInner = () => {
     setUniforms({
       fFilled: filledPercentage,
       fFluidDensity: fluidDensity,
+      MAX_STEPS: maxSteps,
     });
-  }, [fluidColor, filledPercentage, fluidDensity]);
+  }, [fluidColor, filledPercentage, fluidDensity, maxSteps]);
 
   useFrame(({ gl, camera, scene, clock }) => {
     bounds.refresh();
