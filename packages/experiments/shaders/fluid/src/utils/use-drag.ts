@@ -44,7 +44,6 @@ export const useDrag = ({
     if (!canvas) return
 
     const handleMouseDown = (event) => {
-      // event.preventDefault();
       setIsDragging(true);
 
       const { clientX, clientY } = getClientPosition(event);
@@ -52,8 +51,14 @@ export const useDrag = ({
       setDragStart({ x: clientX, y: clientY });
     };
 
-    const handleMouseMove = (event) => {
+    const handleMouseMove = (event: MouseEvent | TouchEvent) => {
       if (!isDragging) return;
+
+      if ('touches' in event) {
+        // prevent mobile scroll
+        event.preventDefault();
+      }
+
       const { x: startX, y: startY } = dragStart;
 
       const { clientX, clientY } = getClientPosition(event);
