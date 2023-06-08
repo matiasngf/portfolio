@@ -34,9 +34,7 @@ const ThreeApp = () => {
           <axesHelper args={[10]} />
         </>
       )}
-      <Suspense fallback={<Loading />}>
-        <PrimaryScene />
-      </Suspense>
+      <PrimaryScene />
     </>
   );
 };
