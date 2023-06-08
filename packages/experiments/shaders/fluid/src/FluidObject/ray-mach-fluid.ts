@@ -1,7 +1,7 @@
 export const rayMarchFluid = /*glsl*/ `
 // RAYMARCHING VARIABLES
-#define MAX_STEPS 300
-#define SURFACE_DIST 0.0002
+#define MAX_STEPS 3
+#define SURFACE_DIST 0.1
 
 // STRUCTS
 struct RayHit {

@@ -1,8 +1,9 @@
 import { useLoader } from "@react-three/fiber";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Group, Mesh, MeshBasicMaterial, TextureLoader } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import type { GLTF } from "three-stdlib";
+import { useBackgroundStore } from "../PrimaryScene/background";
 
 export interface PotionBottleGLTF extends GLTF {
   nodes: {
@@ -14,10 +15,14 @@ export interface PotionBottleGLTF extends GLTF {
 }
 
 export const Potion = () => {
-  const envTexture = useLoader(
-    TextureLoader,
-    "/experiment-shaders-fluid-assets/woods_4k.jpg"
-  );
+  // const envTexture = useLoader(
+  //   TextureLoader,
+  //   "/experiment-shaders-fluid-assets/woods_4k.jpg"
+  // );
+
+  const [currentGalss, setCurrentGlass] = useState<MeshBasicMaterial | null>();
+
+  const envTexture = useBackgroundStore((s) => s.texture);
 
   // load model
 
@@ -46,8 +51,16 @@ export const Potion = () => {
 
     result.add(glass);
 
+    setCurrentGlass(glass.material as MeshBasicMaterial);
+
     return result;
   }, [bottleModel]);
+
+  useEffect(() => {
+    if (currentGalss) {
+      currentGalss.envMap = envTexture;
+    }
+  }, [currentGalss, envTexture]);
 
   return <primitive object={ModelNode} />;
 };

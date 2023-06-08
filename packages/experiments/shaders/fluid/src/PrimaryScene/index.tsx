@@ -11,6 +11,7 @@ import { FluidObject } from "../FluidObject";
 import { useConfigStore } from "../utils/use-config";
 import { useDrag } from "../utils/use-drag";
 import { Bounds, Environment } from "@react-three/drei";
+import { useBackgroundStore } from "./background";
 
 export interface PrimarySceneProps {}
 
@@ -29,7 +30,10 @@ export const PrimaryScene = ({
 
   // global texture
 
-  const [cubeTexture, setCubeTexture] = useState(null);
+  const cubeTexture = useBackgroundStore((s) => s.texture);
+  const setTexture = useBackgroundStore((s) => s.setTexture);
+
+  // const [cubeTexture, setCubeTexture] = useState(null);
 
   const { gl, scene } = useThree();
 
@@ -39,14 +43,13 @@ export const PrimaryScene = ({
       texture.colorSpace = SRGBColorSpace;
       const cubeRenderTarget = new WebGLCubeRenderTarget(texture.image.height);
       cubeRenderTarget.fromEquirectangularTexture(gl, texture);
-      setCubeTexture(cubeRenderTarget.texture);
+      setTexture(cubeRenderTarget.texture);
     });
-  }, [gl]);
+  }, []);
 
   useEffect(() => {
     if (cubeTexture) {
       scene.background = cubeTexture;
-      scene.environment = cubeTexture;
     }
   }, [cubeTexture]);
 
