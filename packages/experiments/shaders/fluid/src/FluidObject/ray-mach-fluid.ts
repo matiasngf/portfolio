@@ -1,9 +1,6 @@
 export const rayMarchFluid = /*glsl*/ `
 
-uniform int MAX_STEPS;
-
 // RAYMARCHING VARIABLES
-// #define MAX_STEPS 10
 #define SURFACE_DIST 0.05
 
 // STRUCTS
@@ -84,11 +81,11 @@ float getWave(vec3 p) {
 
   float distToWave = maxLenght / 2.0 - rotatedP.x;
 
-  float vaweHeight = 0.2 * forceLength;
-  float waveAmplitude = 0.4;
+  float vaweHeight = 0.1 * forceLength;
+  float waveAmplitude = 0.5;
   float wavePow = pow(distToWave, 0.5) * waveAmplitude;
-  float wavePos = wavePow * 10.0 + cutOnPi(fFluidNoise);
-  float waveOffset = 1.0;
+  float wavePos = wavePow * 10.0;
+  float waveOffset = cutOnPi(fFluidNoise);
   float wave = sin(wavePos + waveOffset) * vaweHeight;
 
   return wave;
@@ -116,7 +113,7 @@ RayResult castRay(
   bool isHit = false;
   RayHit hitPoint;
 
-  for(int i = 0; i < MAX_STEPS; i++) {
+  for(int i = 0; i < iMaxSteps; i++) {
     hitPoint = getScene(p);
     float distToEdge = maxDistance - totalDistance;
 

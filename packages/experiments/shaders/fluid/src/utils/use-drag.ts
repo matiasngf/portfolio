@@ -72,7 +72,7 @@ export const useDrag = ({
       const deltaX = clientX - startX;
       const deltaY = clientY - startY;
 
-      const multiplyScalar = isTouch ? 0.03 : 0.01;
+      const multiplyScalar = isTouch ? 0.013 : 0.01;
 
       setDraggedX((d) => d + deltaX * multiplyScalar * sensitivity);
       setDraggedY((d) => {

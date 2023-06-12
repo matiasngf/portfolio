@@ -39,6 +39,8 @@ uniform vec3 vFluidColor;
 uniform float fFluidDensity;
 uniform sampler2D depthTexture;
 
+uniform int iMaxSteps;
+
 varying vec3 vNormal;
 varying vec3 wPos;
 varying vec2 screenSpaceUV;

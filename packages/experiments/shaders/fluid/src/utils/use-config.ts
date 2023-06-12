@@ -98,10 +98,6 @@ export const useConfigStore = create<ConfigStore>((set) => ({
     if (fluidRotationForce.length() < 0.0001) {
       fluidRotationForce = new Vector2(0, 0)
     }
-    // let fluidNoise = prev.fluidNoise * 0.98
-    // if (fluidNoise < 0.0001) {
-    //   fluidNoise = 0
-    // }
 
     let fluidNoise = lerp(prev.fluidNoise, prev.fluidNoiseTarget, 0.04)
 
@@ -124,7 +120,6 @@ const hexToVec3 = (hex: string) => {
 
 /** Should be used only once */
 export const useConfigControls = () => {
-  const setObjectRotation = useConfigStore(state => state.setObjectRotation)
   const raf = useConfigStore(state => state.raf)
 
   useControls(() => ({

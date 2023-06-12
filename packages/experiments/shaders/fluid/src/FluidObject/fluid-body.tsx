@@ -3,19 +3,40 @@ import { useUniforms } from "../utils/uniforms";
 import { useConfig, useFluid } from "../utils/use-config";
 import { fluidFragmentShader, fluidVertexShader } from "./fluid-shaders";
 import { Bounds, useBounds, useFBO } from "@react-three/drei";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Group, RGBAFormat, ShaderMaterial } from "three";
 import { createDepthMaterial } from "./depth-material";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { PotionBottleGLTF } from "./potion";
 
-const devMode = true;
+const hashFromString = (str: string) => {
+  let hash = 0;
+  if (str.length == 0) return hash;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+  }
+  return hash;
+};
 
-export const FluidBody = () => (
-  <Bounds>
-    <FluidBodyInner />
-  </Bounds>
-);
+export const FluidBody = () => {
+  const [shaderHash, setShaderHash] = useState(0);
+
+  useEffect(() => {
+    // rebuild object if hash changes
+    const hash = hashFromString(fluidFragmentShader);
+    if (shaderHash !== hash) {
+      setShaderHash(hash);
+    }
+  }, [fluidFragmentShader]);
+
+  return (
+    <Bounds>
+      <FluidBodyInner key={shaderHash} />
+    </Bounds>
+  );
+};
 
 export const FluidBodyInner = () => {
   const {
@@ -47,7 +68,7 @@ export const FluidBodyInner = () => {
     depthTexture: depthTargetMap.texture,
     nearPlane: 0.1,
     farPlane: 100,
-    MAX_STEPS: maxSteps,
+    iMaxSteps: maxSteps,
   });
 
   const [depthUniforms, setDepthUniforms] = useUniforms({
@@ -65,7 +86,7 @@ export const FluidBodyInner = () => {
     setUniforms({
       fFilled: filledPercentage,
       fFluidDensity: fluidDensity,
-      MAX_STEPS: maxSteps,
+      iMaxSteps: maxSteps,
     });
   }, [fluidColor, filledPercentage, fluidDensity, maxSteps]);
 
