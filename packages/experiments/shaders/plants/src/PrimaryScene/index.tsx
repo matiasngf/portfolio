@@ -1,19 +1,15 @@
 import { useThree } from "@react-three/fiber";
 import { PropsWithChildren, useEffect, useState } from "react";
-import {
-  SRGBColorSpace,
-  TextureLoader,
-  WebGLCubeRenderTarget,
-} from "three";
+import { SRGBColorSpace, TextureLoader, WebGLCubeRenderTarget } from "three";
 import { Bounds } from "@react-three/drei";
 import { useBackgroundStore } from "./background";
+import { Plant } from "../Plant";
 
 export interface PrimarySceneProps {}
 
 export const PrimaryScene = ({
   children,
 }: PropsWithChildren<PrimarySceneProps>) => {
-
   // global texture
 
   const cubeTexture = useBackgroundStore((s) => s.texture);
@@ -38,9 +34,10 @@ export const PrimaryScene = ({
   }, [cubeTexture]);
 
   return (
-    <Bounds fit margin={2}>
+    <>
       {children}
+      <Plant />
       <ambientLight />
-    </Bounds>
+    </>
   );
 };

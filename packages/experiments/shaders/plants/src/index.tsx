@@ -3,6 +3,7 @@ import { PrimaryScene } from "./PrimaryScene";
 import { Html, OrbitControls } from "@react-three/drei";
 import { Suspense } from "react";
 import { useConfigControls, useConfigStore } from "./utils/use-config";
+import { Vector3 } from "three";
 
 function Loading() {
   return (
@@ -30,8 +31,13 @@ const ThreeApp = () => {
     <>
       {debugGrid && (
         <>
-          <gridHelper args={[10, 10]} />
-          <axesHelper args={[10]} />
+          <gridHelper renderOrder={1} args={[10, 10]} />
+          <gridHelper
+            renderOrder={1}
+            rotation={[Math.PI / 2, 0, 0]}
+            args={[10, 10]}
+          />
+          <axesHelper renderOrder={2} args={[10]} />
         </>
       )}
       <PrimaryScene />
@@ -42,8 +48,10 @@ const ThreeApp = () => {
 const App = () => {
   return (
     <Canvas
-      onCreated={(state) => (state.gl.localClippingEnabled = true)}
-      camera={{ fov: 40, position: [0, 0.5, 5] }}
+      onCreated={(state) => {
+        state.camera.lookAt(0, 2, 0);
+      }}
+      camera={{ fov: 40, position: [2, 2, 2] }}
     >
       <ThreeApp />
       <OrbitControls />

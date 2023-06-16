@@ -1,7 +1,6 @@
 import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
-import { Color, Euler, Vector2, Vector3 } from "three";
-import { lerp } from "three/src/math/MathUtils";
+import { Vector3 } from "three";
 import { create } from 'zustand'
 import { shallow } from 'zustand/shallow'
 
@@ -9,32 +8,38 @@ import { shallow } from 'zustand/shallow'
 const upVector = new Vector3(0, 1, 0)
 
 interface ConfigStore {
+  grow: number
   debug: boolean
   debugGrid: boolean
 }
 
 export const useConfigStore = create<ConfigStore>((set) => ({
+  grow: 0.2,
   debug: false,
   debugGrid: false,
 }))
-
-const hexToVec3 = (hex: string) => {
-  const color = new Color(hex)
-  return new Vector3(color.r, color.g, color.b)
-}
 
 /** Should be used only once */
 export const useConfigControls = () => {
 
   useControls(() => ({
+    grow: {
+      value: 0.2,
+      min: 0,
+      max: 1,
+      step: 0.001,
+      onChange: (value) => {
+        useConfigStore.setState({ grow: value })
+      }
+    },
     debug: {
-      value: false,
+      value: true,
       onChange: (value) => {
         useConfigStore.setState({ debug: value })
       }
     },
     debugGrid: {
-      value: false,
+      value: true,
       onChange: (value) => {
         useConfigStore.setState({ debugGrid: value })
       }
@@ -50,6 +55,7 @@ export const useConfigControls = () => {
 
 export const useConfig = () => {
   return useConfigStore(state => ({
+    grow: state.grow,
     debug: state.debug
   }), shallow)
 }
