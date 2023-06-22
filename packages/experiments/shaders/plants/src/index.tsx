@@ -3,7 +3,6 @@ import { PrimaryScene } from "./PrimaryScene";
 import { Html, OrbitControls } from "@react-three/drei";
 import { Suspense } from "react";
 import { useConfigControls, useConfigStore } from "./utils/use-config";
-import { Vector3 } from "three";
 
 function Loading() {
   return (

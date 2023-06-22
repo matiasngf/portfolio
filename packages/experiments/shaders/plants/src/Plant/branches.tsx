@@ -15,7 +15,7 @@ export const Branches = () => {
 
   const [uniforms, setUniforms] = useUniforms({
     progress: 0,
-    branchRadius: 0.01,
+    branchRadius: 0.005,
     branchGrowOffset: 0.1,
   });
 
@@ -35,7 +35,7 @@ export const Branches = () => {
     ) as LineSegments[];
 
     branches.forEach((branchPath) => {
-      const branchMesh = pathToBranch(branchPath.clone(true), uniforms);
+      const branchMesh = pathToBranch(branchPath.clone(true), uniforms, 5);
       result.add(branchMesh);
     });
 
