@@ -1,7 +1,6 @@
 import { CylinderGeometry, GLSL3, LineSegments, Mesh, Quaternion, ShaderMaterial, Vector3 } from "three";
 import { branchFragmentShader, branchVertexShader } from "./plant-shaders";
 import { Uniforms } from "../utils/uniforms";
-import { useId } from "react";
 
 interface PathVertex {
   position: Vector3;
@@ -47,6 +46,7 @@ export const pathToBranch = (branch: LineSegments, uniforms: Uniforms): Mesh<Cyl
 
   let totalDistance = 0;
 
+  // TODO remove distances, the vertices are spaced evenly, maybe add as an optional parameter
   const distances = vertices.map((v, i) => {
     if (i === 0) return 0;
     const dist = v.distanceTo(vertices[i - 1]);
@@ -56,7 +56,7 @@ export const pathToBranch = (branch: LineSegments, uniforms: Uniforms): Mesh<Cyl
 
   let prevDirection = new Vector3(0, 1, 0);
 
-  let addedQuaternions = new Quaternion(0, 0, 0, 1);
+  const addedQuaternions = new Quaternion(0, 0, 0, 1);
 
   const pathVertices: PathVertex[] = vertices.map((v, i) => {
     const direction = new Vector3();
@@ -73,16 +73,14 @@ export const pathToBranch = (branch: LineSegments, uniforms: Uniforms): Mesh<Cyl
       direction,
       prevDirection,
     );
-    prevDirection = direction;
 
     if (i === 0) {
-
       addedQuaternions.copy(rotation);
     } else {
       addedQuaternions.multiplyQuaternions(addedQuaternions, rotation);
     }
 
-    // console.log(addedQuaternions);
+    prevDirection.copy(direction);
 
 
     return {
@@ -115,7 +113,7 @@ export const pathToBranch = (branch: LineSegments, uniforms: Uniforms): Mesh<Cyl
   branchMaterial.needsUpdate = true;
 
   // normalized cilinder
-  const cylinder = new CylinderGeometry(1, 1, 1, 20, numVertices * 5);
+  const cylinder = new CylinderGeometry(1, 1, 1, 20, numVertices * 2);
   const branchMesh = new Mesh(cylinder, branchMaterial);
 
   branchMesh.position.copy(branch.position);

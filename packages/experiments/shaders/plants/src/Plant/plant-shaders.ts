@@ -20,15 +20,28 @@ struct PathPos {
 uniform PathVertex pathVertices[NUM_VERTICES];
 uniform float totalDistance;
 uniform float progress;
+uniform float branchRadius;
+uniform float branchGrowOffset;
 
 varying vec2 vUv;
 varying vec3 worldPos;
 varying vec3 localPos;
 varying float targetFactor;
+varying float growFactorRaw;
+varying float growFactor; // clamped
 
 ${rotate}
 
-// TODO: split this into two function
+float getGrowFactor() {
+  float totalLenght = totalDistance * progress;
+  float currentLenght = localPos.y * totalLenght;
+  float growEnd = totalLenght - branchGrowOffset;
+
+  float growFactor = (growEnd - currentLenght) / branchGrowOffset + 1.;
+  return growFactor;
+}
+
+// TODO: split this into two functions
 PathPos getPositionOnPath(float percentage) {
   // Calculate the target distance along the path
   float targetDistance = percentage * totalDistance;
@@ -82,8 +95,13 @@ void main() {
   localPos = position + vec3(0.0, 0.5, 0.0);
   targetFactor = localPos.y;
 
+  // calculate grow factor
+  growFactorRaw = getGrowFactor();
+  growFactor = clamp(growFactorRaw, 0.0, 1.0);
+  float branchSize = branchRadius * growFactor;
+
   // move vertices to y = 0
-  vec3 targetPos = position * vec3(0.02, 0.0, 0.02);
+  vec3 targetPos = position * vec3(branchSize, 0.0, branchSize);
   
   //translate to path
   PathPos pathPosition = getPositionOnPath(targetFactor * progress);
@@ -113,6 +131,7 @@ varying vec3 localPos;
 
 uniform float totalDistance;
 uniform float progress;
+varying float growFactor;
 
 ${valueRemap}
 
@@ -122,13 +141,6 @@ void main() {
   vec3 green = vec3(0.0, 1.0, 0.0);
 
   result = green;
-
-  float totalLenght = totalDistance * progress;
-  float currentLenght = localPos.y * totalLenght;
-  float growOffset = 0.1;
-  float growEnd = totalLenght - growOffset;
-
-  float growFactor = clamp((1. - localPos.y) * 3., 0., 1.);
 
   result.y = growFactor;
 

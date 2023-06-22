@@ -15,6 +15,8 @@ export const Branches = () => {
 
   const [uniforms, setUniforms] = useUniforms({
     progress: 0,
+    branchRadius: 0.01,
+    branchGrowOffset: 0.1,
   });
 
   const { grow } = useConfig();
