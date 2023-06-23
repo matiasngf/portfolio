@@ -1,27 +1,11 @@
 import { rotate, valueRemap } from "../utils/shader-utils";
+import { getPositionOnPath, pathStructs, pathUniforms } from "../utils/shaders/paths";
 
 export const branchVertexShader = /*glsl*/ `
 
-struct PathVertex {
-  vec3 position;
-  float distance;
-  vec3 direction;
-  // quaternion rotation
-  vec4 rotation;
-  vec4 addedQuaternion;
-};
+${pathStructs}
 
-struct PathPos {
-  vec3 position;
-  vec3 direction;
-  vec4 rotation;
-};
-
-uniform PathVertex pathVertices[NUM_VERTICES];
-uniform float totalDistance;
-uniform float progress;
-uniform float branchRadius;
-uniform float branchGrowOffset;
+${pathUniforms}
 
 varying vec2 vUv;
 varying vec3 worldPos;
@@ -31,6 +15,7 @@ varying float growFactorRaw;
 varying float growFactor; // clamped
 
 ${rotate}
+${getPositionOnPath}
 
 float getGrowFactor() {
   float totalLenght = totalDistance * progress;
@@ -39,56 +24,6 @@ float getGrowFactor() {
 
   float growFactor = (growEnd - currentLenght) / branchGrowOffset + 1.;
   return growFactor;
-}
-
-// TODO: split this into two functions
-PathPos getPositionOnPath(float percentage) {
-  // Calculate the target distance along the path
-  float targetDistance = percentage * totalDistance;
-  
-  // Find the index of the vertices
-  // indexPrev ------> iNext
-  int iNext = 1;
-  float traveledDistance = pathVertices[1].distance;
-  while (traveledDistance < targetDistance) {
-    if (iNext == NUM_VERTICES - 1) {
-      // reached the end of the path
-      break;
-    }
-    iNext++;
-    traveledDistance += pathVertices[iNext].distance;
-  }
-  int iPrev = max(0, iNext - 1);
-
-  // Get the two adjacent vertices
-  vec3 posPrev = pathVertices[iPrev].position;
-  vec3 posNext = pathVertices[iNext].position;
-
-  float distancePrevToNext = pathVertices[iNext].distance;
-
-  // Calculate the interpolation factor based on distances
-  // 0 ------ tDist ------ offsetDist
-  float offsetDist = traveledDistance - distancePrevToNext;
-  float tDist = targetDistance - offsetDist;
-  float t = tDist / distancePrevToNext;
-
-  // Interpolate the position
-  vec3 position = mix(posPrev, posNext, t);
-
-  // Calculate the direction as the normalized direction between the two vertices
-  vec3 direction = mix(pathVertices[iPrev].direction, pathVertices[iNext].direction, t);
-
-  // vec4 rotation = getQuaternionFromVectors(direction, vec3(0.0, 1.0, 0.0));
-  // vec4 rotation = pathVertices[iPrev].addedQuaternion;
-
-  //mix quaterions
-  vec4 rotation = mix(pathVertices[iPrev].addedQuaternion, pathVertices[iNext].addedQuaternion, t);
-
-  return PathPos(
-    position,
-    direction,
-    rotation
-  );
 }
 
 void main() {
