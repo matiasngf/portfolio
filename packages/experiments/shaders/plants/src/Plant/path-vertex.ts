@@ -11,6 +11,12 @@ export interface PathVertex {
   addedQuaternion: Quaternion;
 }
 
+export interface PathVertices {
+  pathVertices: PathVertex[];
+  totalDistance: number;
+  numVertices: number;
+}
+
 export const verticesFromLineSegment = (branch: LineSegments) => {
   const positions = branch.geometry.attributes.position.array;
   const index = branch.geometry.index;
@@ -37,7 +43,7 @@ export const verticesFromLineSegment = (branch: LineSegments) => {
 
 }
 
-export const vectorsToPathVertices = (vertices: Vector3[]) => {
+export const vectorsToPathVertices = (vertices: Vector3[]): PathVertices => {
   const numVertices = vertices.length;
 
   let totalDistance = 0;

@@ -1,10 +1,11 @@
 import { CylinderGeometry, GLSL3, LineSegments, Mesh, Quaternion, ShaderMaterial, Vector3 } from "three";
 import { branchFragmentShader, branchVertexShader } from "./plant-shaders";
-import { Uniforms } from "../utils/uniforms";
 import { verticesFromLineSegment } from "./path-vertex";
+import { getBranchletMesh, getBranchletVertices } from "./branchlet";
+import { BranchUniforms } from "./branches";
 
 // transform a lineSegment into a branch mesh
-export const pathToBranch = (branch: LineSegments, uniforms: Uniforms, branchlets: number): Mesh<CylinderGeometry, ShaderMaterial> => {
+export const pathToBranch = (branch: LineSegments, uniforms: BranchUniforms, branchlets: number): Mesh<CylinderGeometry, ShaderMaterial> => {
 
   const {
     pathVertices,
@@ -35,6 +36,14 @@ export const pathToBranch = (branch: LineSegments, uniforms: Uniforms, branchlet
 
   branchMesh.position.copy(branch.position);
   branchMesh.rotation.copy(branch.rotation);
+
+  for (let i = 0; i < branchlets; i++) {
+    const t = Math.random();
+    const branchletV = getBranchletVertices(pathVertices, t);
+    const branchletMesh = getBranchletMesh(branchletV.pathVertices, t, uniforms);
+    branchletMesh.position.copy(branchletV.position);
+    branchMesh.add(branchletMesh);
+  }
 
   return branchMesh;
 }
