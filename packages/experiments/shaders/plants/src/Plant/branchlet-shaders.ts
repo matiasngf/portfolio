@@ -24,7 +24,7 @@ ${valueRemap}
 
 float getGrowFactor() {
   float branchletProgress = valueRemap(progress, tStart, tEnd, 0.0, 1.0);
-  float branchletGrowOffset = branchGrowOffset / 3.;
+  float branchletGrowOffset = branchGrowOffset * 0.2;
   branchletProgress = clamp(branchletProgress, 0.0, 1.0);
   float totalLenght = totalDistance * branchletProgress;
 
@@ -48,7 +48,9 @@ void main() {
   vec3 targetPos = position * vec3(branchSize, 0.0, branchSize);
   
   //translate to path
-  PathPos pathPosition = getPositionOnPath(targetFactor * progress);
+  float branchletProgress = valueRemap(progress, tStart, tEnd, 0.0, 1.0);
+  branchletProgress = clamp(branchletProgress, 0.0, 1.0);
+  PathPos pathPosition = getPositionOnPath(targetFactor * branchletProgress);
 
   // rotate the Y axis to the direction
   targetPos = qtransform(pathPosition.rotation, targetPos);
