@@ -42,8 +42,6 @@ export const getBranchletVertices = (pathVertices: PathVertex[], t: number) => {
     position
   } = getPathVertex(pathVertices, t);
 
-  const randomFactor = 0.1;
-
   const currentDireciton = direction.clone();
   const currentPosition = new Vector3(0, 0, 0);
   const randomRotation = new Quaternion();
@@ -51,8 +49,9 @@ export const getBranchletVertices = (pathVertices: PathVertex[], t: number) => {
   // first vertex
   branchletVertices.push(currentPosition.clone());
 
-  const numVertices = 10;
-  const edgeLength = 0.02;
+  const randomFactor = 0.1;
+  const numVertices = 20;
+  const edgeLength = 0.01;
 
   for (let i = 0; i < numVertices - 1; i++) {
 
@@ -64,6 +63,14 @@ export const getBranchletVertices = (pathVertices: PathVertex[], t: number) => {
     ));
 
     currentDireciton.applyQuaternion(randomRotation);
+
+    // smoot Y over time
+    const branchProgress = (i + 1) / numVertices;
+    const growOffset = 0.7;
+    const cap = 0.2;
+    const yFactor = Math.cos(branchProgress * Math.PI * growOffset) * cap + (1 - cap);
+    currentDireciton.y = currentDireciton.y * yFactor;
+    currentDireciton.normalize();
 
     // move vertex
     currentPosition.add(currentDireciton.clone().multiplyScalar(edgeLength));
