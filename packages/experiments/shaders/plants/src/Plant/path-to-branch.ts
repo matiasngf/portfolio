@@ -38,7 +38,7 @@ export const pathToBranch = (branch: LineSegments, uniforms: BranchUniforms, bra
   branchMesh.rotation.copy(branch.rotation);
 
   for (let i = 0; i < branchlets; i++) {
-    const t = Math.random();
+    const t = 1 - Math.pow(Math.random(), 1.7);
     const branchletV = getBranchletVertices(pathVertices, t);
     const branchletMesh = getBranchletMesh(branchletV.pathVertices, t, uniforms);
     branchletMesh.position.copy(branchletV.position);
