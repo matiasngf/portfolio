@@ -10,6 +10,7 @@ export interface PlantGLTF extends GLTF {
     pot: Mesh;
     Branch: LineSegments;
     Branch2: LineSegments;
+    leaf: Mesh;
   };
   materials: {};
 }

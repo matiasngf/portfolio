@@ -5,7 +5,6 @@ import { useEffect, useMemo } from "react";
 import { LineSegments } from "three";
 import { Uniforms, useUniforms } from "../utils/uniforms";
 import { useConfig } from "../utils/use-config";
-import { getBranchMesh } from "./helpers/get-branch-mesh";
 import { Branch } from "./branch";
 
 const branchUniforms = {

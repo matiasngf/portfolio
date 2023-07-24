@@ -3,12 +3,8 @@ import { PathVertex, PathVertices, getPathVertex, vectorsToPathVertices } from "
 import { branchletFragmentShader, branchletVertexShader } from "./branchlet-shaders";
 import { BranchUniforms } from "../branches";
 
-// TODO: material, leaves
+// TODO: material
 export const getBranchletMesh = (path: PathVertices, t: number, uniforms: BranchUniforms): Mesh => {
-
-
-  console.log(uniforms);
-
 
   const branchletGeometry = new CylinderGeometry(1, 1, 1, 10, path.numVertices * 2);
   const branchletMaterial = new ShaderMaterial({
