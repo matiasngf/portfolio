@@ -5,7 +5,7 @@ import { useEffect, useMemo } from "react";
 import { Group, LineSegments } from "three";
 import { Uniforms, useUniforms } from "../utils/uniforms";
 import { useConfig } from "../utils/use-config";
-import { pathToBranch } from "./path-to-branch";
+import { getBranchMesh } from "./get-branch-mesh";
 
 const branchUniforms = {
   progress: 0,
@@ -39,7 +39,7 @@ export const Branches = () => {
     ) as LineSegments[];
 
     branches.forEach((branchPath) => {
-      const branchMesh = pathToBranch(branchPath.clone(true), uniforms, 15);
+      const branchMesh = getBranchMesh(branchPath.clone(true), uniforms, 15);
       result.add(branchMesh);
     });
 

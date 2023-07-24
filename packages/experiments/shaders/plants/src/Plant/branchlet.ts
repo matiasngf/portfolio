@@ -3,7 +3,7 @@ import { PathVertex, PathVertices, getPathVertex, vectorsToPathVertices } from "
 import { branchletFragmentShader, branchletVertexShader } from "./branchlet-shaders";
 import { BranchUniforms } from "./branches";
 
-// TODO: use this function to generate mesh and material
+// TODO: material, leaves
 export const getBranchletMesh = (path: PathVertices, t: number, uniforms: BranchUniforms): Mesh => {
 
 
@@ -33,6 +33,7 @@ export const getBranchletMesh = (path: PathVertices, t: number, uniforms: Branch
   return branchletMesh;
 }
 
+/** Generates a branchlet that will start at the same direction/position of the branch at t */
 export const getBranchletVertices = (pathVertices: PathVertex[], t: number) => {
 
   const branchletVertices: Vector3[] = [];
