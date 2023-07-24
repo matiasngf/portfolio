@@ -2,10 +2,11 @@ import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three-stdlib";
 import { PlantGLTF } from ".";
 import { useEffect, useMemo } from "react";
-import { Group, LineSegments } from "three";
+import { LineSegments } from "three";
 import { Uniforms, useUniforms } from "../utils/uniforms";
 import { useConfig } from "../utils/use-config";
-import { getBranchMesh } from "./get-branch-mesh";
+import { getBranchMesh } from "./helpers/get-branch-mesh";
+import { Branch } from "./branch";
 
 const branchUniforms = {
   progress: 0,
@@ -31,22 +32,21 @@ export const Branches = () => {
     });
   }, [grow]);
 
-  const ModelNode = useMemo(() => {
-    const result = new Group();
-
+  const branches = useMemo(() => {
     const branches = Object.values(plantModel.nodes).filter(
       (node) => node.name.startsWith("Branch") && node.type === "LineSegments"
     ) as LineSegments[];
 
-    branches.forEach((branchPath) => {
-      const branchMesh = getBranchMesh(branchPath.clone(true), uniforms, 15);
-      result.add(branchMesh);
-    });
-
-    return result;
+    return branches;
   }, [plantModel]);
 
-  return <primitive object={ModelNode} />;
+  return (
+    <group>
+      {branches.map((branch, i) => (
+        <Branch uniforms={uniforms} segments={branch} key={i} />
+      ))}
+    </group>
+  );
 };
 
 // https://sketchfab.com/3d-models/free-pothos-potted-plant-money-plant-e9832f38484f4f85b3f9081b51fa3799

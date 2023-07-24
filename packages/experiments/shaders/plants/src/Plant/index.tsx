@@ -7,7 +7,7 @@ import { Branches } from "./branches";
 
 export interface PlantGLTF extends GLTF {
   nodes: {
-    POT_WOOD_LEGS_WOODEN_LEGS_POT_0: Mesh;
+    pot: Mesh;
     Branch: LineSegments;
     Branch2: LineSegments;
   };
@@ -32,7 +32,7 @@ const Pot = () => {
   const ModelNode = useMemo(() => {
     const result = new Group();
 
-    const pot = plantModel.nodes.POT_WOOD_LEGS_WOODEN_LEGS_POT_0.clone();
+    const pot = plantModel.nodes.pot.clone();
     result.add(pot);
 
     return result;
