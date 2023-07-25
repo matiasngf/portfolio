@@ -13,10 +13,10 @@ export const Branch = ({ segments, uniforms }: BranchProps) => {
   const branchletsNumber = 15;
   const branchletsArr = useMemo(() => {
     const ts = Array.from(Array(branchletsNumber).keys()).map(() =>
-      Math.min(Math.random(), 0.8)
+      Math.min(Math.random(), 0.9)
     );
     // add a branchlet at the end
-    ts.push(0.8);
+    ts.push(0.9);
     return ts;
   }, [branchletsNumber]);
 
