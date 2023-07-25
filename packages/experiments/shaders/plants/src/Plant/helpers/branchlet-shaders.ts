@@ -38,19 +38,19 @@ float getGrowFactor() {
 void main() {
   localPos = position + vec3(0.0, 0.5, 0.0);
   targetFactor = localPos.y;
-
-  // calculate grow factor
-  growFactorRaw = getGrowFactor();
-  growFactor = clamp(growFactorRaw, 0.0, 1.0);
-  float branchSize = branchRadius * 0.3 * growFactor;
-
-  // move vertices to y = 0
-  vec3 targetPos = position * vec3(branchSize, 0.0, branchSize);
   
   //translate to path
   float branchletProgress = valueRemap(progress, tStart, tEnd, 0.0, 1.0);
   branchletProgress = clamp(branchletProgress, 0.0, 1.0);
   PathPos pathPosition = getPositionOnPath(targetFactor * branchletProgress);
+
+  // calculate grow factor
+  growFactorRaw = getGrowFactor();
+  growFactor = clamp(growFactorRaw, branchletProgress > 0.1 ? 0.5 : 0., 1.0);
+  float branchSize = branchRadius * 0.3 * growFactor;
+
+  // move vertices to y = 0
+  vec3 targetPos = position * vec3(branchSize, 0.0, branchSize);
 
   // rotate the Y axis to the direction
   targetPos = qtransform(pathPosition.rotation, targetPos);

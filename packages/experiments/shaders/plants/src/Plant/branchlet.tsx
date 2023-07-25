@@ -10,11 +10,12 @@ import { Leaf } from "./leaf";
 interface BranchletProps {
   pathVertices: PathVertex[];
   uniforms: BranchUniforms;
+  t: number;
 }
 
-export const Branchlet = ({ pathVertices, uniforms }: BranchletProps) => {
-  const { branchletMesh, branchletPath, t } = useMemo(() => {
-    const t = 1 - Math.pow(Math.random(), 1.7);
+export const Branchlet = ({ pathVertices, uniforms, t }: BranchletProps) => {
+  const { branchletMesh, branchletPath } = useMemo(() => {
+    // const t = Math.random();
     const branchletV = getBranchletVertices(pathVertices, t);
     const branchletMesh = getBranchletMesh(
       branchletV.pathVertices,
@@ -25,9 +26,8 @@ export const Branchlet = ({ pathVertices, uniforms }: BranchletProps) => {
     return {
       branchletMesh,
       branchletPath: branchletV.pathVertices,
-      t,
     };
-  }, []);
+  }, [t]);
 
   return (
     <primitive object={branchletMesh}>

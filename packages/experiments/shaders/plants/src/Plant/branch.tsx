@@ -12,7 +12,12 @@ export interface BranchProps {
 export const Branch = ({ segments, uniforms }: BranchProps) => {
   const branchletsNumber = 15;
   const branchletsArr = useMemo(() => {
-    return Array.from(Array(branchletsNumber).keys());
+    const ts = Array.from(Array(branchletsNumber).keys()).map(() =>
+      Math.min(Math.random(), 0.8)
+    );
+    // add a branchlet at the end
+    ts.push(0.8);
+    return ts;
   }, [branchletsNumber]);
 
   const { branchMesh, branchPath } = useMemo(() => {
@@ -26,10 +31,11 @@ export const Branch = ({ segments, uniforms }: BranchProps) => {
 
   return (
     <primitive object={branchMesh}>
-      {branchletsArr.map((i) => (
+      {branchletsArr.map((t, i) => (
         <Branchlet
           pathVertices={branchPath.pathVertices}
           uniforms={uniforms}
+          t={t}
           key={i}
         />
       ))}

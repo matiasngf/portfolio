@@ -17,8 +17,8 @@ varying float growFactor; // clamped
 ${rotate}
 ${getPositionOnPath}
 
-float getGrowFactor() {
-  float totalLenght = totalDistance * progress;
+float getGrowFactor(float p) {
+  float totalLenght = totalDistance * p;
   float currentLenght = localPos.y * totalLenght;
   float growEnd = totalLenght - branchGrowOffset;
 
@@ -27,11 +27,12 @@ float getGrowFactor() {
 }
 
 void main() {
+  float clampedProgress = clamp(progress, 0.0, 1.0);
   localPos = position + vec3(0.0, 0.5, 0.0);
   targetFactor = localPos.y;
 
   // calculate grow factor
-  growFactorRaw = getGrowFactor();
+  growFactorRaw = getGrowFactor(clampedProgress);
   growFactor = clamp(growFactorRaw, 0.0, 1.0);
   float branchSize = branchRadius * growFactor;
 
@@ -39,7 +40,7 @@ void main() {
   vec3 targetPos = position * vec3(branchSize, 0.0, branchSize);
   
   //translate to path
-  PathPos pathPosition = getPositionOnPath(targetFactor * progress);
+  PathPos pathPosition = getPositionOnPath(targetFactor * clampedProgress);
 
   // rotate the Y axis to the direction
   targetPos = qtransform(pathPosition.rotation, targetPos);

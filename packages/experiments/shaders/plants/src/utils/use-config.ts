@@ -26,7 +26,7 @@ export const useConfigControls = () => {
     grow: {
       value: 0.8,
       min: 0,
-      max: 1,
+      max: 1.3,
       step: 0.001,
       onChange: (value) => {
         useConfigStore.setState({ grow: value })

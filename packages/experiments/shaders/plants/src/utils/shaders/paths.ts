@@ -25,6 +25,9 @@ uniform float branchGrowOffset;
 
 export const getPositionOnPath = /* glsl */ `
 PathPos getPositionOnPath(float percentage) {
+
+  percentage = clamp(percentage, 0.0, 1.0);
+
   // Calculate the target distance along the path
   float targetDistance = percentage * totalDistance;
   

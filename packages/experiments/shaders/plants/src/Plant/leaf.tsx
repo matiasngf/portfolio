@@ -43,7 +43,7 @@ export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
     });
 
     return leaf;
-  }, [plantModel]);
+  }, [plantModel, branchletPath, uniforms, t]);
 
   return <primitive object={modelNode} />;
 };
