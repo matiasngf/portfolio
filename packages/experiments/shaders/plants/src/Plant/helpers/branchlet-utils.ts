@@ -1,6 +1,6 @@
-import { CylinderGeometry, Euler, GLSL3, Mesh, MeshBasicMaterial, Quaternion, ShaderMaterial, SphereGeometry, Vector3 } from "three";
+import { CylinderGeometry, Euler, GLSL3, Mesh, Quaternion, ShaderMaterial, Vector3 } from "three";
 import { PathVertex, PathVertices, getPathVertex, vectorsToPathVertices } from "./path-vertex";
-import { branchletFragmentShader, branchletVertexShader } from "./branchlet-shaders";
+import { branchletFragmentShader, branchletVertexShader } from "../shaders/branchlet-shaders";
 import { BranchUniforms } from "../branches";
 
 // TODO: material

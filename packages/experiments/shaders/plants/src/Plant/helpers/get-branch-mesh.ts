@@ -1,5 +1,5 @@
-import { CylinderGeometry, GLSL3, LineSegments, Mesh, Quaternion, ShaderMaterial, Vector3 } from "three";
-import { branchFragmentShader, branchVertexShader } from "./branch-shaders";
+import { CylinderGeometry, GLSL3, LineSegments, Mesh, ShaderMaterial } from "three";
+import { branchFragmentShader, branchVertexShader } from "../shaders/branch-shaders";
 import { PathVertices, verticesFromLineSegment } from "./path-vertex";
 import { BranchUniforms } from "../branches";
 

@@ -4,8 +4,8 @@ import { PathVertices } from "./helpers/path-vertex";
 import { GLTFLoader } from "three-stdlib";
 import { PlantGLTF } from ".";
 import { useMemo } from "react";
-import { DoubleSide, GLSL3, ShaderMaterial } from "three";
-import { leafFragmentShader, leafVertexShader } from "./helpers/leaf-shaders";
+import { DoubleSide, GLSL3, MeshStandardMaterial, ShaderMaterial } from "three";
+import { leafFragmentShader, leafVertexShader } from "./shaders/leaf-shaders";
 
 export interface LeafProps {
   branchletPath: PathVertices;
@@ -22,6 +22,7 @@ export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
 
   const modelNode = useMemo(() => {
     const leaf = plantModel.nodes.leaf.clone();
+    const originalMat = (leaf.material as MeshStandardMaterial).clone();
 
     leaf.material = new ShaderMaterial({
       side: DoubleSide,
@@ -33,6 +34,9 @@ export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
       },
       uniforms: {
         ...uniforms,
+        leafTexture: {
+          value: originalMat.map.clone(),
+        },
         pathVertices: {
           value: branchletPath.pathVertices,
         },
