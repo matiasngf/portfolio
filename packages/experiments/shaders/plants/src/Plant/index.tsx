@@ -1,13 +1,12 @@
-import { useLoader } from "@react-three/fiber";
-import { useMemo } from "react";
-import { Group, LineSegments, Mesh } from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { LineSegments, Mesh } from "three";
 import type { GLTF } from "three-stdlib";
 import { Branches } from "./branches";
+import { Pot } from "./pot";
 
 export interface PlantGLTF extends GLTF {
   nodes: {
     pot: Mesh;
+    stick: Mesh;
     Branch: LineSegments;
     Branch2: LineSegments;
     leaf: Mesh;
@@ -22,22 +21,4 @@ export const Plant = () => {
       <Pot />
     </group>
   );
-};
-
-const Pot = () => {
-  const plantModel = useLoader(
-    GLTFLoader,
-    "experiment-shaders-plants-assets/plant.glb"
-  ) as unknown as PlantGLTF;
-
-  const ModelNode = useMemo(() => {
-    const result = new Group();
-
-    const pot = plantModel.nodes.pot.clone();
-    result.add(pot);
-
-    return result;
-  }, [plantModel]);
-
-  return <primitive object={ModelNode} />;
 };
