@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { PrimaryScene } from "./PrimaryScene";
-import { Html, OrbitControls } from "@react-three/drei";
+import { Html } from "@react-three/drei";
 import { Suspense } from "react";
 import { useConfigControls, useConfigStore } from "./utils/use-config";
 
@@ -57,7 +57,6 @@ const App = () => {
       camera={{ fov: 40, position: [2, 2, 2], near: 0.01, far: 20 }}
     >
       <ThreeApp />
-      <OrbitControls />
     </Canvas>
   );
 };
