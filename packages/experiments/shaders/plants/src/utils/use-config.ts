@@ -14,7 +14,7 @@ interface ConfigStore {
 }
 
 export const useConfigStore = create<ConfigStore>((set) => ({
-  grow: 0.2,
+  grow: 10,
   debug: false,
   debugGrid: false,
 }))
@@ -24,7 +24,7 @@ export const useConfigControls = () => {
 
   useControls(() => ({
     grow: {
-      value: 0.8,
+      value: 0,
       min: 0,
       max: 1.3,
       step: 0.001,
@@ -33,13 +33,13 @@ export const useConfigControls = () => {
       }
     },
     debug: {
-      value: true,
+      value: false,
       onChange: (value) => {
         useConfigStore.setState({ debug: value })
       }
     },
     debugGrid: {
-      value: true,
+      value: false,
       onChange: (value) => {
         useConfigStore.setState({ debugGrid: value })
       }
