@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import { Plant } from "../Plant";
-import { Backdrop, ContactShadows, RandomizedLight } from "@react-three/drei";
+import { Backdrop } from "@react-three/drei";
 import { MainCamera } from "./main-camera";
 
 export interface PrimarySceneProps {}

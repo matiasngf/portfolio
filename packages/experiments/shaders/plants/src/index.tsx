@@ -1,25 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { PrimaryScene } from "./PrimaryScene";
-import { Html } from "@react-three/drei";
-import { Suspense } from "react";
 import { useConfigControls, useConfigStore } from "./utils/use-config";
-
-function Loading() {
-  return (
-    <Html
-      fullscreen
-      style={{
-        backgroundColor: "black",
-        color: "white",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <h2>Loading</h2>
-    </Html>
-  );
-}
 
 const ThreeApp = () => {
   useConfigControls();

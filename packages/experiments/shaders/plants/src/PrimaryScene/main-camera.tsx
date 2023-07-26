@@ -1,5 +1,5 @@
 import { OrbitControls, PerspectiveCamera, useHelper } from "@react-three/drei";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import {
   CameraHelper,
   PerspectiveCamera as PerspectiveCameraType,
