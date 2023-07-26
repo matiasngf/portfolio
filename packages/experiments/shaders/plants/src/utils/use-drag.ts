@@ -5,6 +5,7 @@ export interface UseDragOptions {
   sensitivity?: number;
   enableDamping?: boolean;
   dampingFactor?: number;
+  preventDefault?: boolean;
 }
 
 const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent => {
@@ -27,6 +28,7 @@ const getClientPosition = (event: MouseEvent | TouchEvent) => {
 export const useDrag = ({
   sensitivity = 1,
   dampingFactor = 0.05,
+  preventDefault = true,
 }: UseDragOptions = {}) => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -39,8 +41,6 @@ export const useDrag = ({
 
   const maxY = 1.0;
   const minY = -0.8;
-
-
 
   useEffect(() => {
 
@@ -60,7 +60,7 @@ export const useDrag = ({
 
       const isTouch = isTouchEvent(event);
 
-      if (isTouch) {
+      if (isTouch && preventDefault) {
         // prevent mobile scroll
         event.preventDefault();
       }
@@ -107,7 +107,7 @@ export const useDrag = ({
       canvas.removeEventListener('touchmove', handleMouseMove);
       canvas.removeEventListener('touchend', handleMouseUp);
     };
-  }, [isDragging, dragStart]);
+  }, [isDragging, dragStart, preventDefault]);
 
   return [
     draggedXSmooth,

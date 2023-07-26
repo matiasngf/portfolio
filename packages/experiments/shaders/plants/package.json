@@ -20,6 +20,7 @@
     "@rollup/plugin-commonjs": "^23.0.2",
     "@rollup/plugin-image": "^3.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
+    "@studio-freight/lenis": "^1.0.19",
     "@types/react": "^18.0.22",
     "@types/three": "^0.152.0",
     "@vitejs/plugin-react": "^4.0.0",
@@ -41,6 +42,7 @@
     "zustand": "^4.3.8"
   },
   "peerDependencies": {
+    "@studio-freight/lenis": "^1.0.19",
     "@react-three/drei": "^9.66.4",
     "@react-three/fiber": "^8.13.0",
     "@react-three/postprocessing": "2.7.0",
