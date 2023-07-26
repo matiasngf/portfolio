@@ -1,4 +1,4 @@
-import { CylinderGeometry, GLSL3, LineSegments, Mesh, ShaderMaterial } from "three";
+import { CylinderGeometry, GLSL3, LineSegments, Mesh, ShaderMaterial, Texture } from "three";
 import { branchFragmentShader, branchVertexShader } from "../shaders/branch-shaders";
 import { PathVertices, verticesFromLineSegment } from "./path-vertex";
 import { BranchUniforms } from "../branches";
@@ -9,7 +9,7 @@ export interface getBranchReult {
 }
 
 /** Transform a lineSegment into a branch mesh */
-export const getBranchMesh = (branch: LineSegments, branchUniforms: BranchUniforms) => {
+export const getBranchMesh = (branch: LineSegments, branchUniforms: BranchUniforms, texture: Texture) => {
 
   const branchPath = verticesFromLineSegment(branch)
 
@@ -29,6 +29,7 @@ export const getBranchMesh = (branch: LineSegments, branchUniforms: BranchUnifor
       NUM_VERTICES: numVertices,
     },
     uniforms: {
+      map: { value: texture },
       pathVertices: {
         value: pathVertices,
       },

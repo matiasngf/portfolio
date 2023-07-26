@@ -63,9 +63,6 @@ PathPos getPositionOnPath(float percentage) {
   // Calculate the direction as the normalized direction between the two vertices
   vec3 direction = mix(pathVertices[iPrev].direction, pathVertices[iNext].direction, t);
 
-  // vec4 rotation = getQuaternionFromVectors(direction, vec3(0.0, 1.0, 0.0));
-  // vec4 rotation = pathVertices[iPrev].addedQuaternion;
-
   //mix quaterions
   vec4 rotation = mix(pathVertices[iPrev].addedQuaternion, pathVertices[iNext].addedQuaternion, t);
 

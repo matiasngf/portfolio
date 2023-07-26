@@ -1,10 +1,9 @@
-import { CylinderGeometry, Euler, GLSL3, Mesh, Quaternion, ShaderMaterial, Vector3 } from "three";
+import { CylinderGeometry, Euler, GLSL3, Mesh, Quaternion, ShaderMaterial, Texture, Vector3 } from "three";
 import { PathVertex, PathVertices, getPathVertex, vectorsToPathVertices } from "./path-vertex";
 import { branchletFragmentShader, branchletVertexShader } from "../shaders/branchlet-shaders";
 import { BranchUniforms } from "../branches";
 
-// TODO: material
-export const getBranchletMesh = (path: PathVertices, t: number, uniforms: BranchUniforms): Mesh => {
+export const getBranchletMesh = (path: PathVertices, t: number, uniforms: BranchUniforms, texture: Texture): Mesh => {
 
   const branchletGeometry = new CylinderGeometry(1, 1, 1, 10, path.numVertices * 2);
   const branchletMaterial = new ShaderMaterial({
@@ -16,6 +15,7 @@ export const getBranchletMesh = (path: PathVertices, t: number, uniforms: Branch
     },
     uniforms: {
       ...uniforms,
+      map: { value: texture },
       pathVertices: {
         value: path.pathVertices,
       },

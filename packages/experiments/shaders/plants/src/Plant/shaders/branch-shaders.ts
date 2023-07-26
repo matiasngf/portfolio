@@ -68,18 +68,18 @@ varying vec3 localPos;
 uniform float totalDistance;
 uniform float progress;
 varying float growFactor;
+uniform sampler2D map;
 
 ${valueRemap}
 
 void main() {
-  vec3 result = vec3(0.0);
+  float clampedProgress = clamp(progress, 0.0, 1.0);
 
-  vec3 green = vec3(0.0, 1.0, 0.0);
+  vec2 mapUv = vec2(vUv.x * 2.0, localPos.y * clampedProgress * totalDistance * 4.);
+  vec3 colorMap = texture2D(map, mapUv).rgb;
 
-  result = green;
+  // result.y = growFactor;
 
-  result.y = growFactor;
-
-  fragColor = vec4(result, 1.0);
+  fragColor = vec4(colorMap, 1.0);
 }
 `;

@@ -16,17 +16,16 @@ varying vec3 localPos;
 varying float targetFactor;
 varying float growFactorRaw;
 varying float growFactor; // clamped
+varying float branchletProgress;
 
 ${rotate}
 ${getPositionOnPath}
 
 ${valueRemap}
 
-float getGrowFactor() {
-  float branchletProgress = valueRemap(progress, tStart, tEnd, 0.0, 1.0);
+float getGrowFactor(float bProgress) {
   float branchletGrowOffset = branchGrowOffset * 0.2;
-  branchletProgress = clamp(branchletProgress, 0.0, 1.0);
-  float totalLenght = totalDistance * branchletProgress;
+  float totalLenght = totalDistance * bProgress;
 
   float currentLenght = localPos.y * totalLenght;
   float growEnd = totalLenght - branchletGrowOffset;
@@ -40,14 +39,14 @@ void main() {
   targetFactor = localPos.y;
   
   //translate to path
-  float branchletProgress = valueRemap(progress, tStart, tEnd, 0.0, 1.0);
+  branchletProgress = valueRemap(progress, tStart, tEnd, 0.0, 1.0);
   branchletProgress = clamp(branchletProgress, 0.0, 1.0);
   PathPos pathPosition = getPositionOnPath(targetFactor * branchletProgress);
 
   // calculate grow factor
-  growFactorRaw = getGrowFactor();
+  growFactorRaw = getGrowFactor(branchletProgress);
   growFactor = clamp(growFactorRaw, branchletProgress > 0.1 ? 0.5 : 0., 1.0);
-  float branchSize = branchRadius * 0.3 * growFactor;
+  float branchSize = branchRadius * 0.5 * growFactor;
 
   // move vertices to y = 0
   vec3 targetPos = position * vec3(branchSize, 0.0, branchSize);
@@ -74,21 +73,17 @@ varying vec3 worldPos;
 varying vec2 vUv;
 varying float targetFactor;
 varying vec3 localPos;
+varying float growFactor;
+varying float branchletProgress;
 
 uniform float totalDistance;
 uniform float progress;
-varying float growFactor;
-
+uniform sampler2D map;
 
 void main() {
-  vec3 result = vec3(0.0);
+  vec2 mapUv = vec2(vUv.x * 2.0, localPos.y * branchletProgress * totalDistance * 4.);
+  vec3 colorMap = texture2D(map, mapUv).rgb;
 
-  vec3 green = vec3(0.0, 1.0, 0.0);
-
-  result = green;
-
-  result.y = growFactor;
-
-  fragColor = vec4(result, 1.0);
+  fragColor = vec4(colorMap, 1.0);
 }
 `
