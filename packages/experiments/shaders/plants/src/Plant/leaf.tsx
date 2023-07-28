@@ -84,7 +84,14 @@ export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
 
       // move model along branchlet path
       const point = curve.getPointAt(branchletProgress);
-      const branchDirection = curve.getTangentAt(branchletProgress);
+      const startingDirection = curve.getTangentAt(0);
+      const endDirection = curve.getTangentAt(1);
+      const branchDirection = startingDirection.lerp(
+        endDirection,
+        branchletProgress
+      );
+      const branchCurrentDirection = curve.getTangentAt(branchletProgress);
+      branchDirection.lerp(branchCurrentDirection, 0.2);
       modelNode.position.copy(point);
 
       // rotate model to face branch direction
