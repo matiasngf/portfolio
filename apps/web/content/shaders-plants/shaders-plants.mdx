@@ -1,1 +1,285 @@
-## Shaders plants
+import { Source } from "@/components/mdx/source";
+export const experimentPath =
+  "https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/plants";
+
+In this post, I wanted to experiment with how to create procedural branches and how to make them grow along a path.
+
+## Objectives:
+
+This is quite a large experiment that accomplishes multiple things:
+
+- Making a mesh "grow" along a path drawn in Blender.
+- Generating new branchlets procedurally that will expand from the main branch.
+- Adding leaves that will grow along with the branchlets.
+- Make everything react to the scroll.
+
+## Getting the base model
+
+To do this experiment. I used a base [plant model from sketchfab](https://sketchfab.com/3d-models/free-pothos-potted-plant-money-plant-e9832f38484f4f85b3f9081b51fa3799). Once I have the model in Blender, I deleted the default branches and added some Bezier Curves that will be used as guides later.
+
+[imagen de Blender]
+
+To correctly export and parse the model later, the curves were transformed into geometry and renamed using the format `Branch.[number]`. I also added one leaf and stick models that will be used later in the experiment.
+
+Finally, the model was exported as `plant.glb`.
+
+## Main setup
+
+I'm using `zustand` and `leva` in order to create a store and controlls that will hold the state of the plant. The store will hold the following values:
+
+- grow: number -> The amount of growth that the plant will have.
+- debug: boolean -> Whether to use an external camera and helpers.
+- debugGrid: boolean -> Whether to show the debug lines or not.
+
+<Source basePath={experimentPath} path="/src/utils/use-config.ts">
+
+```ts
+import { useControls } from "leva";
+import { create } from "zustand";
+import { shallow } from "zustand/shallow";
+
+interface ConfigStore {
+  grow: number;
+  debug: boolean;
+  debugGrid: boolean;
+}
+
+export const useConfigStore = create<ConfigStore>(() => ({
+  grow: 10,
+  debug: false,
+  debugGrid: false,
+}));
+
+/** Should be used only once */
+export const useConfigControls = () => {
+  useControls(() => ({
+    // disabled in prod
+    grow: {
+      value: 0,
+      min: 0,
+      max: 1.3,
+      step: 0.001,
+      onChange: (value) => {
+        useConfigStore.setState({ grow: value });
+      },
+    },
+    debug: {
+      value: false,
+      onChange: (value) => {
+        useConfigStore.setState({ debug: value });
+      },
+    },
+    debugGrid: {
+      value: false,
+      onChange: (value) => {
+        useConfigStore.setState({ debugGrid: value });
+      },
+    },
+  }));
+
+  return;
+};
+
+export const useConfig = () => {
+  return useConfigStore(
+    (state) => ({
+      grow: state.grow,
+      debug: state.debug,
+    }),
+    shallow
+  );
+};
+```
+
+</Source>
+
+Then, I created a main component that imports the Branches and Pot components and exports the `GLTF nodes` that will be used to parse the model.
+
+<Source basePath={experimentPath} path="/src/Plant/index.tsx">
+
+```tsx
+import { LineSegments, Mesh } from "three";
+import type { GLTF } from "three-stdlib";
+import { Branches } from "./branches";
+import { Pot } from "./pot";
+
+export interface PlantGLTF extends GLTF {
+  nodes: {
+    pot: Mesh;
+    stick: Mesh;
+    Branch: LineSegments;
+    leaf: Mesh;
+  };
+}
+
+export const Plant = () => {
+  return (
+    <group position={[0, 0, 0]}>
+      <Branches />
+      <Pot />
+    </group>
+  );
+};
+```
+
+</Source>
+
+## Creating the main branches
+
+To add the branches into our scene. I first needed to parse the data of the blg object. Because we transformed our Bezier curves into Meshes, the data will be stored as LineSegments.
+
+```tsx
+import { GLTFLoader } from "three-stdlib";
+import { useLoader } from "@react-three/fiber";
+import { PlantGLTF } from ".";
+
+export const Branches = () => {
+  // Load the model using the GLTFLoader
+  const plantModel = useLoader(
+    GLTFLoader,
+    "/experiment-shaders-plants-assets/plant.glb"
+  ) as unknown as PlantGLTF;
+
+  // Parse the model and find the LineSegments nodes that start with "Branch"
+  const branches = useMemo(() => {
+    return Object.values(plantModel.nodes).filter(
+      (node) => node.name.startsWith("Branch") && node.type === "LineSegments"
+    ) as LineSegments[];
+  }, [plantModel]);
+};
+```
+
+Then I needed to add some uniforms that will be used by all the materials later. I also added a `useEffect` that will update the uniforms when the `grow` value changes.
+
+```tsx
+import { useEffect, useMemo } from "react";
+import { Uniforms, useUniforms } from "../utils/uniforms";
+import { useConfig } from "../utils/use-config";
+
+// Create some default uniforms
+const branchUniforms = {
+  progress: 0,
+  branchRadius: 0.005,
+  branchGrowOffset: 0.1,
+};
+
+// Export the typed uniforms
+export type BranchUniforms = Uniforms<typeof branchUniforms>;
+
+export const Branches = () => {
+  /** ...previous code... */
+
+  // Add a hook to create uniforms
+  const [uniforms, setUniforms] = useUniforms(branchUniforms);
+
+  // Get the grow value from the store
+  const { grow } = useConfig();
+
+  // The grow value will be used to update the progress uniform
+  useEffect(() => {
+    setUniforms({
+      progress: grow,
+    });
+  }, [grow]);
+};
+```
+
+Fianlly, I mapped over the `branches` array and return a `<Branch />` component. This is the final source code:
+
+<Source basePath={experimentPath} path="/src/Plant/branches.tsx">
+
+```tsx
+import { useLoader } from "@react-three/fiber";
+import { GLTFLoader } from "three-stdlib";
+import { PlantGLTF } from ".";
+import { useEffect, useMemo } from "react";
+import { LineSegments } from "three";
+import { Uniforms, useUniforms } from "../utils/uniforms";
+import { useConfig } from "../utils/use-config";
+import { Branch } from "./branch";
+
+const branchUniforms = {
+  progress: 0,
+  branchRadius: 0.005,
+  branchGrowOffset: 0.1,
+};
+
+export type BranchUniforms = Uniforms<typeof branchUniforms>;
+
+export const Branches = () => {
+  const plantModel = useLoader(
+    GLTFLoader,
+    "/experiment-shaders-plants-assets/plant.glb"
+  ) as unknown as PlantGLTF;
+
+  const branches = useMemo(() => {
+    return Object.values(plantModel.nodes).filter(
+      (node) => node.name.startsWith("Branch") && node.type === "LineSegments"
+    ) as LineSegments[];
+  }, [plantModel]);
+
+  const [uniforms, setUniforms] = useUniforms(branchUniforms);
+
+  const { grow } = useConfig();
+
+  useEffect(() => {
+    setUniforms({
+      progress: grow,
+    });
+  }, [grow]);
+
+  return (
+    <group>
+      {branches.map((branch, i) => (
+        <Branch uniforms={uniforms} segments={branch} key={i} branchlets={15} />
+      ))}
+    </group>
+  );
+};
+```
+
+</Source>
+
+## The `<Branch/>` component
+
+The `Branch` component will do two things. First, create a mesh that will grow along a `segments` path using the `uniforms.growFactor`, and second, add secondary procedural branches called `branchlets`.
+
+First, lets create an interface for the component:
+
+```ts
+export interface BranchProps {
+  segments: LineSegments;
+  uniforms: BranchUniforms;
+  branchlets: number;
+}
+```
+
+Then, we can create the component that will first load the branch texture and then create the mesh using the `getBranchMesh` function.
+
+```tsx
+export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
+  const branchMap = useTexture(
+    "/experiment-shaders-plants-assets/branch-texture.jpg",
+    (t: Texture) => {
+      t.wrapT = RepeatWrapping;
+      t.wrapS = MirroredRepeatWrapping;
+    }
+  );
+
+  const { branchMesh, branchPath } = useMemo(() => {
+    const { branchMesh, branchPath } = getBranchMesh(
+      segments.clone(true),
+      uniforms,
+      branchMap
+    );
+
+    return { branchMesh, branchPath };
+  }, [segments, uniforms, branchMap]);
+
+  return <primitive object={branchMesh} />;
+};
+```
+
+### Growing meshes
+
+I needed to create a mesh that grows along a set of points. To achieve this, I used a shaderMaterial that takes a cylinder geometry and a path as a uniform. Then, I used those uniforms to position the vertices of the cylinder along the path.
