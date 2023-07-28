@@ -34,6 +34,7 @@
     "experiments-ray-marching-voxels-lava-lamp": "workspace:*",
     "experiments-simple-scene": "workspace:*",
     "experiments-shaders-fluid": "workspace:*",
+    "experiments-shaders-plants": "workspace:*",
     "framer-motion": "^10.12.10",
     "leva": "^0.9.34",
     "lil-gui": "^0.17.0",
@@ -43,7 +44,9 @@
     "react-dom": "18.2.0",
     "react-use": "^17.4.0",
     "remark-gfm": "^3.0.1",
-    "three": "^0.152.2"
+    "three": "^0.152.2",
+    "@studio-freight/lenis": "^1.0.19",
+    "zustand": "^4.3.8"
   },
   "devDependencies": {
     "@types/mdx": "^2.0.3",

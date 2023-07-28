@@ -40,6 +40,16 @@ export interface Projects {
 }
 
 export const projectsConfig: Projects = {
+  'shaders-plants': {
+    type: "experiment",
+    name: "Procedural plants",
+    description: "Creating procedural plants with shaders.",
+    component: loadReactProject(() => import("experiments-shaders-plants")),
+    preview: Previews.ShadersPlants,
+    post: Posts.ShadersPlants,
+    source: `${baseExperiment}/shaders/plants`,
+    tags: ["shaders", "rtf", "procedural"],
+  },
   'shaders-fluid': {
     type: "experiment",
     name: "3D fluid shader",

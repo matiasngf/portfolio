@@ -76,9 +76,7 @@ const DebugCamera = ({ isActive }: DebugCameraProps) => {
 
   useEffect(() => {
     if (!groupRef.current) return;
-    console.log(xPos);
-
-    groupRef.current.rotation.y = xPos;
+    groupRef.current.rotation.y = -xPos;
   }, [xPos, groupRef.current]);
 
   return (

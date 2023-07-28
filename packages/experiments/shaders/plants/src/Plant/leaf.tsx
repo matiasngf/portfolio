@@ -26,7 +26,7 @@ export interface LeafProps {
 export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
   const plantModel = useLoader(
     GLTFLoader,
-    "experiment-shaders-plants-assets/plant.glb"
+    "/experiment-shaders-plants-assets/plant.glb"
   ) as unknown as PlantGLTF;
 
   const [leafUniforms, setLeafUniforms] = useUniforms({

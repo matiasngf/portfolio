@@ -53,6 +53,9 @@ importers:
       '@react-three/postprocessing':
         specifier: 2.7.0
         version: 2.7.0(@react-three/fiber@8.13.0)(react@18.2.0)(three@0.152.2)
+      '@studio-freight/lenis':
+        specifier: ^1.0.19
+        version: 1.0.19
       '@vercel/analytics':
         specifier: ^0.1.4
         version: 0.1.4(react@18.2.0)
@@ -89,6 +92,9 @@ importers:
       experiments-shaders-fluid:
         specifier: workspace:*
         version: link:../../packages/experiments/shaders/fluid
+      experiments-shaders-plants:
+        specifier: workspace:*
+        version: link:../../packages/experiments/shaders/plants
       experiments-simple-scene:
         specifier: workspace:*
         version: link:../../packages/experiments/simple-scene
@@ -125,6 +131,9 @@ importers:
       three-stdlib:
         specifier: ^2.23.8
         version: 2.23.8(three@0.152.2)
+      zustand:
+        specifier: ^4.3.8
+        version: 4.3.8(react@18.2.0)
     devDependencies:
       '@types/mdx':
         specifier: ^2.0.3
@@ -2265,7 +2274,6 @@ packages:
 
   /@studio-freight/lenis@1.0.19:
     resolution: {integrity: sha512-0DZdjDaJqhYVxzcbj6Dpv/BHS/RLc4f6XYu/n0t0fUKatuvO5vtXW4gW4GHgJPiPIpamct7bg8hpihbjZ6fqpw==}
-    dev: true
 
   /@swc/helpers@0.5.1:
     resolution: {integrity: sha512-sJ902EfIzn1Fa+qYmjdQqh8tPsoxyBz+8yBKC2HKUxyezKJFwPGOn7pv4WY6QuQW//ySQi5lJjA/ZT9sNWWNTg==}
@@ -9020,7 +9028,6 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
-    dev: true
 
   /user-home@2.0.0:
     resolution: {integrity: sha512-KMWqdlOcjCYdtIJpicDSFBQ8nFwS2i9sslAd6f4+CBGcU4gist2REnr2fxj2YocvJFxSF3ZOHLYLVZnUxv4BZQ==}
@@ -9376,7 +9383,6 @@ packages:
     dependencies:
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
-    dev: true
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}

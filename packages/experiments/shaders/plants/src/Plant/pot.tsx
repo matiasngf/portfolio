@@ -8,10 +8,12 @@ import { useTexture } from "@react-three/drei";
 export const Pot = () => {
   const plantModel = useLoader(
     GLTFLoader,
-    "experiment-shaders-plants-assets/plant.glb"
+    "/experiment-shaders-plants-assets/plant.glb"
   ) as unknown as PlantGLTF;
 
-  const labelTexture = useTexture("experiment-shaders-plants-assets/label.jpg");
+  const labelTexture = useTexture(
+    "/experiment-shaders-plants-assets/label.jpg"
+  );
 
   const { pot, stick } = useMemo(() => {
     const pot = plantModel.nodes.pot.clone();
