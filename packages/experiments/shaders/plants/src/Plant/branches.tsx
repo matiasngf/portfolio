@@ -21,6 +21,12 @@ export const Branches = () => {
     "/experiment-shaders-plants-assets/plant.glb"
   ) as unknown as PlantGLTF;
 
+  const branches = useMemo(() => {
+    return Object.values(plantModel.nodes).filter(
+      (node) => node.name.startsWith("Branch") && node.type === "LineSegments"
+    ) as LineSegments[];
+  }, [plantModel]);
+
   const [uniforms, setUniforms] = useUniforms(branchUniforms);
 
   const { grow } = useConfig();
@@ -31,21 +37,11 @@ export const Branches = () => {
     });
   }, [grow]);
 
-  const branches = useMemo(() => {
-    const branches = Object.values(plantModel.nodes).filter(
-      (node) => node.name.startsWith("Branch") && node.type === "LineSegments"
-    ) as LineSegments[];
-
-    return branches;
-  }, [plantModel]);
-
   return (
     <group>
       {branches.map((branch, i) => (
-        <Branch uniforms={uniforms} segments={branch} key={i} />
+        <Branch uniforms={uniforms} segments={branch} key={i} branchlets={15} />
       ))}
     </group>
   );
 };
-
-// https://sketchfab.com/3d-models/free-pothos-potted-plant-money-plant-e9832f38484f4f85b3f9081b51fa3799

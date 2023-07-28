@@ -8,10 +8,8 @@ export interface PlantGLTF extends GLTF {
     pot: Mesh;
     stick: Mesh;
     Branch: LineSegments;
-    Branch2: LineSegments;
     leaf: Mesh;
   };
-  materials: {};
 }
 
 export const Plant = () => {

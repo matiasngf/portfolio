@@ -1,11 +1,6 @@
-import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
-import { Vector3 } from "three";
 import { create } from 'zustand'
 import { shallow } from 'zustand/shallow'
-
-/** Absolute up vector */
-const upVector = new Vector3(0, 1, 0)
 
 interface ConfigStore {
   grow: number
@@ -13,7 +8,7 @@ interface ConfigStore {
   debugGrid: boolean
 }
 
-export const useConfigStore = create<ConfigStore>((set) => ({
+export const useConfigStore = create<ConfigStore>(() => ({
   grow: 10,
   debug: false,
   debugGrid: false,
@@ -45,10 +40,6 @@ export const useConfigControls = () => {
       }
     }
   }));
-
-  useFrame(() => {
-    // raf
-  })
 
   return
 }

@@ -13,9 +13,10 @@ import { useTexture } from "@react-three/drei";
 export interface BranchProps {
   segments: LineSegments;
   uniforms: BranchUniforms;
+  branchlets: number;
 }
 
-export const Branch = ({ segments, uniforms }: BranchProps) => {
+export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
   const branchMap = useTexture(
     "/experiment-shaders-plants-assets/branch-texture.jpg",
     (t: Texture) => {
@@ -23,16 +24,6 @@ export const Branch = ({ segments, uniforms }: BranchProps) => {
       t.wrapS = MirroredRepeatWrapping;
     }
   );
-
-  const branchletsNumber = 15;
-  const branchletsArr = useMemo(() => {
-    const ts = Array.from(Array(branchletsNumber).keys()).map(() =>
-      Math.min(Math.random(), 0.9)
-    );
-    // add a branchlet at the end
-    ts.push(0.9);
-    return ts;
-  }, [branchletsNumber]);
 
   const { branchMesh, branchPath } = useMemo(() => {
     const { branchMesh, branchPath } = getBranchMesh(
@@ -43,6 +34,15 @@ export const Branch = ({ segments, uniforms }: BranchProps) => {
 
     return { branchMesh, branchPath };
   }, [segments, uniforms, branchMap]);
+
+  const branchletsArr = useMemo(() => {
+    const ts = Array.from(Array(branchlets).keys()).map(() =>
+      Math.min(Math.random(), 0.9)
+    );
+    // add a branchlet at the end
+    ts.push(0.9);
+    return ts;
+  }, [branchlets]);
 
   return (
     <primitive object={branchMesh}>

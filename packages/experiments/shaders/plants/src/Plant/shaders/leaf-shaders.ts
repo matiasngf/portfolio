@@ -24,7 +24,7 @@ void main() {
   if (colorMap.a < 0.6) discard;
   
   vec3 result = colorMap.rgb;
-  vec3 green = vec3(0.2, 0.7, 0.2);
+  vec3 green = vec3(0.2, 0.5, 0.2);
 
   result = mix(green, result, leafProgress);
 
