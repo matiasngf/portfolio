@@ -1,6 +1,10 @@
 import { Source } from "@/components/mdx/source";
 
-import cylinderTransform from "./cylinder-transform.png";
+import cylinder1 from "./cylinder-1.png";
+import cylinder2 from "./cylinder-2.png";
+import cylinder3 from "./cylinder-3.png";
+
+import cylinderTransform1 from "./cylinder-transform-1.png";
 import cylinderTransform2 from "./cylinder-transform-2.png";
 import pathVertexVars from "./path-vertex-vars.png";
 
@@ -131,7 +135,7 @@ export const Plant = () => {
 
 ## Creating the main branches
 
-To add the branches into our scene. I first needed to parse the data of the blg object. Because we transformed our Bezier curves into Meshes, the data will be stored as LineSegments.
+To add the branches into our scene. I first needed to parse the data of the `.glb` file. Because we transformed our Bezier curves into Meshes, the data will be stored as LineSegments.
 
 ```tsx
 import { GLTFLoader } from "three-stdlib";
@@ -273,11 +277,7 @@ export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
 };
 ```
 
-Then, we need to generate a mesh that will grow along the `segments` path. To do this, we will use a `shaderMaterial` that takes a `cylinderGeometry` and the `LineSegments` and positions the vertices along the path.
-
-<Image src={cylinderTransform} />
-
-To achieve that, I created a `getBranchMesh` function that I used inside a `useMemo` hook.
+I wanted to generate the mesh procedurally, so I created a `getBranchMesh` function that takes the `segments` path and the `uniforms` and returns a `branchMesh` and a `branchPath`.
 
 ```tsx
 export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
@@ -297,11 +297,45 @@ export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
 };
 ```
 
+_Let's go just one more step into this rabbit hole and see what the `getBranchMesh` function does._
+
 ### getBranchMesh
 
-As described before, I needed to transform the vertices of the `cylinderGeometry` to make it grow along the `segments` path. To do this, I created a `shaderMaterial` that uses the points in the `segments` path to calculate the position of each vertex.
+This function handles the generation of the branch mesh. But, this mesh needs to follow the path segments and even grow along it. To do this, I first needed to create a cylinder geometry that will be used as a base for the mesh.
 
-The shader needs to take each vertex, calculate where it would land on the branch `segments` and then position the vertex correctly.
+```tsx
+/** Transform a lineSegment into a branch mesh */
+export const getBranchMesh = (
+  branch: LineSegments,
+  branchUniforms: BranchUniforms,
+  texture: Texture
+) => {
+  const branchResolution = 20;
+  const noramlizedCylinder = new CylinderGeometry(
+    1, // radiusTop
+    1, // radiusBottom
+    1, // height
+    branchResolution, // radialSegments
+    numVertices * 2 // heightSegments
+  );
+};
+```
+
+This is the result of the cylinder geometry:
+
+<Image src={cylinder1} />
+
+And these are some example vertices coordinates of the geometry:
+
+<Image src={cylinder2} />
+
+The idea is to reposition this cylinder vertices along the path using a shader.
+
+<Image src={cylinderTransform1} />
+
+Let's take one of the vertices and see how it would be transformed and call it `p`:
+
+<Image src={cylinder3} />
 
 <Image src={cylinderTransform2} />
 
