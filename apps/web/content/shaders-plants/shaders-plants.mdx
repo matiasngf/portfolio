@@ -1,4 +1,9 @@
 import { Source } from "@/components/mdx/source";
+
+import cylinderTransform from "./cylinder-transform.png";
+import cylinderTransform2 from "./cylinder-transform-2.png";
+import pathVertexVars from "./path-vertex-vars.png";
+
 export const experimentPath =
   "https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/plants";
 
@@ -254,7 +259,25 @@ export interface BranchProps {
 }
 ```
 
-Then, we can create the component that will first load the branch texture and then create the mesh using the `getBranchMesh` function.
+Now we can start coding our component, first we can load the branch texture using the `useTexture` hook.
+
+```tsx
+export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
+  const branchMap = useTexture(
+    "/experiment-shaders-plants-assets/branch-texture.jpg",
+    (t: Texture) => {
+      t.wrapT = RepeatWrapping;
+      t.wrapS = MirroredRepeatWrapping;
+    }
+  );
+};
+```
+
+Then, we need to generate a mesh that will grow along the `segments` path. To do this, we will use a `shaderMaterial` that takes a `cylinderGeometry` and the `LineSegments` and positions the vertices along the path.
+
+<Image src={cylinderTransform} />
+
+To achieve that, I created a `getBranchMesh` function that I used inside a `useMemo` hook.
 
 ```tsx
 export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
@@ -267,19 +290,76 @@ export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
   );
 
   const { branchMesh, branchPath } = useMemo(() => {
-    const { branchMesh, branchPath } = getBranchMesh(
-      segments.clone(true),
-      uniforms,
-      branchMap
-    );
-
-    return { branchMesh, branchPath };
+    return getBranchMesh(segments.clone(true), uniforms, branchMap);
   }, [segments, uniforms, branchMap]);
 
   return <primitive object={branchMesh} />;
 };
 ```
 
+### getBranchMesh
+
+As described before, I needed to transform the vertices of the `cylinderGeometry` to make it grow along the `segments` path. To do this, I created a `shaderMaterial` that uses the points in the `segments` path to calculate the position of each vertex.
+
+The shader needs to take each vertex, calculate where it would land on the branch `segments` and then position the vertex correctly.
+
+<Image src={cylinderTransform2} />
+
+At first, I only used the raw vertex data in the branch shader, but I found that it was not very efficient. So I decided to pre-calculate some values in javascript and pass them to the shader as uniforms.
+
 ### Growing meshes
 
-I needed to create a mesh that grows along a set of points. To achieve this, I used a shaderMaterial that takes a cylinder geometry and a path as a uniform. Then, I used those uniforms to position the vertices of the cylinder along the path.
+I needed a way to efficiently transform the vertices of the cylinder geometry. To do this, I created a funciton that loops over each vertex of the `segments` variable, and calculates the following variables:
+
+```ts
+// position of this point
+position: Vector3;
+// distance form this point to the previous one
+distance: number;
+// direction from this point to the next
+direction: Vector3;
+// rotation from the prev point to this one
+rotation: Quaternion;
+// rotation from the first point to this one
+addedQuaternion: Quaternion;
+```
+
+Here is a visual representation of the variables:
+
+<Image src={pathVertexVars} />
+
+_Note: The `addedQuaternion` is calcualted by multiplying all the rotations from the previous points._
+
+I called this interface `PathVertex`. Then I also created `PathVertices` which also has the totalDistance calculated. To do this I created the `verticesFromLineSegment` function:
+
+```ts
+interface PathVertex {
+  // position of this point
+  position: Vector3;
+  // distance form this point to the previous one
+  distance: number;
+  // direction from this point to the next
+  direction: Vector3;
+  // rotation from the prev point to this one
+  rotation: Quaternion;
+  // rotation from the first point to this one
+  addedQuaternion: Quaternion;
+}
+
+interface PathVertices {
+  pathVertices: PathVertex[];
+  totalDistance: number;
+  numVertices: number;
+}
+
+const verticesFromLineSegment = (branch: LineSegments): PathVertices => {...}
+```
+
+To see the complete implementation of this function, check the source code:
+
+<Link
+  target="_blank"
+  href={experimentPath + "/src/Plant/helpers/path-vertex.ts"}
+>
+  /src/Plant/helpers/path-vertex.ts
+</Link>

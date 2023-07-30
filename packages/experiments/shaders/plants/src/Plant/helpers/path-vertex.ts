@@ -1,7 +1,9 @@
 import { LineSegments, Quaternion, Vector3 } from "three";
 
 export interface PathVertex {
+  // position of this point
   position: Vector3;
+  // distance form this point to the previous one
   distance: number;
   // direction from this point to the next
   direction: Vector3;
@@ -17,7 +19,7 @@ export interface PathVertices {
   numVertices: number;
 }
 
-export const verticesFromLineSegment = (branch: LineSegments) => {
+export const verticesFromLineSegment = (branch: LineSegments): PathVertices => {
   const positions = branch.geometry.attributes.position.array;
   const index = branch.geometry.index;
   const vertices: Vector3[] = [];
@@ -48,7 +50,6 @@ export const vectorsToPathVertices = (vertices: Vector3[]): PathVertices => {
 
   let totalDistance = 0;
 
-  // TODO remove distances, the vertices are spaced evenly, maybe add as an optional parameter
   const distances = vertices.map((v, i) => {
     if (i === 0) return 0;
     const dist = v.distanceTo(vertices[i - 1]);

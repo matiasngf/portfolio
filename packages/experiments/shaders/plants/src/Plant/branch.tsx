@@ -26,13 +26,7 @@ export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
   );
 
   const { branchMesh, branchPath } = useMemo(() => {
-    const { branchMesh, branchPath } = getBranchMesh(
-      segments.clone(true),
-      uniforms,
-      branchMap
-    );
-
-    return { branchMesh, branchPath };
+    return getBranchMesh(segments.clone(true), uniforms, branchMap);
   }, [segments, uniforms, branchMap]);
 
   const branchletsArr = useMemo(() => {
