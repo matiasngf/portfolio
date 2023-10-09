@@ -17,12 +17,12 @@ const endPosition = new Vector3(1, 1, 1);
 const endTarget = new Vector3(0, 0.25, 0);
 
 export const MainCamera = () => {
-  const { debug, grow } = useConfig();
+  const { debugCamera, grow } = useConfig();
 
   const cameraRef = useRef<PerspectiveCameraType>(null);
   const camera = cameraRef.current;
 
-  useHelper(debug && cameraRef, CameraHelper);
+  useHelper(debugCamera && cameraRef, CameraHelper);
 
   useFrame(() => {
     if (!camera) return;
@@ -39,9 +39,9 @@ export const MainCamera = () => {
 
   return (
     <group>
-      {debug && (
+      {debugCamera && (
         <>
-          {/* <OrbitControls enabled={debug} /> */}
+          {/* <OrbitControls enabled={debugCamera} /> */}
           <axesHelper position={startingPos} args={[0.2]} />
           <axesHelper position={startingTarget} args={[0.2]} />
           <axesHelper position={endPosition} args={[0.2]} />
@@ -50,9 +50,9 @@ export const MainCamera = () => {
       <PerspectiveCamera
         ref={cameraRef}
         position={startingPos}
-        makeDefault={!debug}
+        makeDefault={!debugCamera}
       />
-      <DebugCamera isActive={debug} />
+      <DebugCamera isActive={debugCamera} />
     </group>
   );
 };

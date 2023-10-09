@@ -4,14 +4,26 @@ import { shallow } from 'zustand/shallow'
 
 interface ConfigStore {
   grow: number
-  debug: boolean
+  debugCamera: boolean
   debugGrid: boolean
+  renderBranches: boolean
+  debugBranches: boolean
+  renderBranchlets: boolean
+  debugBranchlets: boolean
+  renderLeaves: boolean
+  debugLeaves: boolean
 }
 
 export const useConfigStore = create<ConfigStore>(() => ({
   grow: 10,
-  debug: false,
+  debugCamera: false,
   debugGrid: false,
+  renderBranches: true,
+  debugBranches: false,
+  renderBranchlets: true,
+  debugBranchlets: false,
+  renderLeaves: true,
+  debugLeaves: false,
 }))
 
 /** Should be used only once */
@@ -27,10 +39,10 @@ export const useConfigControls = () => {
         useConfigStore.setState({ grow: value })
       }
     },
-    debug: {
+    debugCamera: {
       value: false,
       onChange: (value) => {
-        useConfigStore.setState({ debug: value })
+        useConfigStore.setState({ debugCamera: value })
       }
     },
     debugGrid: {
@@ -41,12 +53,64 @@ export const useConfigControls = () => {
     }
   }));
 
+  useControls('Branches', () => ({
+    render: {
+      value: true,
+      onChange: (value) => {
+        useConfigStore.setState({ renderBranches: value })
+      }
+    },
+    debug: {
+      value: false,
+      onChange: (value) => {
+        useConfigStore.setState({ debugBranches: value })
+      }
+    }
+  }))
+
+  useControls('Branchlets', () => ({
+    render: {
+      value: true,
+      onChange: (value) => {
+        useConfigStore.setState({ renderBranchlets: value })
+      }
+    },
+    debug: {
+      value: false,
+      onChange: (value) => {
+        useConfigStore.setState({ debugBranchlets: value })
+      }
+    }
+  }))
+
+  useControls('Leaves', () => ({
+    render: {
+      value: true,
+      onChange: (value) => {
+        useConfigStore.setState({ renderLeaves: value })
+      }
+    },
+    debug: {
+      value: false,
+      onChange: (value) => {
+        useConfigStore.setState({ debugLeaves: value })
+      }
+    }
+  }))
+
   return
 }
 
 export const useConfig = () => {
   return useConfigStore(state => ({
     grow: state.grow,
-    debug: state.debug
+    debugCamera: state.debugCamera,
+    debugGrid: state.debugGrid,
+    debugBranches: state.debugBranches,
+    renderBranches: state.renderBranches,
+    debugBranchlets: state.debugBranchlets,
+    renderBranchlets: state.renderBranchlets,
+    debugLeaves: state.debugLeaves,
+    renderLeaves: state.renderLeaves,
   }), shallow)
 }

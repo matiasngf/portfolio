@@ -42,11 +42,10 @@ export const getBranchMesh = (branch: LineSegments, branchUniforms: BranchUnifor
   const noramlizedCylinder = new CylinderGeometry(1, 1, 1, branchResolution, numVertices * 2);
   const branchMesh = new Mesh(noramlizedCylinder, branchMaterial);
 
-  branchMesh.position.copy(branch.position);
-  branchMesh.rotation.copy(branch.rotation);
-
   return {
     branchMesh,
-    branchPath
+    branchPath,
+    position: branch.position,
+    rotation: branch.rotation,
   };
 }

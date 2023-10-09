@@ -5,6 +5,7 @@ import { GLTFLoader } from "three-stdlib";
 import { PlantGLTF } from ".";
 import { useEffect, useMemo } from "react";
 import {
+  AxesHelper,
   CatmullRomCurve3,
   DoubleSide,
   GLSL3,
@@ -15,6 +16,7 @@ import {
 import { leafFragmentShader, leafVertexShader } from "./shaders/leaf-shaders";
 import { clamp, valueRemap } from "../utils/math-utils";
 import { useUniforms } from "../utils/uniforms";
+import { useConfig } from "../utils/use-config";
 
 export interface LeafProps {
   branchletPath: PathVertices;
@@ -24,6 +26,8 @@ export interface LeafProps {
 }
 
 export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
+  const { debugLeaves, renderLeaves } = useConfig();
+
   const plantModel = useLoader(
     GLTFLoader,
     "/experiment-shaders-plants-assets/plant.glb"
@@ -55,6 +59,10 @@ export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
 
     return leaf;
   }, [plantModel, branchletPath, uniforms, t]);
+
+  const helper = useMemo(() => {
+    return new AxesHelper(0.1);
+  }, []);
 
   useEffect(() => {
     if (!modelNode) return;
@@ -93,6 +101,7 @@ export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
       const branchCurrentDirection = curve.getTangentAt(branchletProgress);
       branchDirection.lerp(branchCurrentDirection, 0.2);
       modelNode.position.copy(point);
+      helper.position.copy(point);
 
       // rotate model to face branch direction
       const leafDirection = new Vector3(1, 0, 0).normalize();
@@ -101,9 +110,11 @@ export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
         .normalize();
       const angle = Math.acos(leafDirection.dot(branchDirection));
       modelNode.quaternion.setFromAxisAngle(axis, angle);
+      helper.quaternion.setFromAxisAngle(axis, angle);
 
       // scale
       modelNode.scale.setScalar(branchletProgress * 2);
+      // helper.scale.setScalar(branchletProgress * 0.1);
 
       // update progress
       prevProgress = currentProgress;
@@ -120,7 +131,8 @@ export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
 
   return (
     <group>
-      <primitive object={modelNode} />
+      {debugLeaves && <primitive object={helper} />}
+      {renderLeaves && <primitive object={modelNode} />}
     </group>
   );
 };
