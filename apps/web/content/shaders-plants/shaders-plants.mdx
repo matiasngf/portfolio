@@ -6,6 +6,10 @@ import cylinder3 from "./cylinder-3.png";
 
 import cylinderTransform1 from "./cylinder-transform-1.png";
 import cylinderTransform2 from "./cylinder-transform-2.png";
+import cylinderTransform3 from "./cylinder-transform-3.png";
+import cylinderTransform4 from "./cylinder-transform-4.png";
+import cylinderTransform5 from "./cylinder-transform-5.png";
+import cylinderTransform6 from "./cylinder-transform-6.png";
 import pathVertexVars from "./path-vertex-vars.png";
 
 export const experimentPath =
@@ -337,7 +341,25 @@ Let's take one of the vertices and see how it would be transformed and call it `
 
 <Image src={cylinder3} />
 
+We now need to find where that `vertex` would land in the `path`. To imagine this let's first stretch the path to be a straight line:
+
 <Image src={cylinderTransform2} />
+
+Now we can see that the `p` point would land between the second and third point of the path. Let's call those points `i` and `j`:
+
+<Image src={cylinderTransform3} />
+
+Knowing what vertices are `i` and `j` (previous and next vertices), we can start transforming the `p` point. The first step is to flatten all the vertices of the cylinder geometry to the `xz` plane:
+
+<Image src={cylinderTransform4} />
+
+Then, the point `p` will be rotated to match the direction `j-i`.
+
+<Image src={cylinderTransform5} />
+
+Finally, we can `lerp` between the `i` and `j` points to find the final position of `p` and translate it:
+
+<Image src={cylinderTransform6} />
 
 At first, I only used the raw vertex data in the branch shader, but I found that it was not very efficient. So I decided to pre-calculate some values in javascript and pass them to the shader as uniforms.
 
