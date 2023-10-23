@@ -26,18 +26,17 @@ export const Branchlet = ({
   const { debugBranchlets, renderBranchlets } = useConfig();
 
   const { branchletMesh, branchletPath, position } = useMemo(() => {
-    const branchletV = getBranchletVertices(pathVertices, t);
+    const branchletVertices = getBranchletVertices(pathVertices, t);
     const branchletMesh = getBranchletMesh(
-      branchletV.pathVertices,
+      branchletVertices.pathVertices,
       t,
       uniforms,
       texture
     );
-    // branchletMesh.position.copy(branchletV.position);
     return {
       branchletMesh,
-      branchletPath: branchletV.pathVertices,
-      position: branchletV.position,
+      branchletPath: branchletVertices.pathVertices,
+      position: branchletVertices.position,
     };
   }, [t, texture]);
 
