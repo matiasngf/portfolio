@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -9,7 +13,7 @@ importers:
         version: link:packages/eslint-config-custom
       prettier:
         specifier: latest
-        version: 2.8.8
+        version: 3.0.3
       turbo:
         specifier: latest
         version: 1.9.4
@@ -736,6 +740,84 @@ importers:
       vite:
         specifier: ^2.9.9
         version: 2.9.15
+
+  packages/experiments/shaders/basement-logo:
+    devDependencies:
+      '@react-three/drei':
+        specifier: ^9.66.4
+        version: 9.66.4(@react-three/fiber@8.13.0)(@types/three@0.152.0)(react-dom@18.2.0)(react@18.2.0)(three@0.152.2)
+      '@react-three/fiber':
+        specifier: ^8.13.0
+        version: 8.13.0(react-dom@18.2.0)(react@18.2.0)(three@0.152.2)
+      '@react-three/postprocessing':
+        specifier: 2.7.0
+        version: 2.7.0(@react-three/fiber@8.13.0)(react@18.2.0)(three@0.152.2)
+      '@rollup/plugin-commonjs':
+        specifier: ^23.0.2
+        version: 23.0.2(rollup@3.2.5)
+      '@rollup/plugin-image':
+        specifier: ^3.0.1
+        version: 3.0.1(rollup@3.2.5)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.0.1
+        version: 15.0.1(rollup@3.2.5)
+      '@types/react':
+        specifier: ^18.0.22
+        version: 18.0.24
+      '@types/three':
+        specifier: ^0.152.0
+        version: 0.152.0
+      '@vitejs/plugin-react':
+        specifier: ^4.0.0
+        version: 4.0.0(vite@4.3.5)
+      eslint:
+        specifier: ^7.32.0
+        version: 7.32.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../../eslint-config-custom
+      framer-motion:
+        specifier: ^10.12.10
+        version: 10.12.10(react-dom@18.2.0)(react@18.2.0)
+      leva:
+        specifier: ^0.9.34
+        version: 0.9.34(react-dom@18.2.0)(react@18.2.0)
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+      rollup:
+        specifier: ^3.2.5
+        version: 3.2.5
+      rollup-plugin-peer-deps-external:
+        specifier: ^2.2.4
+        version: 2.2.4(rollup@3.2.5)
+      rollup-plugin-typescript2:
+        specifier: ^0.34.1
+        version: 0.34.1(rollup@3.2.5)(typescript@4.8.4)
+      three:
+        specifier: ^0.152.2
+        version: 0.152.2
+      three-stdlib:
+        specifier: ^2.23.8
+        version: 2.23.8(three@0.152.2)
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../../tsconfig
+      tslib:
+        specifier: ^2.4.1
+        version: 2.4.1
+      typescript:
+        specifier: ^4.6.4
+        version: 4.8.4
+      vite:
+        specifier: ^4.3.5
+        version: 4.3.5
+      zustand:
+        specifier: ^4.3.8
+        version: 4.3.8(react@18.2.0)
 
   packages/experiments/shaders/fluid:
     devDependencies:
@@ -2228,16 +2310,13 @@ packages:
     dependencies:
       '@tweenjs/tween.js': 18.6.4
       '@types/stats.js': 0.17.0
-      '@types/webxr': 0.5.1
+      '@types/webxr': 0.5.2
       fflate: 0.6.10
       lil-gui: 0.17.0
 
   /@types/unist@2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: false
-
-  /@types/webxr@0.5.1:
-    resolution: {integrity: sha512-xlFXPfgJR5vIuDefhaHuUM9uUgvPaXB6GKdXy2gdEh8gBWQZ2ul24AJz3foUd8NNKlSTQuWYJpCb1/pL81m1KQ==}
 
   /@types/webxr@0.5.2:
     resolution: {integrity: sha512-szL74BnIcok9m7QwYtVmQ+EdIKwbjPANudfuvDrAF8Cljg9MKUlIoc1w5tjj9PMpeSH3U1Xnx//czQybJ0EfSw==}
@@ -7201,9 +7280,9 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
-  /prettier@2.8.8:
-    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
-    engines: {node: '>=10.13.0'}
+  /prettier@3.0.3:
+    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
