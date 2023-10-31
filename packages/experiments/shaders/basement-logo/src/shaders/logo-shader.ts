@@ -11,42 +11,46 @@ export type LogoUniforms = {
   noiseSize: number
 }
 
-export const logoVertexShader = /*glsl*/ `
-
-varying vec3 vNormal;
-varying vec2 vUv;
-varying vec3 wPos;
-varying float offsetFactor;
-
-uniform vec3 mousePosition;
-uniform float transitionSize;
-uniform float radius;
-uniform float offsetDistance;
-
+/** Utils */
+const getOffsetFactor = /*glsl*/ `
 float getOffsetFactor(vec3 pos) {
-  
-
   float x = length(pos - mousePosition) - radius;
   x = x / transitionSize;
   x = clamp(x, 0.0, 1.0);
 
   return x;
 }
+`
+/** Vertex shader */
+export const logoVertexShader = /*glsl*/ `
+
+varying vec3 vNormal;
+varying vec2 vUv;
+varying vec3 wPos;
+
+uniform vec3 mousePosition;
+uniform float transitionSize;
+uniform float radius;
+uniform float offsetDistance;
+
+${getOffsetFactor}
 
 void main() {
   vUv = uv;
   vNormal = normal;
-  offsetFactor = getOffsetFactor(position);
   
+  // calcualte world position
+  wPos = (modelMatrix * vec4(position, 1.0)).xyz;
+  
+  // calculate offset
+  float offsetFactor = getOffsetFactor(wPos);
   vec3 offsetDirection = normalize(position - mousePosition);
   vec3 offset = normal * offsetFactor * offsetDistance;
 
+  // transform pos with offset
   vec3 pos = position;
   pos += offset;
-
-  //recalculate offset factor after offset
-  offsetFactor = pow(getOffsetFactor(pos), 0.5);
-
+  // recalculate world pos
   wPos = (modelMatrix * vec4(pos, 1.0)).xyz;
 
 
@@ -54,23 +58,26 @@ void main() {
 }
 
 `
-
+/** Fragment shader */
 export const logoFragmentShader = /*glsl*/ `
 
 varying vec3 vNormal;
 varying vec2 vUv;
 varying vec3 wPos;
-varying float offsetFactor;
 
-uniform vec3 mousePosition;
 uniform float time;
+uniform vec3 mousePosition;
+uniform float transitionSize;
+uniform float radius;
 uniform float noiseSize;
 
 ${noise4d1}
 ${rgb}
 ${valueRemap}
+${getOffsetFactor}
 
 void main() {
+  float offsetFactor = pow(getOffsetFactor(wPos), 0.4);
   vec4 noiseParam = vec4(wPos / noiseSize, time * 0.5);
   noiseParam.xyz += mousePosition * 0.0;
 
@@ -78,11 +85,20 @@ void main() {
   noiseFactor = valueRemap(noiseFactor, -1.0, 1.0, 0.0, 1.0);
 
   float maskFactor = valueRemap(offsetFactor, 0.0, 1.0, -0.01, 1.01);
-  float noiseMask = noiseFactor > maskFactor ? 1.0 : 0.0;
-  noiseMask = offsetFactor > 0.99 ? 0.0 : noiseMask;
 
-  float borderSize = 0.1;
+  float noiseMask = smoothstep(maskFactor, maskFactor + 0.3, noiseFactor);
+  noiseMask = clamp(noiseMask / (fwidth(noiseFactor) * 2.0), 0., 1.);
+  noiseMask = offsetFactor > 0.99 ? 0.0 : noiseMask;
+  noiseMask = offsetFactor < 0.1 ? 1.0 : noiseMask;
+  if (noiseMask < 0.1) {
+    discard;
+  }
+  noiseMask = clamp(noiseMask, 0.2, 1.0);
+
+  float borderSize = 0.2;
   float borderMask = noiseFactor - borderSize > maskFactor ? 1.0 : 0.0;
+
+  borderMask = smoothstep(maskFactor, maskFactor + 0.01, noiseFactor - borderSize);
   borderMask = offsetFactor < 0.01 ? 1.0 : borderMask;
   
   // Colors
@@ -91,14 +107,12 @@ void main() {
   vec3 black = vec3(0.);
 
   // Final composite
-  vec3 result = vec3(0.00);
-  result = mix(orange, white, borderMask);
-  result = mix(black, result, noiseMask);
+  vec3 result = mix(orange, white, borderMask);
   
   // Debug
   // result = vec3(borderMask);
 
-  gl_FragColor = vec4(vec3(result), 1.0);
+  gl_FragColor = vec4(vec3(result), noiseMask);
 }
 
 `

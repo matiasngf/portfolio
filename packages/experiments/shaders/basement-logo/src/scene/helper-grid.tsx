@@ -8,9 +8,14 @@ export const HelperGrid = () => {
   return (
     <>
       <group rotation={[Math.PI / 2, 0, 0]}>
-        <gridHelper args={[10, 10]} />
-        <gridHelper scale={0.1} args={[100, 100]}>
-          <lineBasicMaterial opacity={0.2} transparent />
+        <gridHelper args={[10, 10]} renderOrder={2} />
+        <gridHelper scale={0.1} args={[100, 100]} renderOrder={1}>
+          <lineBasicMaterial
+            opacity={0.2}
+            transparent
+            depthTest={false}
+            depthWrite={false}
+          />
         </gridHelper>
       </group>
       <axesHelper args={[10]} />
