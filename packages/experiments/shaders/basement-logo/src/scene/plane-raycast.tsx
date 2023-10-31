@@ -18,11 +18,11 @@ export const PlaneRaycast = () => {
     if (followMouse) {
       mousePosition.lerp(realMousePos, 0.03);
     } else {
-      const time = clock.elapsedTime * 0.6;
+      const time = clock.elapsedTime * 0.4;
       // x
       const xStart = -Math.PI / 2;
       const xTime = xStart + time;
-      const xSize = 5.5;
+      const xSize = 4.7;
       const xSin = Math.sin(xTime);
       let smoothCurve = Math.pow(xSin, 3);
       smoothCurve = lerp(smoothCurve, xSin, 0.3);

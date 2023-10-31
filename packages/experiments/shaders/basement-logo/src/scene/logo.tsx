@@ -1,15 +1,7 @@
-import {
-  MeshBasicMaterial,
-  type Mesh,
-  ShaderMaterial,
-  DoubleSide,
-  FrontSide,
-  TwoPassDoubleSide,
-  BackSide,
-} from "three";
+import { type Mesh, ShaderMaterial, DoubleSide } from "three";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { GLTF, GLTFLoader } from "three-stdlib";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import {
   LogoUniforms,
   logoFragmentShader,
@@ -17,7 +9,7 @@ import {
 } from "../shaders/logo-shader";
 import { useUniforms } from "../utils/use-uniforms";
 import { useLogoStore } from "../utils/use-logo";
-import { button, folder, useControls } from "leva";
+import { button, useControls } from "leva";
 
 export interface LogoGLTF extends GLTF {
   nodes: {
