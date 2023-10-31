@@ -50,9 +50,9 @@ void main() {
   // transform pos with offset
   vec3 pos = position;
   pos += offset;
-  // recalculate world pos
-  wPos = (modelMatrix * vec4(pos, 1.0)).xyz;
 
+  // recalculate world pos after transform
+  wPos = (modelMatrix * vec4(pos, 1.0)).xyz;
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }
