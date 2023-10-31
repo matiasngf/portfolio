@@ -86,6 +86,9 @@ importers:
       experiments-ray-marching-voxels-lava-lamp:
         specifier: workspace:*
         version: link:../../packages/experiments/ray-marching/voxels-lava-lamp
+      experiments-shaders-basement-logo:
+        specifier: workspace:*
+        version: link:../../packages/experiments/shaders/basement-logo
       experiments-shaders-fluid:
         specifier: workspace:*
         version: link:../../packages/experiments/shaders/fluid
