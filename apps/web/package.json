@@ -34,6 +34,7 @@
     "experiments-ray-marching-voxels-lava-lamp": "workspace:*",
     "experiments-simple-scene": "workspace:*",
     "experiments-shaders-fluid": "workspace:*",
+    "experiments-shaders-basement-logo": "workspace:*",
     "experiments-shaders-plants": "workspace:*",
     "framer-motion": "^10.12.10",
     "leva": "^0.9.34",

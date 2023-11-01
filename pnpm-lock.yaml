@@ -89,6 +89,9 @@ importers:
       experiments-ray-marching-voxels-lava-lamp:
         specifier: workspace:*
         version: link:../../packages/experiments/ray-marching/voxels-lava-lamp
+      experiments-shaders-basement-logo:
+        specifier: workspace:*
+        version: link:../../packages/experiments/shaders/basement-logo
       experiments-shaders-fluid:
         specifier: workspace:*
         version: link:../../packages/experiments/shaders/fluid
@@ -749,6 +752,84 @@ importers:
       vite:
         specifier: ^2.9.9
         version: 2.9.15
+
+  packages/experiments/shaders/basement-logo:
+    devDependencies:
+      '@react-three/drei':
+        specifier: ^9.66.4
+        version: 9.66.4(@react-three/fiber@8.13.0)(@types/three@0.152.0)(react-dom@18.2.0)(react@18.2.0)(three@0.152.2)
+      '@react-three/fiber':
+        specifier: ^8.13.0
+        version: 8.13.0(react-dom@18.2.0)(react@18.2.0)(three@0.152.2)
+      '@react-three/postprocessing':
+        specifier: 2.7.0
+        version: 2.7.0(@react-three/fiber@8.13.0)(react@18.2.0)(three@0.152.2)
+      '@rollup/plugin-commonjs':
+        specifier: ^23.0.2
+        version: 23.0.2(rollup@3.2.5)
+      '@rollup/plugin-image':
+        specifier: ^3.0.1
+        version: 3.0.1(rollup@3.2.5)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.0.1
+        version: 15.0.1(rollup@3.2.5)
+      '@types/react':
+        specifier: ^18.0.22
+        version: 18.0.24
+      '@types/three':
+        specifier: ^0.152.0
+        version: 0.152.0
+      '@vitejs/plugin-react':
+        specifier: ^4.0.0
+        version: 4.0.0(vite@4.3.5)
+      eslint:
+        specifier: ^7.32.0
+        version: 7.32.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../../eslint-config-custom
+      framer-motion:
+        specifier: ^10.12.10
+        version: 10.12.10(react-dom@18.2.0)(react@18.2.0)
+      leva:
+        specifier: ^0.9.34
+        version: 0.9.34(react-dom@18.2.0)(react@18.2.0)
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+      rollup:
+        specifier: ^3.2.5
+        version: 3.2.5
+      rollup-plugin-peer-deps-external:
+        specifier: ^2.2.4
+        version: 2.2.4(rollup@3.2.5)
+      rollup-plugin-typescript2:
+        specifier: ^0.34.1
+        version: 0.34.1(rollup@3.2.5)(typescript@4.8.4)
+      three:
+        specifier: ^0.152.2
+        version: 0.152.2
+      three-stdlib:
+        specifier: ^2.23.8
+        version: 2.23.8(three@0.152.2)
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../../tsconfig
+      tslib:
+        specifier: ^2.4.1
+        version: 2.4.1
+      typescript:
+        specifier: ^4.6.4
+        version: 4.8.4
+      vite:
+        specifier: ^4.3.5
+        version: 4.3.5
+      zustand:
+        specifier: ^4.3.8
+        version: 4.3.8(react@18.2.0)
 
   packages/experiments/shaders/fluid:
     devDependencies:

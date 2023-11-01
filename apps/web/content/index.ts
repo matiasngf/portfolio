@@ -15,6 +15,8 @@ import RayMarchingVoxelsLavaLamp from "./ray-marching-voxels-lava-lamp/ray-march
 import RayMarchingVoxelsLavaLampPreview from "./ray-marching-voxels-lava-lamp/preview.png";
 import Earth from "./earth/earth.mdx";
 import EarthPreview from "./earth/preview.png";
+import ShadersBasementLogo from "./shaders-basement-logo/shaders-basement-logo.mdx";
+import ShadersBasementLogoPreview from "./shaders-basement-logo/preview.png";
 import HtmlShadersTrackImages from "./html-shaders-track-images/html-shaders-track-images.mdx";
 import HtmlShadersTrackImagesPreview from "./html-shaders-track-images/preview.png";
 import ShadersFluid from "./shaders-fluid/shaders-fluid.mdx";
@@ -38,6 +40,7 @@ export const Posts = {
   Earth,
   HtmlShadersTrackImages,
   ShadersFluid,
+  ShadersBasementLogo,
   ShadersPlants,
   // posts
   CreatingRayMarchingRenderer,
@@ -55,6 +58,7 @@ export const Previews = {
   Earth: EarthPreview,
   HtmlShadersTrackImages: HtmlShadersTrackImagesPreview,
   ShadersFluid: ShadersFluidPreview,
+  ShadersBasementLogo: ShadersBasementLogoPreview,
   ShadersPlants: ShadersPlantsPreview,
   // posts
   CreatingRayMarchingRenderer: CreatingRayMarchingRendererPreview,

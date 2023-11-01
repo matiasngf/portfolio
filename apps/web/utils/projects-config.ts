@@ -49,6 +49,18 @@ export const projectsConfig: Projects = {
     post: Posts.ShadersPlants,
     source: `${baseExperiment}/shaders/plants`,
     tags: ["shaders", "rtf", "procedural"],
+    noIdex: true,
+  },
+  'shaders-basement-logo': {
+    type: "experiment",
+    name: "Dissolve effect",
+    description: "Dissolve effect with shaders.",
+    component: loadReactProject(() => import("experiments-shaders-basement-logo")),
+    preview: Previews.ShadersBasementLogo,
+    post: Posts.ShadersBasementLogo,
+    source: `${baseExperiment}/shaders/basement-logo`,
+    tags: ["shaders", "rtf"],
+    noIdex: true,
   },
   'shaders-fluid': {
     type: "experiment",
