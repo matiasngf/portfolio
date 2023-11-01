@@ -77,12 +77,15 @@ ${valueRemap}
 ${getOffsetFactor}
 
 void main() {
+  // Recalculate offset factor with new world position
   float offsetFactor = pow(getOffsetFactor(wPos), 0.4);
-  vec4 noiseParam = vec4(wPos / noiseSize, time * 0.5);
-  noiseParam.xyz += mousePosition * 0.0;
 
+  // generate 4D vector for noise, use time as 4th dimension
+  vec4 noiseParam = vec4(wPos / noiseSize, time * 0.5);
+
+  // Calculate noise and remap it from -1, 1 to 0, 1
   float noiseFactor = noise4d1(noiseParam);
-  noiseFactor = valueRemap(noiseFactor, -1.0, 1.0, 0.0, 1.0);
+  noiseFactor = noiseFactor * 0.5 + 0.5;
 
   float maskFactor = valueRemap(offsetFactor, 0.0, 1.0, -0.01, 1.01);
 
