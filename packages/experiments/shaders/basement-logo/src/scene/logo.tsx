@@ -49,7 +49,7 @@ export const Logo = () => {
         },
       },
       transitionSize: {
-        value: 0.48,
+        value: 1.0,
         min: 0.2,
         max: 1,
         onChange: (v) => {
@@ -69,7 +69,7 @@ export const Logo = () => {
         },
       },
       noiseSize: {
-        value: 0.01,
+        value: 0.02,
         min: 0.01,
         max: 0.4,
         onChange: (v) => {
