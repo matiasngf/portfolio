@@ -87,35 +87,31 @@ void main() {
   float noiseFactor = noise4d1(noiseParam);
   noiseFactor = noiseFactor * 0.5 + 0.5;
 
+  // Create mask
   float maskFactor = valueRemap(offsetFactor, 0.0, 1.0, -0.01, 1.01);
-
   float noiseMask = smoothstep(maskFactor, maskFactor + 0.3, noiseFactor);
   noiseMask = clamp(noiseMask / (fwidth(noiseFactor) * 2.0), 0., 1.);
   noiseMask = offsetFactor > 0.99 ? 0.0 : noiseMask;
   noiseMask = offsetFactor < 0.1 ? 1.0 : noiseMask;
+  
+  // Discard pixel if noiseMask is too low
   if (noiseMask < 0.1) {
     discard;
   }
   noiseMask = clamp(noiseMask, 0.2, 1.0);
 
+  // Border
   float borderSize = 0.2;
   float borderMask = noiseFactor - borderSize > maskFactor ? 1.0 : 0.0;
-
   borderMask = smoothstep(maskFactor, maskFactor + 0.01, noiseFactor - borderSize);
   borderMask = offsetFactor < 0.01 ? 1.0 : borderMask;
   
-  // Colors
+  // Color transition
   vec3 orange = rgb(255.0, 77.0, 0.0);
   vec3 white = vec3(0.95);
-  vec3 black = vec3(0.);
-
-  // Final composite
   vec3 result = mix(orange, white, borderMask);
-  
-  // Debug
-  // result = vec3(borderMask);
 
-  gl_FragColor = vec4(vec3(result), noiseMask);
+  gl_FragColor = vec4(result, noiseMask);
 }
 
 `
