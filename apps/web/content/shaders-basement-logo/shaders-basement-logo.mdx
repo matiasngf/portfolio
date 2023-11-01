@@ -2,15 +2,19 @@ import displayLogo from "./display-logo.png";
 import mouseHover from "./mouse-hover.png";
 import meshTransform from "./mesh-transform.png";
 import noisePreview from "./4d-noise.png";
+import noiseMask from "./noise-mask.png";
+import parametersTest from "./parameters-test.png";
+import parametersTest2 from "./parameters-test-2.png";
+import finalResult from "./final-result.png";
 
 import Image from "next/image";
 
-Hello world! To celebrate my new position at Basement.studio I created this
+Hello world! To celebrate my new position at [Basement.studio](https://basement.studio/) I created this
 small experiment.
 
-I'm gonna focus on the shader code. Feel free to check the complete source code on [Github](https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/basement-logo).
+To keep the post simple, I'm gonna focus on the shader code. Feel free to check the complete source code on [Github](https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/basement-logo).
 
-Lets start by showing the model into the scene.
+Lets start with a simple shader that renders a white mesh. This shader will be apllied to the logo model using a `ShaderMaterial`
 
 ```glsl
 // Vertex Shader
@@ -181,3 +185,171 @@ void main() {
 ```
 
 <Image src={noisePreview} />
+
+### Mask
+
+Now that we have the `noise` and `offset` factors, we can use it to create a mask for the disolve effect.
+
+```glsl
+// Fragment shader
+
+varying vec3 vNormal;
+varying vec2 vUv;
+varying vec3 wPos;
+
+uniform float time;
+uniform vec3 mousePosition;
+uniform float transitionSize;
+uniform float radius;
+uniform float noiseSize;
+
+// Utils
+// noise4d1
+// rgb
+// valueRemap
+// getOffsetFactor
+
+void main() {
+  // Recalculate offset factor with new world position
+  float offsetFactor = pow(getOffsetFactor(wPos), 0.4);
+
+  // Calculate noise
+  vec4 noiseParam = vec4(wPos / noiseSize, time * 0.5);
+  float noiseFactor = noise4d1(noiseParam);
+  noiseFactor = noiseFactor * 0.5 + 0.5;
+
+  // Create mask
+  float maskFactor = valueRemap(offsetFactor, 0.0, 1.0, -0.01, 1.01);
+  float noiseMask = smoothstep(maskFactor, maskFactor + 0.3, noiseFactor);
+  noiseMask = clamp(noiseMask / (fwidth(noiseFactor) * 2.0), 0., 1.);
+  noiseMask = offsetFactor > 0.99 ? 0.0 : noiseMask;
+  noiseMask = offsetFactor < 0.1 ? 1.0 : noiseMask;
+
+  // Discard pixel if noiseMask is too low
+  if (noiseMask < 0.1) {
+    discard;
+  }
+  noiseMask = clamp(noiseMask, 0.2, 1.0);
+
+  gl_FragColor = vec4(vec3(noiseMask), noiseMask);
+
+}
+```
+
+<Image src={noiseMask} />
+
+The noise can be transformed using the uniforms. A higher `offsetDistance` with a low `noiseSize` will create a more granular dissolve effect:
+
+<Image src={parametersTest} />
+
+A bigger `noiseSize` will create visible bubbles:
+
+<Image src={parametersTest2} />
+
+### Transition effect
+
+Finally, by shifting the noiseMask we can create a transition effect.
+
+This is the final shader code:
+
+```glsl
+// Vertex shader
+
+varying vec3 vNormal;
+varying vec2 vUv;
+varying vec3 wPos;
+
+uniform vec3 mousePosition;
+uniform float transitionSize;
+uniform float radius;
+uniform float offsetDistance;
+
+// Utils
+// getOffsetFactor...
+
+void main() {
+  vUv = uv;
+  vNormal = normal;
+
+  // calcualte world position
+  wPos = (modelMatrix * vec4(position, 1.0)).xyz;
+
+  // calculate offset
+  float offsetFactor = getOffsetFactor(wPos);
+  vec3 offsetDirection = normalize(position - mousePosition);
+  vec3 offset = normal * offsetFactor * offsetDistance;
+
+  // transform pos with offset
+  vec3 pos = position;
+  pos += offset;
+
+  // recalculate world pos after transform
+  wPos = (modelMatrix * vec4(pos, 1.0)).xyz;
+
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+}
+```
+
+```glsl
+// Framgent shader
+
+varying vec3 vNormal;
+varying vec2 vUv;
+varying vec3 wPos;
+
+uniform float time;
+uniform vec3 mousePosition;
+uniform float transitionSize;
+uniform float radius;
+uniform float noiseSize;
+
+// Utils
+// noise4d1...
+// rgb...
+// valueRemap...
+// getOffsetFactor...
+
+void main() {
+  // Recalculate offset factor with new world position
+  float offsetFactor = pow(getOffsetFactor(wPos), 0.4);
+
+  // generate 4D vector for noise, use time as 4th dimension
+  vec4 noiseParam = vec4(wPos / noiseSize, time * 0.5);
+
+  // Calculate noise and remap it from -1, 1 to 0, 1
+  float noiseFactor = noise4d1(noiseParam);
+  noiseFactor = noiseFactor * 0.5 + 0.5;
+
+  // Create mask
+  float maskFactor = valueRemap(offsetFactor, 0.0, 1.0, -0.01, 1.01);
+  float noiseMask = smoothstep(maskFactor, maskFactor + 0.3, noiseFactor);
+  noiseMask = clamp(noiseMask / (fwidth(noiseFactor) * 2.0), 0., 1.);
+  noiseMask = offsetFactor > 0.99 ? 0.0 : noiseMask;
+  noiseMask = offsetFactor < 0.1 ? 1.0 : noiseMask;
+
+  // Discard pixel if noiseMask is too low
+  if (noiseMask < 0.1) {
+    discard;
+  }
+  noiseMask = clamp(noiseMask, 0.2, 1.0);
+
+  // Border
+  float borderSize = 0.2;
+  float borderMask = noiseFactor - borderSize > maskFactor ? 1.0 : 0.0;
+  borderMask = smoothstep(maskFactor, maskFactor + 0.01, noiseFactor - borderSize);
+  borderMask = offsetFactor < 0.01 ? 1.0 : borderMask;
+
+  // Color transition
+  vec3 orange = rgb(255.0, 77.0, 0.0);
+  vec3 white = vec3(0.95);
+  vec3 result = mix(orange, white, borderMask);
+
+  gl_FragColor = vec4(result, noiseMask);
+}
+```
+
+## Conclusion
+
+Checkout the [live demo](/experiments/shaders-basement-logo/play) and the [source code](https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/basement-logo)
+
+<Image src={finalResult} />
