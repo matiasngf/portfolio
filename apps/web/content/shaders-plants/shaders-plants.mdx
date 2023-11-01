@@ -1,5 +1,8 @@
 import { Source } from "@/components/mdx/source";
 
+import stage from "./stage.png";
+import debugBranches from "./debug-branches.png";
+
 import cylinder1 from "./cylinder-1.png";
 import cylinder2 from "./cylinder-2.png";
 import cylinder3 from "./cylinder-3.png";
@@ -11,6 +14,11 @@ import cylinderTransform4 from "./cylinder-transform-4.png";
 import cylinderTransform5 from "./cylinder-transform-5.png";
 import cylinderTransform6 from "./cylinder-transform-6.png";
 import pathVertexVars from "./path-vertex-vars.png";
+
+import branchPath from "./branch-path.png";
+import branchPathHalf from "./branch-path-half.png";
+
+import branchletsDebug from "./branchlets-debug.png";
 
 export const experimentPath =
   "https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/plants";
@@ -41,7 +49,7 @@ Finally, the model was exported as `plant.glb`.
 I'm using `zustand` and `leva` in order to create a store and controlls that will hold the state of the plant. The store will hold the following values:
 
 - grow: number -> The amount of growth that the plant will have.
-- debug: boolean -> Whether to use an external camera and helpers.
+- debugCamera: boolean -> Whether to use an external camera and helpers.
 - debugGrid: boolean -> Whether to show the debug lines or not.
 
 <Source basePath={experimentPath} path="/src/utils/use-config.ts">
@@ -53,13 +61,13 @@ import { shallow } from "zustand/shallow";
 
 interface ConfigStore {
   grow: number;
-  debug: boolean;
+  debugCamera: boolean;
   debugGrid: boolean;
 }
 
 export const useConfigStore = create<ConfigStore>(() => ({
   grow: 10,
-  debug: false,
+  debugCamera: false,
   debugGrid: false,
 }));
 
@@ -76,10 +84,10 @@ export const useConfigControls = () => {
         useConfigStore.setState({ grow: value });
       },
     },
-    debug: {
+    debugCamera: {
       value: false,
       onChange: (value) => {
-        useConfigStore.setState({ debug: value });
+        useConfigStore.setState({ debugCamera: value });
       },
     },
     debugGrid: {
@@ -137,9 +145,13 @@ export const Plant = () => {
 
 </Source>
 
+I also added a background stage to the scene:
+
+<Image src={stage} />
+
 ## Creating the main branches
 
-To add the branches into our scene. I first needed to parse the data of the `.glb` file. Because we transformed our Bezier curves into Meshes, the data will be stored as LineSegments.
+To add the branches into our scene. I first needed to parse the data of the `.glb` file. Because we transformed our Bezier curves into Meshes, the data will be stored as `LineSegments`.
 
 ```tsx
 import { GLTFLoader } from "three-stdlib";
@@ -253,6 +265,10 @@ export const Branches = () => {
 
 </Source>
 
+If we turn on the debug for the branches, we can see the path that they will follow:
+
+<Image src={debugBranches} />
+
 ## The `<Branch/>` component
 
 The `Branch` component will do two things. First, create a mesh that will grow along a `segments` path using the `uniforms.growFactor`, and second, add secondary procedural branches called `branchlets`.
@@ -307,6 +323,8 @@ _Let's go just one more step into this rabbit hole and see what the `getBranchMe
 
 This function handles the generation of the branch mesh. But, this mesh needs to follow the path segments and even grow along it. To do this, I first needed to create a cylinder geometry that will be used as a base for the mesh.
 
+<Source basePath={experimentPath} path="/src/Plant/helpers/get-branch-mesh.ts">
+
 ```tsx
 /** Transform a lineSegment into a branch mesh */
 export const getBranchMesh = (
@@ -324,6 +342,8 @@ export const getBranchMesh = (
   );
 };
 ```
+
+</Source>
 
 This is the result of the cylinder geometry:
 
@@ -419,3 +439,296 @@ To see the complete implementation of this function, check the source code:
 >
   /src/Plant/helpers/path-vertex.ts
 </Link>
+
+## Branch material
+
+Lets recap what we have so far:
+
+- We are creating a function called `getBranchMesh` that handles the creation of a cylinder geometry and the transformation of the vertices.
+- We have a `segments` path that will be used to generate the branch mesh.
+- We precalculated the `pathVertices` that will be used to transform the vertices of the mesh.
+
+Now we can start creating the branch shader. First, we need to create a `shaderMaterial` that will be used by the mesh:
+
+<Source basePath={experimentPath} path="/src/Plant/helpers/get-branch-mesh.ts">
+
+```tsx
+export const getBranchMesh = (
+  branch: LineSegments,
+  branchUniforms: BranchUniforms,
+  texture: Texture
+) => {
+  const branchPath = verticesFromLineSegment(branch);
+
+  const { pathVertices, totalDistance, numVertices } = branchPath;
+
+  /** This material will transform the cylinder geometry to follow the path */
+  const branchMaterial = new ShaderMaterial({
+    name: branch.name + "material",
+    vertexShader: branchVertexShader,
+    fragmentShader: branchFragmentShader,
+    glslVersion: GLSL3,
+    defines: {
+      NUM_VERTICES: numVertices,
+    },
+    uniforms: {
+      map: { value: texture },
+      pathVertices: {
+        value: pathVertices,
+      },
+      totalDistance: { value: totalDistance },
+      ...branchUniforms,
+    },
+  });
+
+  const branchResolution = 20;
+  const noramlizedCylinder = new CylinderGeometry(
+    1,
+    1,
+    1,
+    branchResolution,
+    numVertices * 2
+  );
+  const branchMesh = new Mesh(noramlizedCylinder, branchMaterial);
+
+  return {
+    branchMesh,
+    branchPath,
+    position: branch.position,
+    rotation: branch.rotation,
+  };
+};
+```
+
+</Source>
+
+### Vertex shader
+
+The key of the mesh transform is on the vertex shader. First, we need to create some basic structures that will be used later:
+
+<Source basePath={experimentPath} path="/src/utils/shaders/paths.ts">
+
+```glsl
+struct PathVertex {
+  vec3 position;
+  float distance;
+  vec3 direction;
+  // quaternion rotation
+  vec4 rotation;
+  vec4 addedQuaternion;
+};
+
+struct PathPos {
+  vec3 position;
+  vec3 direction;
+  vec4 rotation;
+};
+```
+
+</Source>
+
+Now, we need to define the uniforms.
+
+<Source basePath={experimentPath} path="/src/utils/shaders/paths.ts">
+
+```glsl
+uniform PathVertex pathVertices[NUM_VERTICES];
+uniform float totalDistance;
+uniform float progress;
+uniform float branchRadius;
+uniform float branchGrowOffset;
+```
+
+</Source>
+
+Then, some varyings that we will pass between the vertex and fragment shaders:
+
+<Source basePath={experimentPath} path="/src/Plant/shaders/branch-shaders.ts">
+
+```glsl
+varying vec2 vUv;
+varying vec3 worldPos;
+varying vec3 localPos;
+varying float targetFactor;
+varying float growFactorRaw;
+varying float growFactor; // clamped
+
+```
+
+</Source>
+
+### getPositionOnPath helper
+
+This function will calculate the position of a point on the path. It will take a `targetFactor` that will be a value between `0` and `1` and will return a `PathPos` with the position, direction, and rotation of the point.
+
+<Source basePath={experimentPath} path="/src/utils/shaders/paths.ts">
+
+```glsl
+PathPos getPositionOnPath(float percentage) {
+
+  percentage = clamp(percentage, 0.0, 1.0);
+
+  // Calculate the target distance along the path
+  float targetDistance = percentage * totalDistance;
+
+  // Find the index of the vertices
+  // indexPrev ------> iNext
+  int iNext = 1;
+  float traveledDistance = pathVertices[1].distance;
+  while (traveledDistance < targetDistance) {
+    if (iNext == NUM_VERTICES - 1) {
+      // reached the end of the path
+      break;
+    }
+    iNext++;
+    traveledDistance += pathVertices[iNext].distance;
+  }
+  int iPrev = max(0, iNext - 1);
+
+  // Get the two adjacent vertices
+  vec3 posPrev = pathVertices[iPrev].position;
+  vec3 posNext = pathVertices[iNext].position;
+
+  float distancePrevToNext = pathVertices[iNext].distance;
+
+  // Calculate the interpolation factor based on distances
+  // 0 ------ tDist ------ offsetDist
+  float offsetDist = traveledDistance - distancePrevToNext;
+  float tDist = targetDistance - offsetDist;
+  float t = tDist / distancePrevToNext;
+
+  // Interpolate the position
+  vec3 position = mix(posPrev, posNext, t);
+
+  // Calculate the direction as the normalized direction between the two vertices
+  vec3 direction = mix(pathVertices[iPrev].direction, pathVertices[iNext].direction, t);
+
+  //mix quaterions
+  vec4 rotation = mix(pathVertices[iPrev].addedQuaternion, pathVertices[iNext].addedQuaternion, t);
+
+  return PathPos(
+    position,
+    direction,
+    rotation
+  );
+}
+```
+
+</Source>
+
+### Final vertex shader
+
+This is the complete source of the vertex shader.
+
+<Source basePath={experimentPath} path="/src/Plant/shaders/branch-shaders.ts">
+
+```glsl
+${pathStructs} // include of path structs
+
+${pathUniforms} // include of uniforms
+
+varying vec2 vUv;
+varying vec3 worldPos;
+varying vec3 localPos;
+varying float targetFactor;
+varying float growFactorRaw;
+varying float growFactor; // clamped
+
+${rotate} // include of some rotation helpers
+${getPositionOnPath} // include of path helper
+
+float getGrowFactor(float p) {
+  float totalLenght = totalDistance * p;
+  float currentLenght = localPos.y * totalLenght;
+  float growEnd = totalLenght - branchGrowOffset;
+
+  float growFactor = (growEnd - currentLenght) / branchGrowOffset + 1.;
+  return growFactor;
+}
+
+void main() {
+  float clampedProgress = clamp(progress, 0.0, 1.0);
+  localPos = position + vec3(0.0, 0.5, 0.0);
+  targetFactor = localPos.y;
+
+  // calculate grow factor
+  growFactorRaw = getGrowFactor(clampedProgress);
+  growFactor = clamp(growFactorRaw, 0.0, 1.0);
+  float branchSize = branchRadius * growFactor;
+
+  // move vertices to y = 0
+  vec3 targetPos = position * vec3(branchSize, 0.0, branchSize);
+
+  //translate to path
+
+  // rotate the Y axis to the direction
+  targetPos = qtransform(pathPosition.rotation, targetPos);
+
+  // move to pos
+  targetPos += pathPosition.position;
+
+
+  vUv = uv;
+  worldPos = (modelMatrix * vec4(targetPos, 1.0)).xyz;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(targetPos, 1.0);
+}
+```
+
+</Source>
+
+Let's break down some of the operations that are happening in the shader:
+
+<div className="-space-y-2">
+
+```glsl
+// Get position on path
+PathPos pathPosition = getPositionOnPath(targetFactor * clampedProgress);
+```
+
+<Image src={cylinderTransform3} />
+</div>
+
+<div className="-space-y-2">
+
+```glsl
+// Flatten cylinder to xz plane and scale to branchSize
+vec3 targetPos = position * vec3(branchSize, 0.0, branchSize);
+```
+
+<Image src={cylinderTransform4} />
+</div>
+
+<div className="-space-y-2">
+
+```glsl
+// rotate the Y axis to the direction of the
+// segment where the vertex should land
+targetPos = qtransform(pathPosition.rotation, targetPos);
+```
+
+<Image src={cylinderTransform5} />
+</div>
+
+<div className="-space-y-2">
+
+```glsl
+// translate
+targetPos += pathPosition.position;
+```
+
+<Image src={cylinderTransform6} />
+</div>
+
+The result of this shader is a mesh that will grow along the path:
+
+<Image src={branchPath} />
+
+If we set the `grow` uniform to 0.5, the branch will be translated to the middle of the path:
+
+<Image src={branchPathHalf} />
+
+## Branchlets
+
+<Image src={branchletsDebug} />
+
+Branchlets are secondary branches that will grow from the main branch. I didn't want to model each branchlet in Blender, so I decided to generate them procedurally.
