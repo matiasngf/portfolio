@@ -2,6 +2,10 @@ import { Source } from "@/components/mdx/source";
 
 import preview from "./preview.png";
 
+import blender1 from "./blender-1.png";
+import blender2 from "./blender-2.png";
+import blender3 from "./blender-3.png";
+
 import stage from "./stage.png";
 import debugBranches from "./debug-branches.png";
 
@@ -29,30 +33,36 @@ import leafsDebug from "./leafs-debug.png";
 export const experimentPath =
   "https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/plants";
 
-In this post, I wanted to experiment with how to create procedural branches and how to make them grow along a path.
-
 ## Objectives:
 
-This is quite a large experiment that accomplishes multiple things:
+In this experiment, I wanted to learn how to `grow a branch along a path` and generate `procedural branchlets`. This was quite a large experiment that accomplished multiple things:
 
 - Making a mesh "grow" along a path drawn in Blender.
 - Generating new branchlets procedurally that will expand from the main branch.
 - Adding leaves that will grow along with the branchlets.
 - Make everything react to the scroll.
 
+## TLDR;
+
+To achieve the "growing" effect I started of with 3D `paths` guides for branch growth. The branches are rendered as cylinders, morphed to align with these paths. To make this task efficiently. I computed some key path values beforehand called `PathVertices`. These include details about the distance, rotation and position of each path point. Then, I used those values in the `vertex shader` to transform the vertices of the cylinder.
+
 ## Getting the base model
 
-To do this experiment. I used a base [plant model from sketchfab](https://sketchfab.com/3d-models/free-pothos-potted-plant-money-plant-e9832f38484f4f85b3f9081b51fa3799). Once I have the model in Blender, I deleted the default branches and added some Bezier Curves that will be used as guides later.
+I started with a base [plant model from sketchfab](https://sketchfab.com/3d-models/free-pothos-potted-plant-money-plant-e9832f38484f4f85b3f9081b51fa3799). After getting the model into Blender, I got rid of the original branches and added Bezier Curves to guide the growth later.
 
-[imagen de Blender]
+<Image src={blender3} />
 
-To correctly export and parse the model later, the curves were transformed into geometry and renamed using the format `Branch.[number]`. I also added one leaf and stick models that will be used later in the experiment.
+For proper exporting and parsing later, I turned those curves into geometry and renamed them as `Branch.[number]`. Also, I included a leaf and a stick model for later use in the experiment. The model was exported as `plant.glb`.
 
-Finally, the model was exported as `plant.glb`.
+<Image src={blender1} />
+
+<center>
+  <Image src={blender2} />
+</center>
 
 ## Main setup
 
-I'm using `zustand` and `leva` in order to create a store and controlls that will hold the state of the plant. The store will hold the following values:
+I used `zustand` and `leva` to create a store and controls to manage the plant's state. This store keeps track of values like:
 
 - grow: number -> The amount of growth that the plant will have.
 - debugCamera: boolean -> Whether to use an external camera and helpers.
@@ -157,7 +167,7 @@ I also added a background stage to the scene:
 
 ## Creating the main branches
 
-To add the branches into our scene. I first needed to parse the data of the `.glb` file. Because we transformed our Bezier curves into Meshes, the data will be stored as `LineSegments`.
+To add the branches to our scene. I first needed to parse the data of the `.glb` file. Because we transformed our Bezier curves into Meshes, the data will be stored as `LineSegments`.
 
 ```tsx
 import { GLTFLoader } from "three-stdlib";
@@ -180,7 +190,7 @@ export const Branches = () => {
 };
 ```
 
-Then I needed to add some uniforms that will be used by all the materials later. I also added a `useEffect` that will update the uniforms when the `grow` value changes.
+Next up, I put together some uniforms for all materials to use later. I also added a `useEffect` that will update the uniforms when the `grow` value changes.
 
 ```tsx
 import { useEffect, useMemo } from "react";
@@ -215,7 +225,7 @@ export const Branches = () => {
 };
 ```
 
-Fianlly, I mapped over the `branches` array and return a `<Branch />` component. This is the final source code:
+Finally, I looped through the `branches` array and returned a `<Branch />` component. Here's how the final code looks:
 
 <Source basePath={experimentPath} path="/src/Plant/branches.tsx">
 
@@ -277,9 +287,9 @@ If we turn on the debug for the branches, we can see the path that they will fol
 
 ## The `<Branch/>` component
 
-The `Branch` component will do two things. First, create a mesh that will grow along a `segments` path using the `uniforms.growFactor`, and second, add secondary procedural branches called `branchlets`.
+The `Branch` component will do two things. It creates a mesh that grows following the `segments` path, guided by `uniforms.growFactor`, and it also adds smaller, procedural `branches` known as `branchlets`.
 
-First, lets create an interface for the component:
+To kick things off, we'll set up an interface for our component:
 
 ```ts
 export interface BranchProps {
@@ -289,7 +299,7 @@ export interface BranchProps {
 }
 ```
 
-Now we can start coding our component, first we can load the branch texture using the `useTexture` hook.
+Now, let's dive into the component. We begin by loading the branch texture with the `useTexture` hook.
 
 ```tsx
 export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
@@ -303,7 +313,7 @@ export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
 };
 ```
 
-I wanted to generate the mesh procedurally, so I created a `getBranchMesh` function that takes the `segments` path and the `uniforms` and returns a `branchMesh` and a `branchPath`.
+I wanted to generate the mesh procedurally, so I created a `getBranchMesh` function. It takes the `segments` path and the `uniforms` and returns a `branchMesh` and a `branchPath`.
 
 ```tsx
 export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
@@ -327,7 +337,7 @@ _Let's go just one more step into this rabbit hole and see what the `getBranchMe
 
 ### getBranchMesh
 
-This function handles the generation of the branch mesh. But, this mesh needs to follow the path segments and even grow along it. To do this, I first needed to create a cylinder geometry that will be used as a base for the mesh.
+This function handles the generation of the branch mesh. The tricky part? The mesh has to track the path segments and grow with them. To achieve this, I first needed to create a cylinder geometry that will be used as a base for the mesh.
 
 <Source basePath={experimentPath} path="/src/Plant/helpers/get-branch-mesh.ts">
 
@@ -355,11 +365,11 @@ This is the result of the cylinder geometry:
 
 <Image src={cylinder1} />
 
-And these are some example vertices coordinates of the geometry:
+Let's take some example vertex coordinates of that geometry:
 
 <Image src={cylinder2} />
 
-The idea is to reposition this cylinder vertices along the path using a shader.
+The idea is to Shift these cylinder vertices along the path, and we'll use a shader to do just that.
 
 <Image src={cylinderTransform1} />
 
@@ -367,7 +377,7 @@ Let's take one of the vertices and see how it would be transformed and call it `
 
 <Image src={cylinder3} />
 
-We now need to find where that `vertex` would land in the `path`. To imagine this let's first stretch the path to be a straight line:
+Next, we gotta figure out where this `vertex` would end up on the `path`. Imagine stretching the path into a straight line to make this easier:
 
 <Image src={cylinderTransform2} />
 
@@ -387,11 +397,13 @@ Finally, we can `lerp` between the `i` and `j` points to find the final position
 
 <Image src={cylinderTransform6} />
 
-At first, I only used the raw vertex data in the branch shader, but I found that it was not very efficient. So I decided to pre-calculate some values in javascript and pass them to the shader as uniforms.
+At first, I only used the raw `vertex data` in the branch shader, but I found that it was not very efficient. So I decided to pre-calculate some values in javascript and sent those over to the shader as `uniforms`.
 
 ### Growing meshes
 
 I needed a way to efficiently transform the vertices of the cylinder geometry. To do this, I created a funciton that loops over each vertex of the `segments` variable, and calculates the following variables:
+
+To transform the cylinder geometry's vertices efficiently, I created up a function that loops through each `vertex` of the `segments` and calculates the following variables:
 
 ```ts
 // position of this point
@@ -448,13 +460,13 @@ To see the complete implementation of this function, check the source code:
 
 ## Branch material
 
-Lets recap what we have so far:
+Here's a quick summary of our progress:
 
-- We are creating a function called `getBranchMesh` that handles the creation of a cylinder geometry and the transformation of the vertices.
-- We have a `segments` path that will be used to generate the branch mesh.
-- We precalculated the `pathVertices` that will be used to transform the vertices of the mesh.
+- We've got the `getBranchMesh` function that handles the creation of a cylinder geometry and the transforming the vertices.
+- There is a `segments` path that will be used to generate the branch mesh.
+- We precalculated the `pathVertices` to transform the vertices of the mesh.
 
-Now we can start creating the branch shader. First, we need to create a `shaderMaterial` that will be used by the mesh:
+Now we can start creating the branch shader. First, we need to create the `ShaderMaterial`:
 
 <Source basePath={experimentPath} path="/src/Plant/helpers/get-branch-mesh.ts">
 
@@ -510,7 +522,7 @@ export const getBranchMesh = (
 
 ### Vertex shader
 
-The key of the mesh transform is on the vertex shader. First, we need to create some basic structures that will be used later:
+The key of the mesh transform is on the vertex shader. We'll start by setting up some basic `structures`:
 
 <Source basePath={experimentPath} path="/src/utils/shaders/paths.ts">
 
@@ -533,7 +545,7 @@ struct PathPos {
 
 </Source>
 
-Now, we need to define the uniforms.
+Now, we need to define the `uniforms`.
 
 <Source basePath={experimentPath} path="/src/utils/shaders/paths.ts">
 
@@ -547,7 +559,7 @@ uniform float branchGrowOffset;
 
 </Source>
 
-Then, some varyings that we will pass between the vertex and fragment shaders:
+Next, some `varyings` to pass data between the `vertex` and `fragment` shaders:
 
 <Source basePath={experimentPath} path="/src/Plant/shaders/branch-shaders.ts">
 
