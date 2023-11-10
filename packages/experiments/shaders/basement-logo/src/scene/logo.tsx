@@ -85,7 +85,7 @@ export const Logo = () => {
   );
 
   useControls("Presets", {
-    disolve: button(() => {
+    dissolve: button(() => {
       setControls({
         noiseSize: 0.02,
         offsetDistance: 0.24,

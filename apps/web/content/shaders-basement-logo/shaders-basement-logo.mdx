@@ -9,12 +9,12 @@ import finalResult from "./final-result.png";
 
 import Image from "next/image";
 
-Hello world! To celebrate my new position at [Basement.studio](https://basement.studio/) I created this
+Hello world! To celebrate my new position at [basement.studio](https://basement.studio/) I created this
 small experiment.
 
-To keep the post simple, I'm gonna focus on the shader code. Feel free to check the complete source code on [Github](https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/basement-logo).
+To keep the post simple, I will focus on the shader code. Feel free to check the complete source code on [Github](https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/basement-logo).
 
-Lets start with a simple shader that renders a white mesh. This shader will be apllied to the logo model using a `ShaderMaterial`
+Let's start with a simple shader that renders a white mesh. This shader will be applied to the logo model using a `ShaderMaterial`
 
 ```glsl
 // Vertex Shader
@@ -44,7 +44,7 @@ void main() {
 
 <Image src={displayLogo} />
 
-The first thing we need is a `mask` for our disolve effect. To solve this, I implemented a couple of `uniforms` that can be used to create a `circle mask`.
+The first thing we need is a `mask` for our dissolve effect. To solve this, I implemented a couple of `uniforms` that can be used to create a `circle mask`.
 
 The uniforms are:
 
@@ -52,7 +52,7 @@ The uniforms are:
 - `float transitionSize`
 - `float radius`
 
-To create the mask I'm using this function:
+To create the mask, I'm using this function:
 
 ```glsl
 float getOffsetFactor(vec3 pos) {
@@ -95,15 +95,15 @@ void main() {
 }
 ```
 
-In red we can see the area that will be affected by the effect.
+In red, we can see the area that will be affected by the effect.
 
 <Image src={mouseHover} />
 
-Now that we have our mask, we can start working on the disolve effect. In order to "disolve" something a possible approach is to simply deform the object at the same time that we apply a noise textue to it. A cheap thanos effect.
+Now that we have our mask, we can start working on the dissolve effect. In order to "dissolve" something, a possible approach is to simply deform the object at the same time that we apply a noise texture to it. A cheap Thanos effect.
 
 ### Transforming the mesh
 
-On the `vertex shader`, we can calcualte the `offsetFactor` for each vertex and use it to **translate the `vertex` in the direction of the `normal`.**
+On the `vertex shader`, we can calculate the `offsetFactor` for each vertex and use it to **translate the `vertex` in the direction of the `normal`.**
 
 ```glsl
 // Fragment shader
@@ -124,7 +124,7 @@ void main() {
   vUv = uv;
   vNormal = normal;
 
-  // calcualte world position
+  // calculate world position
   wPos = (modelMatrix * vec4(position, 1.0)).xyz;
 
   // calculate offset
@@ -143,13 +143,13 @@ void main() {
 }
 ```
 
-Now, the vertices that are affected by the disolve effect are moving in the direction of the normal:
+Now, the vertices that are affected by the dissolve effect are moving in the direction of the normal:
 
 <Image src={meshTransform} />
 
 ### Applying the noise texture
 
-To create a mask for the disolve effect we can use a noise texture. I used the [Simplex 4D Noise (by Ian McEwan, Ashima Arts)](https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83).
+To create a mask for the dissolve effect, we can use a noise texture. I used the [Simplex 4D Noise (by Ian McEwan, Ashima Arts)](https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83).
 
 I also added a `noiseSize` uniform to control the scale of the noise texture.
 
@@ -188,7 +188,7 @@ void main() {
 
 ### Mask
 
-Now that we have the `noise` and `offset` factors, we can use it to create a mask for the disolve effect.
+Now that we have the `noise` and `offset` factors, we can use it to create a mask for the dissolve effect.
 
 ```glsl
 // Fragment shader
@@ -271,7 +271,7 @@ void main() {
   vUv = uv;
   vNormal = normal;
 
-  // calcualte world position
+  // calculate world position
   wPos = (modelMatrix * vec4(position, 1.0)).xyz;
 
   // calculate offset
@@ -291,7 +291,7 @@ void main() {
 ```
 
 ```glsl
-// Framgent shader
+// Fragment shader
 
 varying vec3 vNormal;
 varying vec2 vUv;
@@ -313,7 +313,7 @@ void main() {
   // Recalculate offset factor with new world position
   float offsetFactor = pow(getOffsetFactor(wPos), 0.4);
 
-  // generate 4D vector for noise, use time as 4th dimension
+  // generate a 4D vector for noise, use time as 4th dimension
   vec4 noiseParam = vec4(wPos / noiseSize, time * 0.5);
 
   // Calculate noise and remap it from -1, 1 to 0, 1
@@ -348,7 +348,7 @@ void main() {
 }
 ```
 
-## Conclusion
+## Final result
 
 Checkout the [live demo](/experiments/shaders-basement-logo/play) and the [source code](https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/basement-logo)
 

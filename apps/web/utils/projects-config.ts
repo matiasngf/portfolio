@@ -60,7 +60,6 @@ export const projectsConfig: Projects = {
     post: Posts.ShadersBasementLogo,
     source: `${baseExperiment}/shaders/basement-logo`,
     tags: ["shaders", "rtf"],
-    noIdex: true,
   },
   'shaders-fluid': {
     type: "experiment",
