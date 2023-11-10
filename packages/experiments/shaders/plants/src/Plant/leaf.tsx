@@ -114,7 +114,6 @@ export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
 
       // scale
       modelNode.scale.setScalar(branchletProgress * 2);
-      // helper.scale.setScalar(branchletProgress * 0.1);
 
       // update progress
       prevProgress = currentProgress;

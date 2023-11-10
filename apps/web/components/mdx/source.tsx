@@ -3,12 +3,14 @@ import { PropsWithChildren } from "react";
 
 export interface SourceProps {
   basePath?: string;
+  functionName?: string;
   path: string;
 }
 
 export const Source = ({
   basePath,
   path,
+  functionName,
   children,
 }: PropsWithChildren<SourceProps>) => {
   return (
@@ -19,7 +21,7 @@ export const Source = ({
           className="text-link"
           target="_blank"
         >
-          {path}
+          {path} {functionName && `> ${functionName}`}
         </Link>
       </div>
       {children}

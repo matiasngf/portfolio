@@ -1,5 +1,7 @@
 import { Source } from "@/components/mdx/source";
 
+import preview from "./preview.png";
+
 import stage from "./stage.png";
 import debugBranches from "./debug-branches.png";
 
@@ -19,6 +21,10 @@ import branchPath from "./branch-path.png";
 import branchPathHalf from "./branch-path-half.png";
 
 import branchletsDebug from "./branchlets-debug.png";
+import branchletsDebug2 from "./branchlets-debug-2.png";
+import branchletsDebug3 from "./branchlets-debug-3.png";
+
+import leafsDebug from "./leafs-debug.png";
 
 export const experimentPath =
   "https://github.com/matiasngf/portfolio/tree/main/packages/experiments/shaders/plants";
@@ -729,6 +735,630 @@ If we set the `grow` uniform to 0.5, the branch will be translated to the middle
 
 ## Branchlets
 
+Branchlets are secondary branches that will grow from the main branch. I didn't want to model each branchlet in Blender, so I decided to generate them procedurally.
+
 <Image src={branchletsDebug} />
 
-Branchlets are secondary branches that will grow from the main branch. I didn't want to model each branchlet in Blender, so I decided to generate them procedurally.
+In order to generate the branchlet, we will need to generate a random set of points that "extends" from each branch.
+
+Let's create a function called `getBranchletVertices` that will take a `pathVertices` array and a `t` value between `0` and `1` and will return a new set of `pathVertices` and a `position` where the branchlet will start.
+
+The `t` value will indicate where the branchlet will start on the main branch. For example, if `t` is `0.5`, the branchlet will start in the middle of the branch. It is important to know this value for a couple of reasons:
+
+- We want the branchlet to grow in the same "direction" of the branch to give a more natural result.
+- We need to know the initial position of the branchlet to translate it to the correct position.
+- We need to calculate the correct `growFactor`, we don't want the branchlet to start growing before the main branch gets to that point.
+
+<Source basePath={experimentPath} path="/src/Plant/helpers/branchlet-utils.ts">
+
+```ts
+/** Generates a branchlet that will start at the same direction/position of the branch at t */
+export const getBranchletVertices = (pathVertices: PathVertex[], t: number) => {
+  const branchletVertices: Vector3[] = [];
+
+  const { direction, position } = getPathVertex(pathVertices, t);
+
+  const currentDireciton = direction.clone();
+  const currentPosition = new Vector3(0, 0, 0);
+  const randomRotation = new Quaternion();
+
+  // first vertex
+  branchletVertices.push(currentPosition.clone());
+
+  const randomFactor = 0.1;
+  const numVertices = 20;
+  const edgeLength = 0.01;
+
+  for (let i = 0; i < numVertices - 1; i++) {
+    // rotate direction
+    randomRotation.setFromEuler(
+      new Euler(
+        (Math.random() - 0.5) * 2 * Math.PI * randomFactor,
+        (Math.random() - 0.5) * 2 * Math.PI * randomFactor,
+        (Math.random() - 0.5) * 2 * Math.PI * randomFactor
+      )
+    );
+
+    currentDireciton.applyQuaternion(randomRotation);
+
+    // smoot Y over time
+    const branchProgress = (i + 1) / numVertices;
+    const growOffset = 0.7;
+    const cap = 0.2;
+    const yFactor =
+      Math.cos(branchProgress * Math.PI * growOffset) * cap + (1 - cap);
+    currentDireciton.y = currentDireciton.y * yFactor;
+    currentDireciton.normalize();
+
+    // move vertex
+    currentPosition.add(currentDireciton.clone().multiplyScalar(edgeLength));
+
+    // add vertex
+    branchletVertices.push(currentPosition.clone());
+  }
+
+  return {
+    pathVertices: vectorsToPathVertices(branchletVertices),
+    position,
+  };
+};
+```
+
+</Source>
+
+Similarly to the branch mesh, we need to create a `getBranchletMesh` function:
+
+<Source basePath={experimentPath} path="/src/Plant/helpers/branchlet-utils">
+
+```ts
+export const getBranchletMesh = (
+  path: PathVertices,
+  t: number,
+  uniforms: BranchUniforms,
+  texture: Texture
+): Mesh => {
+  const branchletGeometry = new CylinderGeometry(
+    1,
+    1,
+    1,
+    10,
+    path.numVertices * 2
+  );
+  const branchletMaterial = new ShaderMaterial({
+    vertexShader: branchletVertexShader,
+    fragmentShader: branchletFragmentShader,
+    glslVersion: GLSL3,
+    defines: {
+      NUM_VERTICES: path.numVertices,
+    },
+    uniforms: {
+      ...uniforms,
+      map: { value: texture },
+      pathVertices: {
+        value: path.pathVertices,
+      },
+      tStart: { value: t + 0.1 },
+      tEnd: { value: t + 0.3 },
+      totalDistance: { value: path.totalDistance },
+    },
+  });
+  const branchletMesh = new Mesh(branchletGeometry, branchletMaterial);
+
+  return branchletMesh;
+};
+```
+
+</Source>
+
+### Branchlet material
+
+The shader for teh branchlet material is similar to the branch material. The main difference is that we are using the `tStart` and `tEnd` uniforms to indicate where the branchlet will start and end.
+
+<Source basePath={experimentPath} path="/src/Plant/shaders/branchlet-shaders.ts">
+
+```glsl
+${pathStructs}
+
+${pathUniforms}
+
+uniform float tStart;
+uniform float tEnd;
+
+varying vec2 vUv;
+varying vec3 worldPos;
+varying vec3 localPos;
+varying float targetFactor;
+varying float growFactorRaw;
+varying float growFactor; // clamped
+varying float branchletProgress;
+
+// add utils
+${rotate}
+${getPositionOnPath}
+${valueRemap}
+
+float getGrowFactor(float bProgress) {
+  float branchletGrowOffset = branchGrowOffset * 0.2;
+  float totalLenght = totalDistance * bProgress;
+
+  float currentLenght = localPos.y * totalLenght;
+  float growEnd = totalLenght - branchletGrowOffset;
+
+  float growFactor = (growEnd - currentLenght) / branchletGrowOffset + 1.;
+  return growFactor;
+}
+
+void main() {
+  localPos = position + vec3(0.0, 0.5, 0.0);
+  targetFactor = localPos.y;
+
+  //translate to path
+  branchletProgress = valueRemap(progress, tStart, tEnd, 0.0, 1.0);
+  branchletProgress = clamp(branchletProgress, 0.0, 1.0);
+  PathPos pathPosition = getPositionOnPath(targetFactor * branchletProgress);
+
+  // calculate grow factor
+  growFactorRaw = getGrowFactor(branchletProgress);
+  growFactor = clamp(growFactorRaw, branchletProgress > 0.1 ? 0.5 : 0., 1.0);
+  float branchSize = branchRadius * 0.5 * growFactor;
+
+  // move vertices to y = 0
+  vec3 targetPos = position * vec3(branchSize, 0.0, branchSize);
+
+  // rotate the Y axis to the direction
+  targetPos = qtransform(pathPosition.rotation, targetPos);
+
+  // move to pos
+  targetPos += pathPosition.position;
+
+
+  vUv = uv;
+  worldPos = (modelMatrix * vec4(targetPos, 1.0)).xyz;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(targetPos, 1.0);
+}
+```
+
+</Source>
+
+<Source basePath={experimentPath} path="/src/Plant/shaders/branchlet-shaders.ts">
+
+```glsl
+out vec4 fragColor;
+
+varying vec3 worldPos;
+varying vec2 vUv;
+varying float targetFactor;
+varying vec3 localPos;
+varying float growFactor;
+varying float branchletProgress;
+
+uniform float totalDistance;
+uniform float progress;
+uniform sampler2D map;
+
+void main() {
+  vec2 mapUv = vec2(vUv.x * 2.0, localPos.y * branchletProgress * totalDistance * 4.);
+  vec3 colorMap = texture2D(map, mapUv).rgb;
+
+  fragColor = vec4(colorMap, 1.0);
+}
+```
+
+</Source>
+
+Observe how the branchlets start growing after the main branch. This is achieved by using the `tStart` and `tEnd` uniforms to shift the grow factor:
+
+<Image src={branchletsDebug2} />
+
+### Branchlet component
+
+Using the `getBranchletMesh` function, we can create a `<Branchlet />` component that will take the `pathVertices` and `t` values and will return a `<primitive />` component.
+
+<Source basePath={experimentPath} path="/src/Plant/branchlet.tsx">
+
+```tsx
+import { useMemo } from "react";
+import {
+  getBranchletMesh,
+  getBranchletVertices,
+} from "./helpers/branchlet-utils";
+import { PathVertex } from "./helpers/path-vertex";
+import { BranchUniforms } from "./branches";
+import { Leaf } from "./leaf";
+import { BufferGeometry, Line, LineBasicMaterial, Texture } from "three";
+import { DebugLine } from "./debug-line";
+
+interface BranchletProps {
+  pathVertices: PathVertex[];
+  uniforms: BranchUniforms;
+  t: number;
+  texture: Texture;
+}
+
+export const Branchlet = ({
+  pathVertices,
+  uniforms,
+  t,
+  texture,
+}: BranchletProps) => {
+  const { branchletMesh, branchletPath, position } = useMemo(() => {
+    const branchletVertices = getBranchletVertices(pathVertices, t);
+    const branchletMesh = getBranchletMesh(
+      branchletVertices.pathVertices,
+      t,
+      uniforms,
+      texture
+    );
+    return {
+      branchletMesh,
+      branchletPath: branchletVertices.pathVertices,
+      position: branchletVertices.position,
+    };
+  }, [t, texture]);
+
+  const branchletLineSegments = useMemo(() => {
+    const branchletLineSegments = new Line(
+      new BufferGeometry().setFromPoints(
+        branchletPath.pathVertices.map((v) => v.position)
+      ),
+
+      new LineBasicMaterial({
+        color: "blue",
+        linewidth: 1,
+        depthTest: false,
+      })
+    );
+    return branchletLineSegments;
+  }, [branchletPath]);
+
+  return (
+    <group position={position}>
+      <primitive object={branchletMesh} />
+    </group>
+  );
+};
+```
+
+</Source>
+
+Now, we can update the `branch.tsx` file to generate an array of random numbers. Those numbers will indicate where the branchlet will grow from the main branch.
+
+<Source basePath={experimentPath} path="/src/Plant/branch.tsx">
+
+```tsx
+import {
+  LineSegments,
+  MirroredRepeatWrapping,
+  RepeatWrapping,
+  Texture,
+} from "three";
+import { BranchUniforms } from "./branches";
+import { useMemo } from "react";
+import { getBranchMesh } from "./helpers/get-branch-mesh";
+import { Branchlet } from "./branchlet";
+import { useTexture } from "@react-three/drei";
+import { DebugLine } from "./debug-line";
+
+export interface BranchProps {
+  segments: LineSegments;
+  uniforms: BranchUniforms;
+  branchlets: number;
+}
+
+export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
+  const branchMap = useTexture(
+    "/experiment-shaders-plants-assets/branch-texture.jpg",
+    (t: Texture) => {
+      t.wrapT = RepeatWrapping;
+      t.wrapS = MirroredRepeatWrapping;
+    }
+  );
+
+  const { branchMesh, branchPath, position, rotation } = useMemo(() => {
+    return getBranchMesh(segments.clone(true), uniforms, branchMap);
+  }, [segments, uniforms, branchMap]);
+
+  /* Generate the random points */
+  const branchletsArr = useMemo(() => {
+    const ts = Array.from(Array(branchlets).keys()).map(() =>
+      Math.min(Math.random(), 0.9)
+    );
+    // add a final branchlet at the end
+    ts.push(0.9);
+    return ts;
+  }, [branchlets]);
+
+  return (
+    <group position={position} rotation={rotation}>
+      <primitive object={branchMesh} />
+      {/* Map over the points*/}
+      {branchletsArr.map((t, i) => (
+        <Branchlet
+          pathVertices={branchPath.pathVertices}
+          uniforms={uniforms}
+          texture={branchMap}
+          t={t}
+          key={i}
+        />
+      ))}
+    </group>
+  );
+};
+```
+
+</Source>
+
+Branchelts result:
+
+<Image src={branchletsDebug3} />
+
+## Leafs
+
+On our plant model we have one lead geometry that we will use to create all leaves. I created a leaf node with `useMemo`.
+
+<Source basePath={experimentPath} path="/src/Plant/leaf.tsx">
+
+```tsx
+export interface LeafProps {
+  branchletPath: PathVertices;
+  uniforms: BranchUniforms;
+  /** Where in the main branch the branchlet starts */
+  t: number;
+}
+
+export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
+  const { debugLeaves, renderLeaves } = useConfig();
+
+  /* Load model */
+  const plantModel = useLoader(
+    GLTFLoader,
+    "/experiment-shaders-plants-assets/plant.glb"
+  ) as unknown as PlantGLTF;
+
+  const [leafUniforms, setLeafUniforms] = useUniforms({
+    leafProgress: 0,
+  });
+
+  const modelNode = useMemo(() => {
+    const leaf = plantModel.nodes.leaf.clone();
+    const leafMaterial = leaf.material as MeshStandardMaterial;
+    const leafTexture = leafMaterial.map.clone();
+    leafTexture.colorSpace = "srgb-linear";
+
+    /* Create material */
+    leaf.material = new ShaderMaterial({
+      side: DoubleSide,
+      transparent: true,
+      vertexShader: leafVertexShader,
+      fragmentShader: leafFragmentShader,
+      glslVersion: GLSL3,
+      uniforms: {
+        ...leafUniforms,
+        leafTexture: {
+          value: leafTexture,
+        },
+      },
+    });
+
+    return leaf;
+  }, [plantModel, branchletPath, uniforms, t]);
+
+  const helper = useMemo(() => {
+    return new AxesHelper(0.1);
+  }, []);
+};
+```
+
+</Source>
+
+Then, inside a useEffect we will calculate the position and scale of the leaf based on the `growFactor`
+
+<Source basePath={experimentPath} path="/src/Plant/leaf.tsx">
+
+```tsx
+export interface LeafProps {
+  branchletPath: PathVertices;
+  uniforms: BranchUniforms;
+  /** Where in the main branch the branchlet starts */
+  t: number;
+}
+
+export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
+  const { debugLeaves, renderLeaves } = useConfig();
+
+  const plantModel = useLoader(
+    GLTFLoader,
+    "/experiment-shaders-plants-assets/plant.glb"
+  ) as unknown as PlantGLTF;
+
+  const [leafUniforms, setLeafUniforms] = useUniforms({
+    leafProgress: 0,
+  });
+
+  const modelNode = useMemo(() => {
+    const leaf = plantModel.nodes.leaf.clone();
+    const leafMaterial = leaf.material as MeshStandardMaterial;
+    const leafTexture = leafMaterial.map.clone();
+    leafTexture.colorSpace = "srgb-linear";
+
+    leaf.material = new ShaderMaterial({
+      side: DoubleSide,
+      transparent: true,
+      vertexShader: leafVertexShader,
+      fragmentShader: leafFragmentShader,
+      glslVersion: GLSL3,
+      uniforms: {
+        ...leafUniforms,
+        leafTexture: {
+          value: leafTexture,
+        },
+      },
+    });
+
+    return leaf;
+  }, [plantModel, branchletPath, uniforms, t]);
+
+  const helper = useMemo(() => {
+    return new AxesHelper(0.1);
+  }, []);
+
+  useEffect(() => {
+    if (!modelNode) return;
+
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    const isCanceled = () => signal.aborted;
+
+    const curve = new CatmullRomCurve3(
+      branchletPath.pathVertices.map((v) => v.position)
+    );
+
+    let prevProgress: number | null = null;
+
+    const raf = () => {
+      if (isCanceled()) return;
+      const currentProgress = uniforms.progress.value;
+      if (prevProgress === currentProgress) {
+        requestAnimationFrame(raf);
+        return;
+      }
+
+      const tStart = t + 0.1;
+      const tEnd = t + 0.3;
+      let branchletProgress = valueRemap(currentProgress, tStart, tEnd, 0, 1);
+      branchletProgress = clamp(branchletProgress, 0, 1);
+
+      // move model along branchlet path
+      const point = curve.getPointAt(branchletProgress);
+      const startingDirection = curve.getTangentAt(0);
+      const endDirection = curve.getTangentAt(1);
+      const branchDirection = startingDirection.lerp(
+        endDirection,
+        branchletProgress
+      );
+      const branchCurrentDirection = curve.getTangentAt(branchletProgress);
+      branchDirection.lerp(branchCurrentDirection, 0.2);
+      modelNode.position.copy(point);
+      helper.position.copy(point);
+
+      // rotate model to face branch direction
+      const leafDirection = new Vector3(1, 0, 0).normalize();
+      const axis = new Vector3()
+        .crossVectors(leafDirection, branchDirection)
+        .normalize();
+      const angle = Math.acos(leafDirection.dot(branchDirection));
+      modelNode.quaternion.setFromAxisAngle(axis, angle);
+      helper.quaternion.setFromAxisAngle(axis, angle);
+
+      // scale
+      modelNode.scale.setScalar(branchletProgress * 2);
+
+      // update progress
+      prevProgress = currentProgress;
+      setLeafUniforms({ leafProgress: branchletProgress });
+
+      requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
+
+    return () => {
+      abortController.abort();
+    };
+  }, [uniforms, branchletPath, t, modelNode]);
+
+  return (
+    <group>
+      {debugLeaves && <primitive object={helper} />}
+      {renderLeaves && <primitive object={modelNode} />}
+    </group>
+  );
+};
+```
+
+</Source>
+
+By turning on debug, we can observe how the helper follows the end of the branchlet:
+
+<Image src={leafsDebug} />
+
+### Leaf material
+
+The shaders for the leaf are very simple, beacause all the position and rotation calculations are done in the `<Leaf />` component.
+
+<Source functionName="leafVertexShader" basePath={experimentPath} path="/src/Plant/shaders/leaf-shaders.ts">
+
+```glsl
+varying vec2 vUv;
+
+void main() {
+  vUv = uv;
+
+  vec3 worldPos = (modelMatrix * vec4(position, 1.0)).xyz;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+}
+```
+
+</Source>
+
+Here I am using the `leafTexture` and `leafProgress` (remaped `growFactor`) to color the leaf.
+
+<Source functionName="leafFragmentShader" basePath={experimentPath} path="/src/Plant/shaders/leaf-shaders.ts">
+
+```glsl
+out vec4 fragColor;
+
+uniform sampler2D leafTexture;
+uniform float leafProgress;
+
+varying vec2 vUv;
+
+void main() {
+  vec4 colorMap = texture2D(leafTexture, vUv).rgba;
+  if (colorMap.a < 0.6) discard;
+
+  vec3 result = colorMap.rgb;
+  vec3 green = vec3(0.2, 0.5, 0.2);
+
+  result = mix(green, result, leafProgress);
+
+  fragColor = vec4(result, colorMap.a);
+}
+```
+
+</Source>
+
+### Adding the leaves to the scene
+
+Finally, we can add the `<Leaf />` into the `<Branchlet />` component:
+
+<Source basePath={experimentPath} path="/src/Plant/branchlet.tsx">
+
+```tsx
+export const Branchlet = ({
+  pathVertices,
+  uniforms,
+  t,
+  texture,
+}: BranchletProps) => {
+  /* ...branchlet source */
+
+  return (
+    <group position={position}>
+      <primitive object={branchletMesh} />
+      {/* Add the leaf component */}
+      <Leaf t={t} branchletPath={branchletPath} uniforms={uniforms} />
+    </group>
+  );
+};
+```
+
+</Source>
+
+## Final result
+
+Wow you made it to the end! I hope you enjoyed this experiment, if you did, please [leave a ⭐ on the repository](https://github.com/matiasngf/portfolio).
+
+Checkout the <a className="text-link" href="./play" target="_blank">live demo</a> and the <a className="text-link" href={experimentPath} target="_blank">source code</a>.
+
+<Image src={preview} />
