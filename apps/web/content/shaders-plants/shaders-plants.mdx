@@ -577,7 +577,7 @@ varying float growFactor; // clamped
 
 ### getPositionOnPath helper
 
-This function will calculate the position of a point on the path. It will take a `targetFactor` that will be a value between `0` and `1` and will return a `PathPos` with the position, direction, and rotation of the point.
+This function calculates the position of a point on the path. It uses a `targetFactor` _— a number between 0 and 1 —_ and gives back a `PathPos` with the position, direction, and rotation of the point.
 
 <Source basePath={experimentPath} path="/src/utils/shaders/paths.ts">
 
@@ -636,7 +636,7 @@ PathPos getPositionOnPath(float percentage) {
 
 ### Final vertex shader
 
-This is the complete source of the vertex shader.
+Here's the full code for the vertex shader.
 
 <Source basePath={experimentPath} path="/src/Plant/shaders/branch-shaders.ts">
 
@@ -694,7 +694,7 @@ void main() {
 
 </Source>
 
-Let's break down some of the operations that are happening in the shader:
+Let's unpack what's going on in this shader:
 
 <div className="-space-y-2">
 
@@ -741,7 +741,7 @@ The result of this shader is a mesh that will grow along the path:
 
 <Image src={branchPath} />
 
-If we set the `grow` uniform to 0.5, the branch will be translated to the middle of the path:
+By setting the `grow` uniform to 0.5, we can see the branch move to the midpoint of the path:
 
 <Image src={branchPathHalf} />
 
@@ -751,7 +751,7 @@ Branchlets are secondary branches that will grow from the main branch. I didn't 
 
 <Image src={branchletsDebug} />
 
-In order to generate the branchlet, we will need to generate a random set of points that "extends" from each branch.
+To generate the branchlet, we start by generating random points that stretch out from each branch.
 
 Let's create a function called `getBranchletVertices` that will take a `pathVertices` array and a `t` value between `0` and `1` and will return a new set of `pathVertices` and a `position` where the branchlet will start.
 
@@ -818,7 +818,7 @@ export const getBranchletVertices = (pathVertices: PathVertex[], t: number) => {
 
 </Source>
 
-Similarly to the branch mesh, we need to create a `getBranchletMesh` function:
+Just like we did with the branch mesh, now we need to create a `getBranchletMesh` function:
 
 <Source basePath={experimentPath} path="/src/Plant/helpers/branchlet-utils">
 
@@ -1369,8 +1369,8 @@ export const Branchlet = ({
 
 ## Final result
 
-Wow you made it to the end! I hope you enjoyed this experiment, if you did, please [leave a ⭐ on the repository](https://github.com/matiasngf/portfolio).
+You've reached the finish line – thanks for sticking around! If you liked this experiment, feel free to [⭐ the repository](https://github.com/matiasngf/portfolio).
 
-Checkout the <a className="text-link" href="./play" target="_blank">live demo</a> and the <a className="text-link" href={experimentPath} target="_blank">source code</a>.
+Take a look at the <a className="text-link" href="./play" target="_blank">live demo</a> and explore the <a className="text-link" href={experimentPath} target="_blank">source code</a>.
 
 <Image src={preview} />
