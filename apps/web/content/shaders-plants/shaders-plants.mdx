@@ -42,7 +42,7 @@ In this experiment, I wanted to learn how to `grow a branch along a path` and ge
 - Adding leaves that will grow along with the branchlets.
 - Make everything react to the scroll.
 
-## TLDR;
+## TL;DR
 
 To achieve the "growing" effect I started of with 3D `paths` guides for branch growth. The branches are rendered as cylinders, morphed to align with these paths. To make this task efficiently. I computed some key path values beforehand called `PathVertices`. These include details about the distance, rotation and position of each path point. Then, I used those values in the `vertex shader` to transform the vertices of the cylinder.
 
