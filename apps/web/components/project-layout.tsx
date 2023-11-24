@@ -16,12 +16,12 @@ export const ProjectLayout = ({
   return (
     <div>
       {children}
-      <IconButton icon={faHome} href="/" className="absolute top-4 left-4" />
+      <IconButton icon={faHome} href="/" className="fixed top-4 left-4" />
       <IconButton
         icon={faGithub}
         href={config.source}
         target="_blank"
-        className="absolute bottom-4 left-4"
+        className="fixed bottom-4 left-4"
       />
     </div>
   );

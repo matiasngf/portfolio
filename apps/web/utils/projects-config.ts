@@ -40,6 +40,16 @@ export interface Projects {
 }
 
 export const projectsConfig: Projects = {
+  'shaders-plants': {
+    type: "experiment",
+    name: "Growing plants with code",
+    description: "Exploring the art of digital gardening in Three.js. Grow branches along paths using vertex shaders, and generate procedural branchlets along the way.",
+    component: loadReactProject(() => import("experiments-shaders-plants")),
+    preview: Previews.ShadersPlants,
+    post: Posts.ShadersPlants,
+    source: `${baseExperiment}/shaders/plants`,
+    tags: ["shaders", "rtf", "procedural"],
+  },
   'shaders-basement-logo': {
     type: "experiment",
     name: "Dissolve effect",

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { textShadowPlugin } = require('./utils/tw-plugins/text-shadow-plugin');
 
 /** @type {import('tailwindcss').Config} */
@@ -6,6 +7,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
     "./layouts/**/*.{js,ts,jsx,tsx}",
+    "./content/**/*.mdx"
   ],
   theme: {
     container: {

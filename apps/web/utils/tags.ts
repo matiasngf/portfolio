@@ -2,6 +2,7 @@ export const tags = {
   shaders: "Shaders",
   "ray-marching": "Ray Marching",
   rtf: "React three fiber",
+  procedural: "Procedural",
 } as const;
 
 export type TagKey = keyof typeof tags;
