@@ -68,7 +68,7 @@ const App = () => {
   }, []);
 
   return (
-    <div style={{ height: "300vh" }}>
+    <div style={{ height: "300vh", width: "100%" }}>
       <Canvas
         style={{ height: "100vh", position: "sticky", top: "0" }}
         onCreated={(state) => {

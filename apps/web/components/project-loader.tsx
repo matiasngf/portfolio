@@ -43,13 +43,13 @@ const ReactProjectLoader = ({ projectConfig }: ReactProjectLoader) => {
 
   if (!Component)
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen text-white bg-black">
         <h2>Loading app</h2>
       </div>
     );
 
   return (
-    <div className="min-h-screen">
+    <div className="flex items-stretch min-h-screen">
       <Component />
     </div>
   );

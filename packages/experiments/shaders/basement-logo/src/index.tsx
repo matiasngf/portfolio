@@ -18,7 +18,10 @@ const App = () => {
   return (
     <>
       <Leva oneLineLabels />
-      <Canvas camera={{ fov: 40, position: [0, 0.5, 5], far: 20, near: 1 }}>
+      <Canvas
+        style={{ height: "initial" }}
+        camera={{ fov: 40, position: [0, 0.5, 5], far: 20, near: 1 }}
+      >
         <color attach="background" args={["black"]} />
         <ThreeApp />
       </Canvas>
