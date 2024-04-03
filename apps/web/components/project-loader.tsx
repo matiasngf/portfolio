@@ -49,7 +49,7 @@ const ReactProjectLoader = ({ projectConfig }: ReactProjectLoader) => {
     );
 
   return (
-    <div className="flex items-stretch min-h-screen">
+    <div className="flex items-stretch min-h-screen [&_canvas]:min-h-screen">
       <Component />
     </div>
   );
