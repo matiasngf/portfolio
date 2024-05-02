@@ -13,8 +13,10 @@
     "lint": "eslint *.ts*",
     "preview": "vite --port 3001"
   },
+  "dependencies": {
+    "lil-gui": "^0.19.2"
+  },
   "peerDependencies": {
-    "lil-gui": "^0.17.0",
     "three": "^0.146.0"
   },
   "devDependencies": {
@@ -27,10 +29,10 @@
     "rollup": "^3.2.5",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-typescript2": "^0.34.1",
+    "three": "^0.146.0",
     "tsconfig": "workspace:*",
     "tslib": "^2.4.1",
     "typescript": "^4.6.4",
-    "vite": "^2.9.9",
-    "three": "^0.146.0"
+    "vite": "^2.9.9"
   }
 }

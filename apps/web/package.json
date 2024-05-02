@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "three-stdlib": "^2.23.8",
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-brands-svg-icons": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
@@ -21,6 +20,7 @@
     "@react-three/drei": "^9.66.4",
     "@react-three/fiber": "^8.13.0",
     "@react-three/postprocessing": "2.7.0",
+    "@studio-freight/lenis": "^1.0.19",
     "@vercel/analytics": "^0.1.4",
     "clsx": "^1.2.1",
     "experiments-earth": "workspace:^",
@@ -32,10 +32,10 @@
     "experiments-ray-marching-voxels": "workspace:*",
     "experiments-ray-marching-voxels-campfire": "workspace:*",
     "experiments-ray-marching-voxels-lava-lamp": "workspace:*",
-    "experiments-simple-scene": "workspace:*",
-    "experiments-shaders-fluid": "workspace:*",
     "experiments-shaders-basement-logo": "workspace:*",
+    "experiments-shaders-fluid": "workspace:*",
     "experiments-shaders-plants": "workspace:*",
+    "experiments-simple-scene": "workspace:*",
     "framer-motion": "^10.12.10",
     "leva": "^0.9.34",
     "lil-gui": "^0.17.0",
@@ -46,12 +46,12 @@
     "react-use": "^17.4.0",
     "remark-gfm": "^3.0.1",
     "three": "^0.152.2",
-    "@studio-freight/lenis": "^1.0.19",
+    "three-stdlib": "^2.23.8",
     "zustand": "^4.3.8"
   },
   "devDependencies": {
     "@types/mdx": "^2.0.3",
-    "@types/node": "^17.0.12",
+    "@types/node": "^20.12.8",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "autoprefixer": "^10.4.13",
