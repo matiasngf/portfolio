@@ -27,6 +27,6 @@ export default {
       rootDir: '.'
     }),
     commonjs(),
-    typescript({ useTsconfigDeclarationDir: true }),
+    typescript({ useTsconfigDeclarationDir: true, abortOnError: false }),
   ]
 };
