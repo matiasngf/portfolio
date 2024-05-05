@@ -21,7 +21,7 @@ export const SceneCamera = () => {
 
   return (
     <OrthographicCamera
-      ref={cameraRef}
+      ref={cameraRef as any}
       near={0.0}
       far={3000}
       position={[width / 2, -y - height / 2, 2000]}

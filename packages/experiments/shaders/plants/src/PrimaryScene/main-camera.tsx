@@ -48,7 +48,7 @@ export const MainCamera = () => {
         </>
       )}
       <PerspectiveCamera
-        ref={cameraRef}
+        ref={cameraRef as any}
         position={startingPos}
         makeDefault={!debugCamera}
       />
