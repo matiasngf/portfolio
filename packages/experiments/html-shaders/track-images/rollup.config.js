@@ -34,6 +34,10 @@ export default {
       rootDir: '.'
     }),
     commonjs(),
-    typescript({ useTsconfigDeclarationDir: true }),
+    typescript({
+      useTsconfigDeclarationDir: true, tsconfigOverride: {
+        strict: false
+      }
+    }),
   ]
 };
