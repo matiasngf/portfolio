@@ -44,7 +44,7 @@ const App = () => {
       wheelMultiplier: 1,
       smoothWheel: true,
       normalizeWheel: true,
-    });
+    } as any);
 
     lenis.on("scroll", (e: any) => {
       const scroll = e.animatedScroll;
