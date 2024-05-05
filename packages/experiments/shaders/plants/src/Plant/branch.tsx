@@ -23,9 +23,10 @@ export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
 
   const branchMap = useTexture(
     "/experiment-shaders-plants-assets/branch-texture.jpg",
-    (t: Texture) => {
-      t.wrapT = RepeatWrapping;
-      t.wrapS = MirroredRepeatWrapping;
+    (t: any) => {
+      const tex = t as Texture;
+      tex.wrapT = RepeatWrapping;
+      tex.wrapS = MirroredRepeatWrapping;
     }
   );
 

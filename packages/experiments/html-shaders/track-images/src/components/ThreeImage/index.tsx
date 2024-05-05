@@ -18,7 +18,7 @@ export const ThreeImage = ({
 }: ThreeImageProps) => {
   const imageId = useId();
   const imageRef = useRef<HTMLImageElement>(null);
-  const rect = useClientRect<HTMLImageElement>(imageRef);
+  const rect = useClientRect<HTMLImageElement>(imageRef as any);
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const { register, remove } = useElementTracker();

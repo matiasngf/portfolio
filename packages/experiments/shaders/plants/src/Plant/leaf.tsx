@@ -40,7 +40,7 @@ export const Leaf = ({ branchletPath, uniforms, t }: LeafProps) => {
   const modelNode = useMemo(() => {
     const leaf = plantModel.nodes.leaf.clone();
     const leafMaterial = leaf.material as MeshStandardMaterial;
-    const leafTexture = leafMaterial.map.clone();
+    const leafTexture = leafMaterial.map!.clone();
     leafTexture.colorSpace = "srgb-linear";
 
     leaf.material = new ShaderMaterial({

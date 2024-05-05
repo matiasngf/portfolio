@@ -26,12 +26,12 @@ function Loading() {
 
 const App = () => {
   useEffect(() => {
-    new SmoothScroll(document, 50, 12);
+    SmoothScroll(document, 50, 12);
   }, []);
   return (
     <>
       <ElementTrackerContextProvider>
-        <div className="relative container w-full min-h-screen z-10">
+        <div className="container relative z-10 w-full min-h-screen">
           <Content />
         </div>
         <Canvas className="top-0 left-0 z-20 !fixed !w-full !h-screen !pointer-events-none">

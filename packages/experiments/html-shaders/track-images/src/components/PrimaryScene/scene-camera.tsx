@@ -15,7 +15,7 @@ export const SceneCamera = () => {
       cameraRef.current.right = width / 2;
       cameraRef.current.top = height / 2;
       cameraRef.current.bottom = -height / 2;
-      cameraRef.current.updateProjectionMatrix();
+      cameraRef.current.updateProjectionMatrix?.();
     }
   }, [width, height]);
 

@@ -6,7 +6,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 
 const pi = Math.PI;
 
-export function sinInOut(t) {
+export function sinInOut(t: any) {
   return (1 - Math.cos(pi * t)) / 2;
 }
 

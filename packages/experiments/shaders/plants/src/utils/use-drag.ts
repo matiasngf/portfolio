@@ -47,7 +47,7 @@ export const useDrag = ({
     const canvas = document.querySelector('canvas');
     if (!canvas) return
 
-    const handleMouseDown = (event) => {
+    const handleMouseDown = (event: MouseEvent | TouchEvent) => {
       setIsDragging(true);
 
       const { clientX, clientY } = getClientPosition(event);

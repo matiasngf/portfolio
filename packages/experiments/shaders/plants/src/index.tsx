@@ -46,7 +46,7 @@ const App = () => {
       normalizeWheel: true,
     });
 
-    lenis.on("scroll", (e) => {
+    lenis.on("scroll", (e: any) => {
       const scroll = e.animatedScroll;
       const windowHeight = window.innerHeight;
       const bodyHeight = document.body.clientHeight;
@@ -54,7 +54,7 @@ const App = () => {
       useConfigStore.setState({ grow: scrollPercent });
     });
 
-    function raf(time) {
+    function raf(time: number) {
       if (isCanceled()) return;
       lenis.raf(time);
       requestAnimationFrame(raf);

@@ -1,6 +1,6 @@
 // https://stackoverflow.com/questions/47011055/smooth-vertical-scrolling-on-mouse-wheel-in-vanilla-javascript
 
-export function SmoothScroll(target, speed, smooth) {
+export function SmoothScroll(target: any, speed: any, smooth: any) {
   if (target === document)
     target = (document.scrollingElement
       || document.documentElement
@@ -17,7 +17,7 @@ export function SmoothScroll(target, speed, smooth) {
   target.addEventListener('mousewheel', scrolled, { passive: false })
   target.addEventListener('DOMMouseScroll', scrolled, { passive: false })
 
-  function scrolled(e) {
+  function scrolled(e: any) {
     e.preventDefault(); // disable default scrolling
 
     const delta = normalizeWheelDelta(e)
@@ -28,7 +28,7 @@ export function SmoothScroll(target, speed, smooth) {
     if (!moving) update()
   }
 
-  function normalizeWheelDelta(e) {
+  function normalizeWheelDelta(e: any) {
     if (e.detail) {
       if (e.wheelDelta)
         return e.wheelDelta / e.detail / 40 * (e.detail > 0 ? 1 : -1) // Opera
@@ -59,7 +59,7 @@ export function SmoothScroll(target, speed, smooth) {
       w.mozRequestAnimationFrame ||
       w.oRequestAnimationFrame ||
       w.msRequestAnimationFrame ||
-      function (func) {
+      function (func: any) {
         window.setTimeout(func, 1000 / 50);
       }
     );

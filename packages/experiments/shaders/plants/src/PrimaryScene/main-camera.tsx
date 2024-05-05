@@ -22,7 +22,7 @@ export const MainCamera = () => {
   const cameraRef = useRef<PerspectiveCameraType>(null);
   const camera = cameraRef.current;
 
-  useHelper(debugCamera && cameraRef, CameraHelper);
+  useHelper(debugCamera && (cameraRef as any), CameraHelper);
 
   useFrame(() => {
     if (!camera) return;

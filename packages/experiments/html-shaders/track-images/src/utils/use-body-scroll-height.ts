@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 export const useBodyScrollHeight = () => {
   const [scrollHeight, setScrollHeight] = useState(document ? document.body.scrollHeight : 0);
-  const observerRef = useRef(null);
+  const observerRef = useRef<any>(null);
 
   useEffect(() => {
     const callback = () => {

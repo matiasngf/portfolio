@@ -27,8 +27,8 @@ export const verticesFromLineSegment = (branch: LineSegments): PathVertices => {
   const useIndexes = new Set<number>();
 
   // build vertices using index
-  for (let i = 0; i < index.array.length; i++) {
-    const vertexIndex = index.array[i];
+  for (let i = 0; i < index!.array.length; i++) {
+    const vertexIndex = index!.array[i];
     if (useIndexes.has(vertexIndex)) continue;
     useIndexes.add(vertexIndex);
 
