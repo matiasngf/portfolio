@@ -3,7 +3,8 @@ import { OrbitControls, PerspectiveCamera, useFBO } from "@react-three/drei";
 import { Earth } from "../Earth";
 import { BackgroundScene } from "../BackgroundScene";
 import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
-import { Scene, RGBAFormat, Camera } from "three";
+import { Scene, RGBAFormat } from "three";
+import type { PerspectiveCamera as PerspectiveCameraType } from "three";
 import { useLightDirection } from "./useLightDirection";
 
 export interface PrimarySceneProps {}
@@ -15,7 +16,7 @@ export const PrimaryScene = ({
 
   const lightDirection = useLightDirection();
 
-  const cam = useRef<Camera | null>(null);
+  const cam = useRef<PerspectiveCameraType | null>(null);
 
   const target = useFBO({
     samples: 8,
@@ -29,6 +30,7 @@ export const PrimaryScene = ({
   }, []);
 
   useFrame((state) => {
+    if (!cam.current) return;
     cam.current.rotation.copy(state.camera.rotation);
     state.gl.setRenderTarget(target);
     state.gl.render(backgroundScene, cam.current);

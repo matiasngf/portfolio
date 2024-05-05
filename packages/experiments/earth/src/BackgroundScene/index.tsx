@@ -23,7 +23,7 @@ export const BackgroundScene = ({ lightDirection }: BackgroundSceneProps) => {
       texture.colorSpace = SRGBColorSpace;
       const cubeRenderTarget = new WebGLCubeRenderTarget(texture.image.height);
       cubeRenderTarget.fromEquirectangularTexture(gl, texture);
-      setCubeTexture(cubeRenderTarget.texture);
+      setCubeTexture(cubeRenderTarget.texture as any);
     });
   }, [gl]);
 
