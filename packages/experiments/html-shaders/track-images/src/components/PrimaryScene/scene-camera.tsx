@@ -5,7 +5,7 @@ import { useThreeScroll } from "../../utils/use-three-scroll";
 import { OrthographicCamera } from "@react-three/drei";
 
 export const SceneCamera = () => {
-  const cameraRef = useRef<OrthographicCameraProps>();
+  const cameraRef = useRef<OrthographicCameraProps | null>(null);
   const { width, height } = useCanvasSize();
   const { y } = useThreeScroll();
 
