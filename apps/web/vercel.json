@@ -3,5 +3,12 @@
     "pages/**/*": {
       "excludeFiles": "utils/projects-config.ts"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/react-paris",
+      "destination": "https://github.com/matiasngf/experiment-compilers/tree/main/fiber",
+      "permanent": true
+    }
+  ]
 }
