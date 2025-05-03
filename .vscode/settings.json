@@ -15,9 +15,9 @@
   "json.schemas": [
     {
       "fileMatch": [
-        "*.json"
+        "*experiment-config.json"
       ],
-      "url": ".schemas/experiments-config.schema.json"
+      "url": ".schemas/experiment-config.schema.json"
     }
   ]
 }
