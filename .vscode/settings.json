@@ -11,5 +11,13 @@
   ],
   "[mdx]": {
     "editor.wordWrap": "on",
-  }
+  },
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "*.json"
+      ],
+      "url": ".schemas/experiments-config.schema.json"
+    }
+  ]
 }

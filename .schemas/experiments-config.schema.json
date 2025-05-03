@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Experiment Configuration",
+  "description": "Defines the metadata for an experiment",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "The unique identifier/name of the experiment",
+      "type": "string"
+    },
+    "description": {
+      "description": "A brief description of the experiment",
+      "type": "string"
+    },
+    "tags": {
+      "description": "Keywords associated with the experiment",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "list": {
+      "description": "Whether to include this experiment in generated lists",
+      "type": "boolean"
+    }
+  },
+  "required": ["name", "description", "tags", "list"]
+}
