@@ -7,23 +7,23 @@
       "DOM",
       "DOM.Iterable"
     ],
-    "module": "ESNext",
+    "module": "NodeNext",
     "skipLibCheck": true,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "moduleResolution": "NodeNext",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "declaration": true,
     "declarationDir": "./dist",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "emitDeclarationOnly": true
   },
   "include": [
-    "src"
-  ]
+    "src",
+  ],
 }
