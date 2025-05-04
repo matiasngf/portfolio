@@ -17,7 +17,10 @@ export const baseConfig: webpack.Configuration = {
   devtool: mode === 'production' ? false : 'source-map',
   entry: path.resolve(srcDir, 'index.ts'),
   target: 'node',
-  externals: [nodeExternals()],
+  externals: [nodeExternals({ importType: 'module' })],
+  experiments: {
+    outputModule: true
+  },
   module: {
     rules: [
       {
@@ -51,5 +54,12 @@ export const baseConfig: webpack.Configuration = {
   output: {
     path: path.resolve(rootDir, 'dist'),
     filename: 'index.js',
+    library: {
+      type: 'module'
+    },
+    module: true,
+    environment: {
+      module: true
+    }
   },
 }

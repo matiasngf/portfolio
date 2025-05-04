@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@swc/core": "^1.11.24",
+    "@types/express": "^5.0.1",
     "@types/node": "^20.9.0",
     "@types/webpack-node-externals": "^3.0.4",
     "chalk": "^5.4.1",
@@ -31,6 +32,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
+    "express": "^5.1.0",
     "zod": "^3.24.3"
   }
 }
