@@ -9,6 +9,7 @@
     "dist"
   ],
   "scripts": {
+    "start": "node dist/index.js",
     "dev": "tsx --tsconfig ./compiler.tsconfig.json ./compiler/index.ts",
     "build": "cross-env NODE_ENV=production tsx --tsconfig ./compiler.tsconfig.json ./compiler/index.ts"
   },

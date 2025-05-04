@@ -13,7 +13,8 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "preview": "turbo run preview"
+    "preview": "turbo run preview",
+    "experiments:build": "turbo run build --filter=experiments-server"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
