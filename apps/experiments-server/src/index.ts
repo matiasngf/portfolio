@@ -18,6 +18,27 @@ app.use('/experiments/:slug', (req, res, next) => {
   }
 })
 
+// Catch-all handler for root-level requests using referer
+app.use((req, res, next) => {
+  const referer = req.headers.referer
+
+  if (referer) {
+    // Extract experiment slug from referer URL
+    const match = referer.match(/\/experiments\/([^\/]+)/)
+
+    if (match && match[1]) {
+      const slug = match[1]
+      const redirectPath = `/experiments/${slug}${req.path}`
+
+      // Redirect to the experiment's path
+      return res.redirect(redirectPath)
+    }
+  }
+
+  // If no referer or invalid format, continue to 404 handler
+  next()
+})
+
 // Default 404 handler
 app.use((req, res) => {
   res.status(404).send({ error: 'Not found' })
