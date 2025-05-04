@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url'
 import type webpack from 'webpack'
 import nodeExternals from 'webpack-node-externals'
 import { mode } from './constants'
+import { deleteSync } from 'del'
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
@@ -62,4 +63,13 @@ export const baseConfig: webpack.Configuration = {
       module: true
     }
   },
+  plugins: [
+    {
+      apply: (compiler) => {
+        compiler.hooks.beforeCompile.tap('DeleteDistPlugin', () => {
+          deleteSync(['dist/**/*'])
+        })
+      }
+    }
+  ]
 }

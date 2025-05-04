@@ -1,0 +1,7 @@
+{
+  "name": "shaders-plants",
+  "description": "Grow plants with code!",
+  "tags": ["three.js", "webgl", "shader"],
+  "list": true,
+  "include": "dist"
+}

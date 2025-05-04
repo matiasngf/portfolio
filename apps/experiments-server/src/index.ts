@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 })
 
 // Default 404 handler
-app.use((req, res) => {
+app.use((_req, res) => {
   res.status(404).send({ error: 'Not found' })
 })
 
