@@ -22,6 +22,10 @@
     "list": {
       "description": "Whether to include this experiment in generated lists",
       "type": "boolean"
+    },
+    "include": {
+      "description": "The folder where the bundle of the expiment is.",
+      "type": "string"
     }
   },
   "required": ["name", "description", "tags", "list"]

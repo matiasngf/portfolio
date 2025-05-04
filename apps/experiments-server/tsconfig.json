@@ -7,9 +7,9 @@
       "DOM",
       "DOM.Iterable"
     ],
-    "module": "NodeNext",
+    "module": "ES2020",
     "skipLibCheck": true,
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -21,9 +21,13 @@
     "declaration": true,
     "declarationDir": "./dist",
     "outDir": "./dist",
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "typeRoots": [
+      "../node_modules/@types"
+    ]
   },
   "include": [
-    "src",
+    "src/**/*.ts",
+    "compiler/**/*.ts",
   ],
 }

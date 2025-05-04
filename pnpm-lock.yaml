@@ -19,6 +19,10 @@ importers:
         version: 1.13.3
 
   apps/experiments-server:
+    dependencies:
+      zod:
+        specifier: ^3.24.3
+        version: 3.24.3
     devDependencies:
       '@swc/core':
         specifier: ^1.11.24
@@ -6432,6 +6436,9 @@ packages:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
 
+  zod@3.24.3:
+    resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
+
   zstddec@0.0.2:
     resolution: {integrity: sha512-DCo0oxvcvOTGP/f5FA6tz2Z6wF+FIcEApSTu0zV5sQgn9hoT5lZ9YRAKUraxt9oP7l4e8TnNdi8IZTCX6WCkwA==}
 
@@ -12780,6 +12787,8 @@ snapshots:
 
   yn@3.1.1:
     optional: true
+
+  zod@3.24.3: {}
 
   zstddec@0.0.2: {}
 

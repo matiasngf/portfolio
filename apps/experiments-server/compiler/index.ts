@@ -1,6 +1,7 @@
 import webpack from "webpack"
 import { baseConfig } from "./webpack-config"
 import { getExperiments } from "./get-experiments"
+import { cloneExperiments } from "./clone-experiments"
 
 async function compile() {
   const experiments = await getExperiments()
@@ -24,6 +25,8 @@ async function compile() {
       colors: true,
       chunks: true
     }))
+
+    cloneExperiments(experiments)
 
     // Close the compiler when done
     compiler.close((closeErr) => {
