@@ -15,6 +15,7 @@ const srcDir = path.resolve(rootDir, 'src')
 // Base configuration for both CJS and ESM
 export const baseConfig: webpack.Configuration = {
   mode,
+  watch: mode === 'development',
   devtool: mode === 'production' ? false : 'source-map',
   entry: path.resolve(srcDir, 'index.ts'),
   target: 'node',
@@ -66,8 +67,12 @@ export const baseConfig: webpack.Configuration = {
   plugins: [
     {
       apply: (compiler) => {
+        let isFirstCompile = true
         compiler.hooks.beforeCompile.tap('DeleteDistPlugin', () => {
-          deleteSync(['dist/**/*'])
+          if (isFirstCompile) {
+            deleteSync(['dist/**/*'])
+            isFirstCompile = false
+          }
         })
       }
     }

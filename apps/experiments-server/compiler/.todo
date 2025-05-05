@@ -1,2 +1,3 @@
-- Handle absolute paths requests from experiments.
-- Serve assets using URL.
+- Generate experiments manifest
+- Combine bundles: optimize space by combine bundles using file-hash.
+- Research export settings for vite
