@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "pages/**/*": {
-      "excludeFiles": "utils/projects-config.ts"
-    }
-  },
   "redirects": [
     {
       "source": "/react-paris",

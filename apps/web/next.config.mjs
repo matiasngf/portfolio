@@ -21,10 +21,6 @@ const withMDX = createMDX({
 const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   reactStrictMode: true,
-  transpilePackages: ["ui"],
-  experimental: {
-    esmExternals: 'loose'
-  },
   async redirects() {
     return [
       {
