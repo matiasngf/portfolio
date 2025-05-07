@@ -2,11 +2,12 @@ import fs from 'fs';
 import path from 'path';
 
 import { ExperimentConfigExtended } from "./experiment-config-schema";
+import { outputFolder } from './constants';
 
 export function cloneExperiments(experiments: ExperimentConfigExtended[]) {
   experiments.forEach((experimentConfig) => {
     const { name, includePath } = experimentConfig
-    const distPath = path.resolve(process.cwd(), 'dist', name)
+    const distPath = path.resolve(process.cwd(), outputFolder, name)
     const sourcePath = path.resolve(process.cwd(), includePath)
 
     // Create destination directory if it doesn't exist

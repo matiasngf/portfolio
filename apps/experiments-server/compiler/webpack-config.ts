@@ -2,7 +2,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import type webpack from 'webpack'
 import nodeExternals from 'webpack-node-externals'
-import { mode } from './constants'
+import { mode, outputFolder } from './constants'
 import { deleteSync } from 'del'
 
 // ES module equivalent of __dirname
@@ -54,7 +54,7 @@ export const baseConfig: webpack.Configuration = {
     minimize: mode === 'production'
   },
   output: {
-    path: path.resolve(rootDir, 'dist'),
+    path: path.resolve(rootDir, outputFolder),
     filename: 'index.js',
     library: {
       type: 'module'
@@ -70,7 +70,7 @@ export const baseConfig: webpack.Configuration = {
         let isFirstCompile = true
         compiler.hooks.beforeCompile.tap('DeleteDistPlugin', () => {
           if (isFirstCompile) {
-            deleteSync(['dist/**/*'])
+            deleteSync([`${outputFolder}/**/*`])
             isFirstCompile = false
           }
         })

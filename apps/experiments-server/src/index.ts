@@ -5,7 +5,7 @@ const app = express()
 const experimentsPath = path.dirname(process.argv[1])
 
 // Serve static files from the experiments directory
-app.use('/experiments/:slug', (req, res, next) => {
+app.use('/:slug', (req, res, next) => {
   const slug = req.params.slug
   const experimentPath = path.join(experimentsPath, slug)
 
@@ -24,11 +24,11 @@ app.use((req, res, next) => {
 
   if (referer) {
     // Extract experiment slug from referer URL
-    const match = referer.match(/\/experiments\/([^\/]+)/)
+    const match = referer.match(/\/([^\/]+)/)
 
     if (match && match[1]) {
       const slug = match[1]
-      const redirectPath = `/experiments/${slug}${req.path}`
+      const redirectPath = `/${slug}${req.path}`
 
       // Redirect to the experiment's path
       return res.redirect(redirectPath)
@@ -45,5 +45,7 @@ app.use((_req, res) => {
 })
 
 app.listen(3000, () => {
-  console.log('Server is running on port 3000')
+  console.log(`Server started at http://localhost:3000`)
 })
+
+module.exports = app

@@ -2,7 +2,7 @@ import webpack from "webpack"
 import { baseConfig } from "./webpack-config"
 import { getExperiments } from "./get-experiments"
 import { cloneExperiments } from "./clone-experiments"
-import { mode } from "./constants"
+import { mode, outputFolder } from "./constants"
 import { spawn } from 'child_process'
 import path from 'path'
 
@@ -44,7 +44,7 @@ async function compile() {
     } else {
       // In development mode, run the compiled script directly
       const rootDir = path.resolve(process.cwd())
-      const scriptPath = path.join(rootDir, 'dist/index.js')
+      const scriptPath = path.join(rootDir, outputFolder, 'index.js')
 
       // Kill previous process if it exists
       if (scriptProcess) {
@@ -56,7 +56,5 @@ async function compile() {
     }
   })
 }
-
-
 
 compile()
