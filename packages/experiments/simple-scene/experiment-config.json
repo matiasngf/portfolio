@@ -1,0 +1,7 @@
+{
+  "name": "simple-scene",
+  "description": "A simple scene with a cube and a sphere",
+  "tags": ["three.js", "webgl"],
+  "list": true,
+  "include": "dist"
+}

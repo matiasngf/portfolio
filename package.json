@@ -13,14 +13,17 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "preview": "turbo run preview"
+    "preview": "turbo run preview",
+    "experiments:build": "turbo run experiments-server-build",
+    "experiments": "turbo run dev --filter=experiments-server"
   },
+  "packageManager": "pnpm@10.8.1",
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
     "prettier": "latest",
-    "turbo": "^1.13.3"
+    "turbo": "^2.5.2"
   },
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   }
 }

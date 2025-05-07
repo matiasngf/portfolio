@@ -1,0 +1,7 @@
+{
+  "name": "shaders-fluid",
+  "description": "Fluid sim shader",
+  "tags": ["three.js", "webgl", "shader"],
+  "list": true,
+  "include": "dist"
+}
