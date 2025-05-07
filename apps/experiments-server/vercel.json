@@ -3,13 +3,6 @@
   "version": 2,
   "buildCommand": "pnpm run experiments:build",
   "outputDirectory": "api",
-  "builds": [
-    {
-      "src": "app.js",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["api/**"] }
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",
