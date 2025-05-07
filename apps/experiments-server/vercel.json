@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm run experiments:build && cd apps/experiments-server",
+  "buildCommand": "pnpm run experiments:build",
   "outputDirectory": "api",
   "builds": [
     {
