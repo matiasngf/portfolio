@@ -1,0 +1,7 @@
+{
+  "name": "basement-logo",
+  "description": "Basement shader",
+  "tags": ["three.js", "webgl", "shader"],
+  "list": true,
+  "include": "dist"
+}
