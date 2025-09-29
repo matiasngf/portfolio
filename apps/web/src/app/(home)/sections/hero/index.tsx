@@ -64,7 +64,7 @@ function Name() {
             className="overflow-hidden h-[1.2em] flex items-center justify-center -my-[.1em]"
           >
             <span className="block relative top-[.2em]">
-              <span className="block relative word-content">
+              <span className="block relative word-content will-change-transform [transform:translateY(140%)]">
                 {word.split("").map((letter, index) =>
                   letter === "o" ? (
                     <Eye key={index}>{letter}</Eye>
