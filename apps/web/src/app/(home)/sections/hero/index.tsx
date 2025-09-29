@@ -11,6 +11,8 @@ import { rotateVector2 } from "@/lib/math/rotate-vec";
 import { lerp } from "three/src/math/MathUtils.js";
 import { useFrame } from "@/hooks/use-frame";
 import { BackdropBlur } from "@/components/backdrop-blur";
+import Image from "next/image";
+import Link from "next/link";
 
 export function Hero() {
   return (
@@ -18,8 +20,13 @@ export function Hero() {
       <div className="flex flex-col gap-4 items-center w-full h-full text-center">
         <div className="flex-1" />
         <Name />
-        <div className="flex-1">
-          <p>Developer & designer</p>
+        <div className="flex flex-col flex-1 gap-8 justify-center items-center">
+          <p className="font-serif italic font-bold text-center text-md">
+            developer & designer
+          </p>
+          <Link href="/">
+            <Image src="/hand-dec-2 1.png" alt="hand" width={29} height={57} />
+          </Link>
         </div>
       </div>
     </div>
