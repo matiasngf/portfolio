@@ -14,7 +14,6 @@ export function BackdropBlur({
   blurResolution = 4,
   minBlur = 0.5,
   maxBlur = 1,
-  z = 0,
 }: BackdropBlurProps) {
   const blurSteps = Array.from({ length: blurResolution }, (_, index) => {
     const progress = index / (blurResolution - 1);
@@ -45,7 +44,6 @@ export function BackdropBlur({
   return (
     <div className={cn("absolute inset-0 pointer-events-none", className)}>
       {blurSteps.map((blurValue, index) => {
-        const zIndex = z + index + 1;
         const layerMask = generateMask(index);
 
         return (
@@ -53,7 +51,6 @@ export function BackdropBlur({
             key={index}
             className="absolute inset-0"
             style={{
-              zIndex,
               backdropFilter: `blur(${blurValue}px)`,
               WebkitBackdropFilter: `blur(${blurValue}px)`,
               mask: layerMask,
