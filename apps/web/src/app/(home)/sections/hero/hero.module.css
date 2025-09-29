@@ -1,0 +1,26 @@
+.letter-container {
+  .dot {
+    --translate-x: 0em;
+    --translate-y: 0px;
+    --scale: 1;
+    @apply absolute rounded-full w-[0.15em] aspect-square left-1/2 top-1/2;
+    transform: translate(
+        calc(var(--translate-x) - 50%),
+        calc(var(--translate-y) - 50%)
+      )
+      rotate(-33deg)
+      scale(calc(var(--scale) * 1 * var(--blink)), calc(var(--scale) * 1));
+
+    .dot-shape {
+      --scale: 1;
+      @apply block w-full h-full rounded-full relative transition-transform duration-300;
+      will-change: transform;
+      transform: scale(calc(var(--scale) * 1), calc(var(--scale) * 1.7));
+    }
+  }
+  &:hover {
+    .dot-shape {
+      --scale: 1.5;
+    }
+  }
+}
