@@ -82,6 +82,7 @@ function Name() {
           </span>
         ))}
         <BackdropBlur className="top-[1.2em] left-[-1em] w-[calc(100%+2em)]" />
+        <div className="absolute top-[2em] inset-0 bg-gradient-to-b pointer-events-none from-black/0 to-black/20" />
       </span>
     </h1>
   );
