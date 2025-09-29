@@ -10,6 +10,7 @@ import { useMouse } from "@/hooks/use-mouse";
 import { rotateVector2 } from "@/lib/math/rotate-vec";
 import { lerp } from "three/src/math/MathUtils.js";
 import { useFrame } from "@/hooks/use-frame";
+import { BackdropBlur } from "@/components/backdrop-blur";
 
 export function Hero() {
   return (
@@ -32,8 +33,8 @@ function Name() {
     animate(".word-content", {
       y: ["140%", "0%"],
       ease: "inOutCirc",
-      duration: 500,
-      delay: stagger(100, {
+      duration: 600,
+      delay: stagger(120, {
         modifier: (v) => v + 100,
       }),
     });
@@ -42,36 +43,39 @@ function Name() {
   return (
     <h1
       ref={root}
-      className="flex-1 text-8xl tracking-wide leading-none font-display"
+      className="relative flex-1 text-7xl tracking-wide leading-none font-display"
       style={
         {
           "font-variation-settings": '"wght" 663',
         } as React.CSSProperties
       }
     >
-      {name.split(" ").map((word, index) => (
-        <span
-          key={index}
-          className="overflow-hidden h-[1.2em] flex items-center justify-center -my-[.1em]"
-        >
-          <span className="block relative top-[.2em]">
-            <span className="block relative word-content">
-              {word.split("").map((letter, index) =>
-                letter === "o" ? (
-                  <Eye key={index}>{letter}</Eye>
-                ) : (
-                  <span
-                    className="inline-block relative letter-content"
-                    key={index}
-                  >
-                    {letter}
-                  </span>
-                )
-              )}
+      <span className="block relative">
+        {name.split(" ").map((word, index) => (
+          <span
+            key={index}
+            className="overflow-hidden h-[1.2em] flex items-center justify-center -my-[.1em]"
+          >
+            <span className="block relative top-[.2em]">
+              <span className="block relative word-content">
+                {word.split("").map((letter, index) =>
+                  letter === "o" ? (
+                    <Eye key={index}>{letter}</Eye>
+                  ) : (
+                    <span
+                      className="inline-block relative letter-content"
+                      key={index}
+                    >
+                      {letter}
+                    </span>
+                  )
+                )}
+              </span>
             </span>
           </span>
-        </span>
-      ))}
+        ))}
+        <BackdropBlur className="top-[1.2em] left-[-1em] w-[calc(100%+2em)]" />
+      </span>
     </h1>
   );
 }
@@ -98,12 +102,11 @@ function Eye({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     animate(eyeOpenRef, {
       current: 1,
-      delay: 700,
+      delay: 900,
       duration: 300,
       easing: "easeInOutCubic",
       onUpdate: () => {
         if (!scope.current) return;
-        console.log(eyeOpenRef.current);
         scope.current.style.setProperty("--blink", `${eyeOpenRef.current}`);
       },
     });
