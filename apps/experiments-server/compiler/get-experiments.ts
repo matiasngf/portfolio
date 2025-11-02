@@ -3,6 +3,7 @@ import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
 import { ExperimentConfigExtended, experimentConfigSchema } from './experiment-config-schema.js'
+import { experimentsPath } from './constants.js'
 
 export async function getExperiments() {
 
@@ -12,7 +13,7 @@ export async function getExperiments() {
 
     const experiments: ExperimentConfigExtended[] = []
 
-    const watcher = chokidar.watch('../../packages/', {
+    const watcher = chokidar.watch(experimentsPath, {
       persistent: true,
       ignored: [/node_modules/, /dist/, /.next/, /public/, /build/, /\.git/],
     })
@@ -63,7 +64,7 @@ export async function getExperiments() {
       })
       .on('error', error => console.error(`Watcher error: ${error}`))
       .on('ready', () => {
-        console.log(chalk.bold('Found ', experiments.length, ' experiment' + (experiments.length !== 1 ? 's' : '')))
+        console.log(chalk.bold.green('Found ', experiments.length, ' experiment' + (experiments.length !== 1 ? 's' : '')))
         // Do not close the watcher here if you want it to keep running
         watcher.close();
         resolve(experiments)

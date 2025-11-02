@@ -2,12 +2,12 @@ import webpack from "webpack"
 import { getWebpackConfig } from "./webpack-config"
 import { getExperiments } from "./get-experiments"
 import { cloneExperiments } from "./clone-experiments"
-import { mode, outputFolder } from "./constants"
+import { mode, vercelStaticPath } from "./constants"
 import { spawn } from 'child_process'
 import path from 'path'
+import { createVercelConfig, createVercelFolder } from "./vercel-utils"
 
-// Log the dir contents of each experiments.includePath folder
-import fs from 'fs'
+// import fs from 'fs'
 
 async function compile() {
   console.log('Current working directory:', process.cwd());
@@ -18,19 +18,24 @@ async function compile() {
 
 
 
-  console.log('\nExperiment includePath contents:')
-  for (const experiment of experiments) {
-    const dirPath = experiment.includePath
-    try {
-      const files = fs.readdirSync(dirPath)
-      console.log(`- ${experiment.name} (${dirPath}):`)
-      files.forEach(file => {
-        console.log(`    ${file}`)
-      })
-    } catch (err) {
-      console.error(`Failed to read dir for ${experiment.name}: ${err}`)
-    }
-  }
+  // console.log('\nExperiment includePath contents:')
+  // for (const experiment of experiments) {
+  //   const dirPath = experiment.includePath
+  //   try {
+  //     const files = fs.readdirSync(dirPath)
+  //     console.log(`- ${experiment.name} (${dirPath}):`)
+  //     files.forEach(file => {
+  //       console.log(`    ${file}`)
+  //     })
+  //   } catch (err) {
+  //     console.error(`Failed to read dir for ${experiment.name}: ${err}`)
+  //   }
+  // }
+
+  createVercelFolder()
+  cloneExperiments(experiments);
+  createVercelConfig()
+
 
 
   return;
@@ -71,7 +76,7 @@ async function compile() {
     } else {
       // In development mode, run the compiled script directly
       const rootDir = path.resolve(process.cwd())
-      const scriptPath = path.join(rootDir, outputFolder, 'index.js')
+      const scriptPath = path.join(rootDir, vercelStaticPath, 'index.js')
 
       // Kill previous process if it exists
       if (scriptProcess) {

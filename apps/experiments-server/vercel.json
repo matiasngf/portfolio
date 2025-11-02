@@ -1,12 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "buildCommand": "cd ../.. && turbo run experiment-build && turbo run experiments-server-build",
-  "outputDirectory": "api",
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "app.js"
-    }
-  ]
+  "buildCommand": "cd ../.. && turbo run experiment-build && turbo run experiments-server-build"
 }

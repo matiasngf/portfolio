@@ -2,7 +2,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import type webpack from 'webpack'
 import nodeExternals from 'webpack-node-externals'
-import { mode, outputFolder } from './constants'
+import { mode, vercelStaticPath } from './constants'
 import { deleteSync } from 'del'
 
 // ES module equivalent of __dirname
@@ -56,7 +56,7 @@ export const getWebpackConfig = (): webpack.Configuration => {
       minimize: mode === 'production'
     },
     output: {
-      path: path.resolve(rootDir, outputFolder),
+      path: path.resolve(rootDir, vercelStaticPath),
       filename: 'index.js',
       library: {
         type: 'module'
@@ -72,7 +72,7 @@ export const getWebpackConfig = (): webpack.Configuration => {
           let isFirstCompile = true
           compiler.hooks.beforeCompile.tap('DeleteDistPlugin', () => {
             if (isFirstCompile) {
-              deleteSync([`${outputFolder}/**/*`])
+              deleteSync([`${vercelStaticPath}/**/*`])
               isFirstCompile = false
             }
           })
