@@ -10,6 +10,8 @@ import path from 'path'
 import fs from 'fs'
 
 async function compile() {
+  console.log('Current working directory:', process.cwd());
+
   const experiments = await getExperiments()
 
   console.log(experiments);
