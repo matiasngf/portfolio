@@ -1,17 +1,42 @@
 import webpack from "webpack"
-import { baseConfig } from "./webpack-config"
+import { getWebpackConfig } from "./webpack-config"
 import { getExperiments } from "./get-experiments"
 import { cloneExperiments } from "./clone-experiments"
 import { mode, outputFolder } from "./constants"
 import { spawn } from 'child_process'
 import path from 'path'
 
+// Log the dir contents of each experiments.includePath folder
+import fs from 'fs'
+
 async function compile() {
   const experiments = await getExperiments()
+
+  console.log(experiments);
+
+
+
+  console.log('\nExperiment includePath contents:')
+  for (const experiment of experiments) {
+    const dirPath = experiment.includePath
+    try {
+      const files = fs.readdirSync(dirPath)
+      console.log(`- ${experiment.name} (${dirPath}):`)
+      files.forEach(file => {
+        console.log(`    ${file}`)
+      })
+    } catch (err) {
+      console.error(`Failed to read dir for ${experiment.name}: ${err}`)
+    }
+  }
+
+
+  return;
   let isFirstCompile = true
   let scriptProcess: any
   // Run webpack for both configurations
-  const compiler = webpack(baseConfig, (err, stats) => {
+  const webpackConfig = getWebpackConfig()
+  const compiler = webpack(webpackConfig, (err, stats) => {
     if (err) {
       console.error(err)
       return
