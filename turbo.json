@@ -5,11 +5,14 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
-    "experiments-server-build": {
-      "dependsOn": ["build"],
+    "experiment-build": {
       "outputs": ["dist/**", ".next/**"],
-      "cache": false,
-      "persistent": true
+      "cache": true
+    },
+    "experiments-server-build": {
+      "dependsOn": ["experiment-build"],
+      "outputs": ["dist/**", ".next/**"],
+      "cache": false
     },
     "lint": {
       "outputs": []

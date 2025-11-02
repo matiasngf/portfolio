@@ -9,7 +9,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "vite build",
+    "experiment-build": "vite build",
     "lint": "eslint *.ts*",
     "preview": "vite --port 3001"
   },
