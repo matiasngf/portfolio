@@ -28,7 +28,7 @@ export const Potion = () => {
 
   const bottleModel = useLoader(
     GLTFLoader,
-    "/experiment-shaders-fluid-assets/potion-bottle.glb"
+    `${import.meta.env.BASE_URL}/experiment-shaders-fluid-assets/potion-bottle.glb`
   ) as unknown as PotionBottleGLTF;
 
   const ModelNode = useMemo(() => {

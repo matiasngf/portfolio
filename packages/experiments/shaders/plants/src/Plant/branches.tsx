@@ -18,7 +18,7 @@ export type BranchUniforms = Uniforms<typeof branchUniforms>;
 export const Branches = () => {
   const plantModel = useLoader(
     GLTFLoader,
-    "/experiment-shaders-plants-assets/plant.glb"
+    `${import.meta.env.BASE_URL}/experiment-shaders-plants-assets/plant.glb`
   ) as unknown as PlantGLTF;
 
   const branches = useMemo(() => {

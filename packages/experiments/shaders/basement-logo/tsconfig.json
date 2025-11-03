@@ -22,7 +22,7 @@
   "include": [
     "src/types.d.ts",
     "src/globals.d.ts",
-    "src/vite-env.d.ts",
+    "vite-env.d.ts",
     "src/**/*"
   ],
   "exclude": [

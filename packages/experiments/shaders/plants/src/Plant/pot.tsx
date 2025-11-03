@@ -8,11 +8,11 @@ import { useTexture } from "@react-three/drei";
 export const Pot = () => {
   const plantModel = useLoader(
     GLTFLoader,
-    "/experiment-shaders-plants-assets/plant.glb"
+    `${import.meta.env.BASE_URL}/experiment-shaders-plants-assets/plant.glb`
   ) as unknown as PlantGLTF;
 
   const labelTexture = useTexture(
-    "/experiment-shaders-plants-assets/label.jpg"
+    `${import.meta.env.BASE_URL}/experiment-shaders-plants-assets/label.jpg`
   );
 
   const { pot, stick } = useMemo(() => {
