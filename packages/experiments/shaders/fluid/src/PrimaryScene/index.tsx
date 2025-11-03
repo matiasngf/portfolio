@@ -39,12 +39,17 @@ export const PrimaryScene = ({
 
   useEffect(() => {
     const loader = new TextureLoader();
-    loader.load("/experiment-shaders-fluid-assets/woods_4k.jpg", (texture) => {
-      texture.colorSpace = SRGBColorSpace;
-      const cubeRenderTarget = new WebGLCubeRenderTarget(texture.image.height);
-      cubeRenderTarget.fromEquirectangularTexture(gl, texture);
-      setTexture(cubeRenderTarget.texture);
-    });
+    loader.load(
+      `${import.meta.env.BASE_URL}/experiment-shaders-fluid-assets/woods_4k.jpg`,
+      (texture) => {
+        texture.colorSpace = SRGBColorSpace;
+        const cubeRenderTarget = new WebGLCubeRenderTarget(
+          texture.image.height
+        );
+        cubeRenderTarget.fromEquirectangularTexture(gl, texture);
+        setTexture(cubeRenderTarget.texture);
+      }
+    );
   }, []);
 
   useEffect(() => {
