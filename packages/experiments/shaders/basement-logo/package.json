@@ -37,11 +37,10 @@
     "tsconfig": "workspace:*",
     "tslib": "^2.4.1",
     "typescript": "^4.6.4",
-    "vite": "^4.3.5",
+    "vite": "^7.1.12",
     "zustand": "^4.3.8"
   },
   "peerDependencies": {
-    "three-stdlib": "^2.23.8",
     "@react-three/drei": "^9.66.4",
     "@react-three/fiber": "^8.13.0",
     "@react-three/postprocessing": "2.7.0",
@@ -50,6 +49,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "three": "^0.152.2",
+    "three-stdlib": "^2.23.8",
     "zustand": "^4.3.8"
   }
 }

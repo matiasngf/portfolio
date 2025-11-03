@@ -20,7 +20,7 @@ export interface LogoGLTF extends GLTF {
 export const Logo = () => {
   const logoModel = useLoader(
     GLTFLoader,
-    "/experiment-shaders-basement-logo-assets/basement-logo.glb"
+    `${import.meta.env.BASE_URL}experiment-shaders-basement-logo-assets/basement-logo.glb`
   ) as unknown as LogoGLTF;
 
   const mousePosition = useLogoStore((s) => s.mousePosition);
