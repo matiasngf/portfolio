@@ -1,4 +1,4 @@
-export const shaderObjects = `
+export const shaderObjects = /*glsl*/`
 Material DebugMaterial = Material(
   vec3(0.0, 0.0, 1.0),
   0.0, 0.0

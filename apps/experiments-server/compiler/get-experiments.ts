@@ -44,6 +44,10 @@ export async function getExperiments() {
           const includePath = path.join(dirPath, experimentConfig.include)
           if (!fs.existsSync(includePath)) throw new Error(chalk.redBright(`${chalk.bold(experimentConfig.include)} folder does not exist on ${dirPath}`))
 
+          if (experiments.find(exp => exp.name === experimentConfig.name)) {
+            throw new Error(chalk.redBright(`Experiment with name ${chalk.bold(experimentConfig.name)} already exists. Experiment names must be unique.`))
+          }
+
           console.log(`└─ ${chalk.bold(experimentConfig.name)}`)
 
           // Create extendend configuration

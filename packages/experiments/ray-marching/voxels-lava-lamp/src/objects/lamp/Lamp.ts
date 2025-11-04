@@ -7,7 +7,7 @@ const metalMaterial = new MeshPhongMaterial({ color: "#c5f" });
 
 export const lavaGroup = new Group();
 lavaGroup.name = "lavaGroup";
-loader.load("/models/groovy_lava_lamp/scene.gltf", (gltf) => {
+loader.load(`${import.meta.env.BASE_URL}/models/groovy_lava_lamp/scene.gltf`, (gltf) => {
   Object.values(gltf.scene.children[0].children[0].children).forEach((obj) => {
     if (!obj.name.includes("glob") && !obj.name.includes("glass")) {
       const mesh = obj.children[0] as Mesh;

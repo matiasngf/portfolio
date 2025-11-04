@@ -1,4 +1,4 @@
-export const getSceneHit = `
+export const getSceneHit = /*glsl*/`
 float getSafeDist() {
   float safeDist = length(vec3(VOXEL_SIZE));
   return safeDist;
