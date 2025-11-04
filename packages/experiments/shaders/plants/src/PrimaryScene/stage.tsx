@@ -2,7 +2,7 @@ import { Backdrop, useTexture } from "@react-three/drei";
 
 export const Stage = () => {
   const shadowTexture = useTexture(
-    "/experiment-shaders-plants-assets/floor-ao.jpg"
+    `${import.meta.env.BASE_URL}/experiment-shaders-plants-assets/floor-ao.jpg`
   );
 
   return (

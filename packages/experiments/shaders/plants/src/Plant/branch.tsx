@@ -22,7 +22,7 @@ export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
   const { debugBranches, renderBranches } = useConfig();
 
   const branchMap = useTexture(
-    "/experiment-shaders-plants-assets/branch-texture.jpg",
+    `${import.meta.env.BASE_URL}/experiment-shaders-plants-assets/branch-texture.jpg`,
     (t: any) => {
       const tex = t as Texture;
       tex.wrapT = RepeatWrapping;
@@ -31,7 +31,11 @@ export const Branch = ({ segments, uniforms, branchlets }: BranchProps) => {
   );
 
   const { branchMesh, branchPath, position, rotation } = useMemo(() => {
-    return getBranchMesh(segments.clone(true), uniforms, branchMap);
+    return getBranchMesh(
+      segments.clone(true),
+      uniforms,
+      branchMap as any as THREE.Texture
+    );
   }, [segments, uniforms, branchMap]);
 
   const branchletsArr = useMemo(() => {
