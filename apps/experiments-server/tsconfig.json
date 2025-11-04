@@ -1,33 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "target": "ESNext",
     "module": "ES2020",
-    "skipLibCheck": true,
     "moduleResolution": "Node",
-    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "declaration": true,
-    "declarationDir": "./dist",
+    "skipLibCheck": true,
     "outDir": "./dist",
-    "emitDeclarationOnly": true,
     "typeRoots": [
       "../node_modules/@types"
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "compiler/**/*.ts",
-  ],
+    "src"
+  ]
 }
