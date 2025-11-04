@@ -1,0 +1,7 @@
+{
+  "name": "earth",
+  "description": "Earth with a realistic atmosphere",
+  "tags": ["three.js", "webgl"],
+  "list": true,
+  "include": "dist"
+}

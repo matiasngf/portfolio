@@ -49,6 +49,7 @@ export async function getExperiments() {
           // Create extendend configuration
           const experimentConfigExtended: ExperimentConfigExtended = {
             ...experimentConfig,
+            rootPath: path.relative(path.resolve(process.cwd(), '../../'), dirPath),
             includePath: includePath,
           }
 

@@ -19,12 +19,17 @@ export const BackgroundScene = ({ lightDirection }: BackgroundSceneProps) => {
 
   useEffect(() => {
     const loader = new TextureLoader();
-    loader.load("/experiment-earth-assets/starmap_g4k.jpg", (texture) => {
-      texture.colorSpace = SRGBColorSpace;
-      const cubeRenderTarget = new WebGLCubeRenderTarget(texture.image.height);
-      cubeRenderTarget.fromEquirectangularTexture(gl, texture);
-      setCubeTexture(cubeRenderTarget.texture as any);
-    });
+    loader.load(
+      `${import.meta.env.BASE_URL}/experiment-earth-assets/starmap_g4k.jpg`,
+      (texture) => {
+        texture.colorSpace = SRGBColorSpace;
+        const cubeRenderTarget = new WebGLCubeRenderTarget(
+          texture.image.height
+        );
+        cubeRenderTarget.fromEquirectangularTexture(gl, texture);
+        setCubeTexture(cubeRenderTarget.texture as any);
+      }
+    );
   }, [gl]);
 
   useEffect(() => {

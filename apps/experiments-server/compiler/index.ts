@@ -5,7 +5,7 @@ import { cloneExperiments } from "./clone-experiments"
 import { mode, vercelStaticPath } from "./constants"
 import { spawn } from 'child_process'
 import path from 'path'
-import { createVercelConfig, createVercelFolder } from "./vercel-utils"
+import { createVercelConfig, createVercelFolder, generateExperimentsManifest } from "./vercel-utils"
 
 // import fs from 'fs'
 
@@ -35,7 +35,7 @@ async function compile() {
   createVercelFolder()
   cloneExperiments(experiments);
   createVercelConfig()
-
+  generateExperimentsManifest(experiments);
 
 
   return;

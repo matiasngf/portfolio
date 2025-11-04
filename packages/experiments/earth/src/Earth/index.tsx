@@ -22,9 +22,9 @@ export const Earth = ({ lightDirection }: EarthProps) => {
   const [earthDayTexture, nightTexture, cloudTexture] = useLoader(
     TextureLoader,
     [
-      "/experiment-earth-assets/8k_earth_daymap.jpg",
-      "/experiment-earth-assets/8k_earth_nightmap.jpg",
-      "/experiment-earth-assets/8k_earth_clouds.jpg",
+      `${import.meta.env.BASE_URL}/experiment-earth-assets/8k_earth_daymap.jpg`,
+      `${import.meta.env.BASE_URL}/experiment-earth-assets/8k_earth_nightmap.jpg`,
+      `${import.meta.env.BASE_URL}/experiment-earth-assets/8k_earth_clouds.jpg`,
     ]
   );
 

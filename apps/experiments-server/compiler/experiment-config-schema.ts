@@ -12,6 +12,7 @@ export const experimentConfigSchema = z.object({
 
 export type ExperimentConfig = z.infer<typeof experimentConfigSchema>
 export const experimentConfigSchemaExtended = experimentConfigSchema.extend({
+  rootPath: z.string().describe('The root path of the experiment folder, relative to the project root'),
   includePath: z
     .string()
     .describe('The path to the experiment folder, relative to the project root'),

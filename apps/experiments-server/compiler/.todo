@@ -1,3 +1,2 @@
 - Generate experiments manifest
 - Combine bundles: optimize space by combine bundles using file-hash.
-- Research export settings for vite

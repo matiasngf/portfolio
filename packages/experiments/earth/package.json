@@ -9,7 +9,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "rollup --config rollup.config.js --bundleConfigAsCjs",
+    "experiment-build": "vite build",
     "lint": "eslint *.ts*",
     "preview": "vite --port 3001"
   },
@@ -36,7 +36,7 @@
     "tsconfig": "workspace:*",
     "tslib": "^2.4.1",
     "typescript": "^5.4.5",
-    "vite": "^4.3.5"
+    "vite": "^7.1.12"
   },
   "peerDependencies": {
     "@react-three/drei": "^9.66.4",

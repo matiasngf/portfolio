@@ -13,14 +13,17 @@
       "es2017"
     ],
     "sourceMap": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "rootDir": "src"
   },
   "include": [
-    "src/**/*"
+    "src/types.d.ts",
+    "src/globals.d.ts",
+    "src/**/*",
+    "vite-env.d.ts"
   ],
   "exclude": [
     "node_modules",

@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 
@@ -19,5 +18,5 @@ export default defineConfig(({ command }) => ({
   esbuild: {
     target: 'esnext'
   },
-  plugins: [react()]
 }))
+
