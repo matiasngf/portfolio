@@ -203,7 +203,6 @@ const displayShader = /* glsl */ `
 `;
 
 function createDoubleFBO(
-  gl: THREE.WebGLRenderer,
   width: number,
   height: number,
   options: {
@@ -289,19 +288,19 @@ export function useFluid({
   // Create render targets
   const { density, velocity, pressure, divergence, curl } = useMemo(() => {
     // Use RGBA formats for better compatibility
-    const densityFBO = createDoubleFBO(gl, dyeRes, dyeRes, {
+    const densityFBO = createDoubleFBO(dyeRes, dyeRes, {
       type: THREE.HalfFloatType,
       format: THREE.RGBAFormat,
     });
 
     // Use RGBA for velocity but only use RG channels
-    const velocityFBO = createDoubleFBO(gl, simRes, simRes, {
+    const velocityFBO = createDoubleFBO(simRes, simRes, {
       type: THREE.HalfFloatType,
       format: THREE.RGBAFormat,
     });
 
     // Use RGBA for pressure but only use R channel
-    const pressureFBO = createDoubleFBO(gl, simRes, simRes, {
+    const pressureFBO = createDoubleFBO(simRes, simRes, {
       type: THREE.HalfFloatType,
       format: THREE.RGBAFormat,
 
@@ -334,7 +333,7 @@ export function useFluid({
       divergence: divergenceRT,
       curl: curlRT,
     };
-  }, [dyeRes, gl, simRes]);
+  }, [dyeRes, simRes]);
 
   // Create shader materials
   const clearMaterial = useMemo(
