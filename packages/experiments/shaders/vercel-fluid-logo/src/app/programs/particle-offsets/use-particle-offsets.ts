@@ -3,6 +3,7 @@
 import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import type { RootState } from "@react-three/fiber";
+import { useControls, folder } from "leva";
 
 import { useDoubleFbo } from "@/lib/gl/fbo/use-double-fbo";
 import { useRawShader } from "@/lib/gl/program/use-shader";
@@ -21,25 +22,62 @@ export interface ParticleOffsetsUniforms extends Record<
   THREE.IUniform
 > {
   uPrevOffsets: { value: THREE.Texture | null };
-  uVelocity: { value: THREE.Texture | null };
+  uPrevVelocity: { value: THREE.Texture | null };
+  uFluidVelocity: { value: THREE.Texture | null };
   uPositions: { value: THREE.DataTexture | null };
-  uDecay: { value: number };
   uStrength: { value: number };
+  uFriction: { value: number };
+  uOffsetDecay: { value: number };
+  uSnapDistance: { value: number };
+  uSnapVelocityThreshold: { value: number };
+  uSnapLerpStrength: { value: number };
+  uMinVelocity: { value: number };
   uScreenAspect: { value: number };
 }
 
 interface UseParticleOffsetsOptions {
   textureSize: number;
-  decay?: number;
   strength?: number;
+  friction?: number;
+  offsetDecay?: number;
 }
 
 export function useParticleOffsets({
   textureSize,
-  decay = 0.98,
-  strength = 0.002,
+  strength: initialStrength = 0.005,
+  friction: initialFriction = 0.98,
+  offsetDecay: initialOffsetDecay = 0.002,
 }: UseParticleOffsetsOptions) {
-  // Double FBO for ping-pong rendering
+  // Leva controls for physics parameters
+  const {
+    strength,
+    friction,
+    offsetDecay,
+    snapDistance,
+    snapVelocityThreshold,
+    snapLerpStrength,
+    minVelocity,
+  } = useControls("Particle Physics", {
+    strength: { value: initialStrength, min: 0, max: 0.05, step: 0.001 },
+    friction: { value: initialFriction, min: 0, max: 1, step: 0.01 },
+    offsetDecay: { value: initialOffsetDecay, min: 0, max: 0.2, step: 0.001 },
+    minVelocity: { value: 1.15, min: 0, max: 2, step: 0.01 },
+    Snap: folder(
+      {
+        snapDistance: { value: 0.05, min: 0.001, max: 0.1, step: 0.001 },
+        snapVelocityThreshold: {
+          value: 0.01,
+          min: 0.0001,
+          max: 0.01,
+          step: 0.0001,
+        },
+        snapLerpStrength: { value: 0.3, min: 0.01, max: 1, step: 0.01 },
+      },
+      { collapsed: true },
+    ),
+  });
+
+  // Double FBO for position offsets (RG) and particle velocity (BA)
   const offsetsFbo = useDoubleFbo(textureSize, textureSize, {
     type: THREE.FloatType,
     format: THREE.RGBAFormat,
@@ -50,10 +88,16 @@ export function useParticleOffsets({
   // Uniforms for the offset update shader
   const uniforms = useUniforms<ParticleOffsetsUniforms>(() => ({
     uPrevOffsets: { value: null },
-    uVelocity: { value: null },
+    uPrevVelocity: { value: null },
+    uFluidVelocity: { value: null },
     uPositions: { value: null },
-    uDecay: { value: decay },
     uStrength: { value: strength },
+    uFriction: { value: friction },
+    uOffsetDecay: { value: offsetDecay },
+    uSnapDistance: { value: snapDistance },
+    uSnapVelocityThreshold: { value: snapVelocityThreshold },
+    uSnapLerpStrength: { value: snapLerpStrength },
+    uMinVelocity: { value: minVelocity },
     uScreenAspect: { value: 1 },
   }));
 
@@ -71,16 +115,26 @@ export function useParticleOffsets({
   // Mesh for rendering
   const mesh = useMemo(() => new THREE.Mesh(quadGeometry, shader), [shader]);
 
-  // Render function to update offsets
+  // Render function to update offsets and particle velocities
   const render = useCallback(
-    (state: RootState, velocityTexture: THREE.Texture) => {
+    (state: RootState, fluidVelocityTexture: THREE.Texture) => {
       const restore = saveGlState(state);
       const { gl, size } = state;
 
-      // Update uniforms
+      // Update uniforms - texture stores offset in RG, particle velocity in BA
       uniforms.uPrevOffsets.value = offsetsFbo.read.texture;
-      uniforms.uVelocity.value = velocityTexture;
+      uniforms.uPrevVelocity.value = offsetsFbo.read.texture; // Same texture, different channels
+      uniforms.uFluidVelocity.value = fluidVelocityTexture;
       uniforms.uScreenAspect.value = size.width / size.height;
+
+      // Update Leva-controlled uniforms
+      uniforms.uStrength.value = strength;
+      uniforms.uFriction.value = friction;
+      uniforms.uOffsetDecay.value = offsetDecay;
+      uniforms.uSnapDistance.value = snapDistance;
+      uniforms.uSnapVelocityThreshold.value = snapVelocityThreshold;
+      uniforms.uSnapLerpStrength.value = snapLerpStrength;
+      uniforms.uMinVelocity.value = minVelocity;
 
       // Render to write target
       gl.setRenderTarget(offsetsFbo.write);
@@ -91,7 +145,18 @@ export function useParticleOffsets({
 
       restore();
     },
-    [mesh, offsetsFbo, uniforms],
+    [
+      mesh,
+      offsetsFbo,
+      uniforms,
+      strength,
+      friction,
+      offsetDecay,
+      snapDistance,
+      snapVelocityThreshold,
+      snapLerpStrength,
+      minVelocity,
+    ],
   );
 
   return {

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/immutability */
 "use client";
 
 import { useFrame, useThree } from "@react-three/fiber";
@@ -275,8 +274,8 @@ export function createQuadGeometry() {
 }
 
 export function useFluid({
-  simRes = 128,
-  dyeRes = 512,
+  simRes = 128 * 2,
+  dyeRes = 512 * 2,
   iterations = 3,
   densityDissipation = 0.97,
   velocityDissipation = 0.98,

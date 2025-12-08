@@ -11,6 +11,7 @@ import {
   Color,
   RawShaderMaterial,
 } from "three";
+import { Leva } from "leva";
 import {
   generateTrianglePoints,
   createEquilateralTriangle,
@@ -65,8 +66,9 @@ function TrianglePoints({
   // Setup particle offsets system
   const particleOffsets = useParticleOffsets({
     textureSize,
-    decay: 0.96,
     strength: 0.005,
+    friction: 0.2,
+    offsetDecay: 0.05,
   });
 
   // Create positions texture for the offset shader
@@ -114,6 +116,7 @@ function TrianglePoints({
 export default function Home() {
   return (
     <div className="w-full h-screen relative bg-black">
+      <Leva collapsed={false} />
       <Canvas>
         <Scene />
       </Canvas>
@@ -123,7 +126,8 @@ export default function Home() {
 
 function Scene() {
   const { velocity } = useFluid({
-    radius: 0.01,
+    radius: 0.05,
+    velocityDissipation: 0.99,
   });
 
   return (
