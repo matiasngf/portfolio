@@ -7,6 +7,8 @@ import {
   generateTrianglePoints,
   createEquilateralTriangle,
 } from "@/lib/utils/generate-triangle-points";
+import { useFluid } from "./fluid-sim";
+import { velocity } from "three/tsl";
 
 interface TrianglePointsProps {
   vertices?: [Vector2, Vector2, Vector2];
@@ -49,5 +51,7 @@ export default function Home() {
 }
 
 function Scene() {
+  const { velocity } = useFluid();
+
   return <TrianglePoints spacing={0.05} size={0.03} color="#00ffcc" />;
 }
