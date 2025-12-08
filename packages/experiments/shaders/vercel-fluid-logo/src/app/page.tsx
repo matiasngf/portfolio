@@ -71,6 +71,7 @@ interface TrianglePointsProps {
   screenFbo: WebGLRenderTarget;
   size?: number;
   color?: string;
+  triangleRadius?: number;
 }
 
 function TrianglePoints({
@@ -79,6 +80,7 @@ function TrianglePoints({
   screenFbo,
   size = 0.02,
   color = "#ffffff",
+  triangleRadius = Math.sqrt(3.5) / 3.5, // Match createEquilateralTriangle(1)
 }: TrianglePointsProps) {
   const { gl, camera } = useThree();
 
@@ -92,11 +94,13 @@ function TrianglePoints({
         uPointSize: { value: size * 100 },
         uColor: { value: new Color(color) },
         uScreenAspect: { value: 1 },
+        uTriangleRadius: { value: triangleRadius },
+        uResolution: { value: new Vector2(1, 1) },
       },
       transparent: true,
       depthWrite: false,
     });
-  }, [size, color]);
+  }, [size, color, triangleRadius]);
 
   // Create points mesh
   const points = useMemo(
@@ -109,9 +113,10 @@ function TrianglePoints({
     // Update particle material with latest offset texture
     material.uniforms.uOffsetTexture.value = offsetTexture;
 
-    // Update screen aspect ratio
+    // Update screen aspect ratio and resolution
     const { width, height } = state.size;
     material.uniforms.uScreenAspect.value = width / height;
+    material.uniforms.uResolution.value.set(width, height);
 
     // Render particles to screenFbo
     gl.setRenderTarget(screenFbo);
