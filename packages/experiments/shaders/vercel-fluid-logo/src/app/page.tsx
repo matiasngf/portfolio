@@ -116,7 +116,7 @@ function TrianglePoints({
 export default function Home() {
   return (
     <div className="w-full h-screen relative bg-black">
-      <Leva collapsed={false} />
+      <Leva collapsed={false} hidden />
       <Canvas>
         <Scene />
       </Canvas>
