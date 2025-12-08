@@ -9,7 +9,6 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "rollup --config rollup.config.js --bundleConfigAsCjs",
     "lint": "eslint *.ts*",
     "preview": "vite --port 3001"
   },

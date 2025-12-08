@@ -1,0 +1,7 @@
+{
+  "name": "vercel-fluid-logo",
+  "description": "Vercel logo with fluid simulation",
+  "tags": ["three.js", "webgl", "shader"],
+  "list": true,
+  "include": "out"
+}
