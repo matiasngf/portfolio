@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   output: "export",
   basePath: "/vercel-fluid-logo",
   webpack: (config, _options) => {

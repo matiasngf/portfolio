@@ -233,7 +233,7 @@ function Scene() {
   );
 
   // Fluid simulation
-  const { velocity, density } = useFluid({
+  const { density } = useFluid({
     radius: 0.4,
     velocityDissipation: 0.95,
     densityDissipation: 0.92,
