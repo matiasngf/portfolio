@@ -43,7 +43,7 @@ function TrianglePoints({
 }: TrianglePointsProps) {
   // Generate particle positions
   const { geometry, positions, textureSize } = useMemo(() => {
-    const triangleVertices = vertices ?? createEquilateralTriangle(2);
+    const triangleVertices = vertices ?? createEquilateralTriangle(1);
     const positionsArray = generateTrianglePoints(triangleVertices, spacing);
     const count = positionsArray.length / 3;
     const texSize = computeTextureSize(count);
@@ -66,7 +66,7 @@ function TrianglePoints({
   const particleOffsets = useParticleOffsets({
     textureSize,
     decay: 0.96,
-    strength: 0.003,
+    strength: 0.005,
   });
 
   // Create positions texture for the offset shader
@@ -122,12 +122,14 @@ export default function Home() {
 }
 
 function Scene() {
-  const { velocity } = useFluid();
+  const { velocity } = useFluid({
+    radius: 0.01,
+  });
 
   return (
     <TrianglePoints
-      spacing={0.05}
-      size={0.03}
+      spacing={0.03}
+      size={0.2}
       color="#00ffcc"
       velocityTexture={velocity.read.texture}
     />
