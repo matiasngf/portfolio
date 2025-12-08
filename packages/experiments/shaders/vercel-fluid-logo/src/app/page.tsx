@@ -1,20 +1,37 @@
+/* eslint-disable react-hooks/immutability */
 "use client";
 
-import { Canvas } from "@react-three/fiber";
-import { useMemo } from "react";
-import { BufferGeometry, Float32BufferAttribute, Vector2 } from "three";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useMemo, useEffect } from "react";
+import * as THREE from "three";
+import {
+  BufferGeometry,
+  Float32BufferAttribute,
+  Vector2,
+  Color,
+  RawShaderMaterial,
+} from "three";
 import {
   generateTrianglePoints,
   createEquilateralTriangle,
 } from "@/lib/utils/generate-triangle-points";
 import { useFluid } from "./fluid-sim";
-import { velocity } from "three/tsl";
+import {
+  useParticleOffsets,
+  createPositionsTexture,
+  createParticleUVs,
+  computeTextureSize,
+} from "./programs/particle-offsets/use-particle-offsets";
+
+import particlesVertexShader from "./programs/particles/particles.vert";
+import particlesFragmentShader from "./programs/particles/particles.frag";
 
 interface TrianglePointsProps {
   vertices?: [Vector2, Vector2, Vector2];
   spacing?: number;
   size?: number;
   color?: string;
+  velocityTexture: THREE.Texture;
 }
 
 function TrianglePoints({
@@ -22,22 +39,71 @@ function TrianglePoints({
   spacing = 0.05,
   size = 0.02,
   color = "#ffffff",
+  velocityTexture,
 }: TrianglePointsProps) {
-  const geometry = useMemo(() => {
+  // Generate particle positions
+  const { geometry, positions, textureSize } = useMemo(() => {
     const triangleVertices = vertices ?? createEquilateralTriangle(2);
-    const positions = generateTrianglePoints(triangleVertices, spacing);
+    const positionsArray = generateTrianglePoints(triangleVertices, spacing);
+    const count = positionsArray.length / 3;
+    const texSize = computeTextureSize(count);
 
     const geo = new BufferGeometry();
-    geo.setAttribute("position", new Float32BufferAttribute(positions, 3));
+    geo.setAttribute("position", new Float32BufferAttribute(positionsArray, 3));
 
-    return geo;
+    // Add particle UVs for offset texture lookup
+    const uvs = createParticleUVs(count, texSize);
+    geo.setAttribute("particleUv", new Float32BufferAttribute(uvs, 2));
+
+    return {
+      geometry: geo,
+      positions: positionsArray,
+      textureSize: texSize,
+    };
   }, [vertices, spacing]);
 
-  return (
-    <points geometry={geometry}>
-      <pointsMaterial size={size} color={color} sizeAttenuation={true} />
-    </points>
-  );
+  // Setup particle offsets system
+  const particleOffsets = useParticleOffsets({
+    textureSize,
+    decay: 0.96,
+    strength: 0.003,
+  });
+
+  // Create positions texture for the offset shader
+  const positionsTexture = useMemo(() => {
+    return createPositionsTexture(positions, textureSize);
+  }, [positions, textureSize]);
+
+  // Set positions texture in uniforms
+  useEffect(() => {
+    particleOffsets.uniforms.uPositions.value = positionsTexture;
+  }, [particleOffsets.uniforms, positionsTexture]);
+
+  // Create particle material
+  const material = useMemo(() => {
+    return new RawShaderMaterial({
+      vertexShader: particlesVertexShader,
+      fragmentShader: particlesFragmentShader,
+      uniforms: {
+        uOffsetTexture: { value: null },
+        uPointSize: { value: size * 100 },
+        uColor: { value: new Color(color) },
+      },
+      transparent: true,
+      depthWrite: false,
+    });
+  }, [size, color]);
+
+  // Update each frame
+  useFrame((state) => {
+    // Render offset update pass
+    particleOffsets.render(state, velocityTexture);
+
+    // Update particle material with latest offset texture
+    material.uniforms.uOffsetTexture.value = particleOffsets.texture;
+  });
+
+  return <points geometry={geometry} material={material} />;
 }
 
 export default function Home() {
@@ -53,5 +119,12 @@ export default function Home() {
 function Scene() {
   const { velocity } = useFluid();
 
-  return <TrianglePoints spacing={0.05} size={0.03} color="#00ffcc" />;
+  return (
+    <TrianglePoints
+      spacing={0.05}
+      size={0.03}
+      color="#00ffcc"
+      velocityTexture={velocity.read.texture}
+    />
+  );
 }

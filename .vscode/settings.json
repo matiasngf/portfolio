@@ -4,20 +4,18 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "tailwindCSS.classAttributes": [
-    "class",
-    "className",
-    ".*Styles"
-  ],
+  "tailwindCSS.classAttributes": ["class", "className", ".*Styles"],
   "[mdx]": {
-    "editor.wordWrap": "on",
+    "editor.wordWrap": "on"
   },
   "json.schemas": [
     {
-      "fileMatch": [
-        "*experiment-config.json"
-      ],
+      "fileMatch": ["*experiment-config.json"],
       "url": ".schemas/experiment-config.schema.json"
     }
-  ]
+  ],
+  "shader-validator.hlsl.enabled": false,
+  "shader-validator.glsl.targetClient": "OpenGL450",
+  "shader-validator.wgsl.enabled": false,
+  "shader-validator.symbols": false
 }
