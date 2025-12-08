@@ -67,9 +67,10 @@ Uses a **double FBO** (ping-pong) to store accumulated position offsets for each
 **Each frame:**
 
 1. Sample previous offset from read buffer
-2. Sample velocity at particle's displaced position
-3. Accumulate: `newOffset = (prevOffset + velocity * strength) * decay`
-4. Write to write buffer, then swap
+2. Calculate screen position with aspect correction: `screenPos = (originalPos + offset) / vec2(aspect, 1.0)`
+3. Sample velocity at particle's screen position (converted to UV space)
+4. Accumulate: `newOffset = (prevOffset + velocity * strength) * decay`
+5. Write to write buffer, then swap
 
 **Helper functions:**
 
@@ -89,8 +90,11 @@ Uses a **double FBO** (ping-pong) to store accumulated position offsets for each
 ```glsl
 vec2 offset = texture2D(uOffsetTexture, particleUv).xy;
 vec3 displaced = position + vec3(offset, 0.0);
-gl_Position = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0);
+// Direct clip space positioning with aspect correction
+gl_Position = vec4(displaced.x / uScreenAspect, displaced.y, displaced.z, 1.0);
 ```
+
+Particles are positioned directly in clip space (-1 to 1) without camera transforms. The `uScreenAspect` uniform corrects for screen aspect ratio to maintain the equilateral triangle shape.
 
 **Fragment shader (`particles.frag`):**
 
@@ -110,6 +114,7 @@ gl_Position = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0);
 - `textureSize` - Must fit all particles (power of 2)
 - `decay` - Return-to-origin speed (0.96 = slow return, 0.8 = fast)
 - `strength` - Velocity influence multiplier
+- `uScreenAspect` - Screen aspect ratio (width/height), updated each frame for correct velocity sampling
 
 ### Particles (`TrianglePoints`)
 
