@@ -6,6 +6,8 @@ uniform float uTriangleRadius;
 varying vec2 vParticleUv;
 varying vec2 vOriginalPosition;
 varying float vPointSizeWorld;
+varying vec2 vOffset;
+varying float vTransitionFactor;
 
 float sdEquilateralTriangle(vec2 p, float r) {
   const float k = sqrt(3.0);
@@ -22,10 +24,13 @@ void main() {
   vec2 pointCoordOffset = gl_PointCoord - vec2(0.5);
   pointCoordOffset.y = -pointCoordOffset.y;
 
+  // Distance from particle center (0 at center, 0.5 at edge)
+  float distFromCenter = length(pointCoordOffset);
+
+  // Discard pixels outside the circle shape of the point
+  if (distFromCenter > 0.5) discard;
+
   // Convert to world space offset
-  // The aspect ratio corrections cancel out: NDC_x * aspect = world_x
-  // Since vPointSizeWorld is based on Y resolution, and screen pixels are square,
-  // both X and Y use the same scale factor
   vec2 worldOffset = pointCoordOffset * vPointSizeWorld;
 
   // Calculate world position of this pixel relative to original particle position
@@ -34,13 +39,20 @@ void main() {
   // Calculate SDF for triangle at this pixel's world position
   float sdf = sdEquilateralTriangle(pixelWorldPos, uTriangleRadius);
 
-  // Debug colors: green inside triangle, red outside
-  vec3 color = sdf < 0.0 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);
+  // Red channel: outside triangle (sdf >= 0)
+  // Green channel: inside triangle (sdf < 0)
+  float red = sdf >= 0.0 ? 1.0 : 0.0;
+  float green = sdf < 0.0 ? 1.0 : 0.0;
 
-  // Discard pixels outside the circle shape of the point
-  float dist = length(pointCoordOffset);
-  if (dist > 0.5) discard;
+  // Blue channel: mixed SDF based on displacement (transition factor from vertex shader)
+  // - When close to origin: 1.0 (won't get blobbed)
+  // - When displaced: radial gradient from 2.0 at center to 0.0 at edge
+  // Circular gradient: 2.0 at center (distFromCenter=0), 0.0 at edge (distFromCenter=0.5)
+  float circularGradient = 2.0 - 4.0 * distFromCenter;
 
-  gl_FragColor = vec4(color, 1.0);
+  // Mix between 1.0 (triangle mode) and circular gradient (blob mode)
+  float blue = mix(green, circularGradient, vTransitionFactor);
+
+  gl_FragColor = vec4(red, green, blue, 1.0);
 }
 

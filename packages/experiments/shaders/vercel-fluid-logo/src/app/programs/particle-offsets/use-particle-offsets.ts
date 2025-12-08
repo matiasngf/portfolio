@@ -64,9 +64,9 @@ export function useParticleOffsets({
     minVelocity: { value: 1.15, min: 0, max: 2, step: 0.01 },
     Snap: folder(
       {
-        snapDistance: { value: 0.05, min: 0.001, max: 0.1, step: 0.001 },
+        snapDistance: { value: 0.02, min: 0.001, max: 0.1, step: 0.001 },
         snapVelocityThreshold: {
-          value: 0.01,
+          value: 0.004,
           min: 0.0001,
           max: 0.01,
           step: 0.0001,
