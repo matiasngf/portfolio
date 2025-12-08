@@ -64,6 +64,7 @@ Key outputs:
 ### 2. Particle Offset System (`use-particle-offsets.ts`)
 
 Uses a **double FBO** (ping-pong) to store per-particle state. Each pixel represents one particle:
+
 - **RG channels**: Position offset from original location
 - **BA channels**: Particle velocity (momentum)
 
@@ -98,6 +99,7 @@ gl_FragColor = vec4(newOffset, newParticleVel);
 ```
 
 **Why physics-based instead of simple decay:**
+
 - Simple `offset *= decay` pulls particles back too aggressively when far from origin
 - Physics model accumulates momentum, creating natural movement
 - Separate friction (velocity decay) and offsetDecay (return force) allow fine-tuning
@@ -130,6 +132,87 @@ Particles are positioned directly in clip space (-1 to 1) without camera transfo
 **Fragment shader (`particles.frag`):**
 
 - Renders circular points with soft edges using `gl_PointCoord`
+- Supports SDF-based shape rendering (see below)
+
+## SDF-Based Shape Rendering
+
+Particles can sample a Signed Distance Function (SDF) to render a shape that spans across all particles. When particles are at their original positions, they form a perfect shape; when displaced, the shape appears to split apart.
+
+### Concept
+
+Instead of evaluating the SDF at the particle's center, we evaluate it **per-pixel within each particle**. This creates sharp edges that cut across particles.
+
+### Implementation
+
+**Vertex shader** passes original position and point size in world units:
+
+```glsl
+varying vec2 vOriginalPosition;
+varying float vPointSizeWorld;
+
+void main() {
+  vOriginalPosition = position.xy;
+
+  // Point size in world units (NDC is -1 to 1, so multiply by 2)
+  vPointSizeWorld = uPointSize / uResolution.y * 2.0;
+
+  // ... rest of vertex shader
+
+}
+```
+
+**Fragment shader** calculates per-pixel world position:
+
+```glsl
+void main() {
+  // gl_PointCoord.y is inverted (0 at top, 1 at bottom)
+  vec2 pointCoordOffset = gl_PointCoord - vec2(0.5);
+  pointCoordOffset.y = -pointCoordOffset.y;
+
+  // Convert to world space offset
+  // Key insight: aspect ratio corrections cancel out!
+  // - Pixels→NDC uses different scales for X (width) and Y (height)
+  // - NDC→World multiplies X by aspect (undoing vertex shader's division)
+  // - Result: both X and Y use the same vPointSizeWorld factor
+  vec2 worldOffset = pointCoordOffset * vPointSizeWorld;
+
+  // Pixel's world position = particle's original position + offset
+  vec2 pixelWorldPos = vOriginalPosition + worldOffset;
+
+  // Evaluate SDF at this pixel's world position
+  float sdf = sdEquilateralTriangle(pixelWorldPos, uTriangleRadius);
+
+  // Color based on SDF
+  vec3 color = sdf < 0.0 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);
+}
+```
+
+### Triangle SDF Function
+
+```glsl
+float sdEquilateralTriangle(vec2 p, float r) {
+  const float k = sqrt(3.0);
+  p.x = abs(p.x) - r;
+  p.y = p.y + r / k;
+  if (p.x + k * p.y > 0.0) p = vec2(p.x - k * p.y, -k * p.x - p.y) / 2.0;
+  p.x -= clamp(p.x, -2.0 * r, 0.0);
+  return -length(p) * sign(p.y);
+}
+```
+
+The `r` parameter is the triangle's half-base width. For a triangle created with `createEquilateralTriangle(size)`, use `r = size * sqrt(3) / 3`.
+
+### Common Pitfalls
+
+1. **Y-axis inversion**: `gl_PointCoord.y` goes 0→1 from top→bottom. Must negate after centering.
+
+2. **Aspect ratio handling**: Don't multiply worldOffset.x by aspect ratio. The conversions cancel out:
+   - Point sprite is square in pixels
+   - Pixel→NDC: divides by resolution (different for X and Y)
+   - NDC→World: X gets multiplied by aspect (undoing vertex shader)
+   - Net result: both axes use the same `vPointSizeWorld` scale
+
+3. **Coordinate system mismatch**: Ensure the SDF uses the same coordinate system as your particle positions.
 
 ## Key Parameters
 
@@ -144,20 +227,20 @@ Particles are positioned directly in clip space (-1 to 1) without camera transfo
 
 **Core physics (passed as options):**
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `strength` | 0.005 | Fluid velocity influence multiplier |
-| `friction` | 0.98 | Particle velocity decay per frame (drag) |
-| `offsetDecay` | 0.002 | Return-to-origin force strength |
+| Parameter     | Default | Description                              |
+| ------------- | ------- | ---------------------------------------- |
+| `strength`    | 0.005   | Fluid velocity influence multiplier      |
+| `friction`    | 0.98    | Particle velocity decay per frame (drag) |
+| `offsetDecay` | 0.002   | Return-to-origin force strength          |
 
 **Leva-controlled (runtime tweakable):**
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `minVelocity` | 0.0001 | Minimum fluid velocity to respond to |
-| `snapDistance` | 0.01 | Distance threshold for snap-to-origin |
-| `snapVelocityThreshold` | 0.001 | Max particle velocity for snap to activate |
-| `snapLerpStrength` | 0.3 | Lerp strength when snapping to origin |
+| Parameter               | Default | Description                                |
+| ----------------------- | ------- | ------------------------------------------ |
+| `minVelocity`           | 0.0001  | Minimum fluid velocity to respond to       |
+| `snapDistance`          | 0.01    | Distance threshold for snap-to-origin      |
+| `snapVelocityThreshold` | 0.001   | Max particle velocity for snap to activate |
+| `snapLerpStrength`      | 0.3     | Lerp strength when snapping to origin      |
 
 **Shader constant:**
 
