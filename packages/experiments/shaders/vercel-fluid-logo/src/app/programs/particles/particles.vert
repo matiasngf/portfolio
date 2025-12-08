@@ -3,10 +3,9 @@ precision highp float;
 attribute vec3 position;
 attribute vec2 particleUv;
 
-uniform mat4 projectionMatrix;
-uniform mat4 modelViewMatrix;
 uniform sampler2D uOffsetTexture;
 uniform float uPointSize;
+uniform float uScreenAspect;
 
 varying vec2 vParticleUv;
 
@@ -19,10 +18,13 @@ void main() {
   // Apply offset to position
   vec3 displaced = position + vec3(offset, 0.0);
 
-  vec4 mvPosition = modelViewMatrix * vec4(displaced, 1.0);
-  gl_Position = projectionMatrix * mvPosition;
-
-  // Size attenuation
-  gl_PointSize = uPointSize * (10.0 / -mvPosition.z);
+  // Correct for screen aspect ratio to maintain equilateral shape
+  gl_Position = vec4(
+    displaced.x / uScreenAspect,
+    displaced.y,
+    displaced.z,
+    1.0
+  );
+  gl_PointSize = uPointSize;
 }
 

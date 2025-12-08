@@ -25,6 +25,7 @@ export interface ParticleOffsetsUniforms extends Record<
   uPositions: { value: THREE.DataTexture | null };
   uDecay: { value: number };
   uStrength: { value: number };
+  uScreenAspect: { value: number };
 }
 
 interface UseParticleOffsetsOptions {
@@ -53,6 +54,7 @@ export function useParticleOffsets({
     uPositions: { value: null },
     uDecay: { value: decay },
     uStrength: { value: strength },
+    uScreenAspect: { value: 1 },
   }));
 
   // Shader material for updating offsets
@@ -73,11 +75,12 @@ export function useParticleOffsets({
   const render = useCallback(
     (state: RootState, velocityTexture: THREE.Texture) => {
       const restore = saveGlState(state);
-      const { gl } = state;
+      const { gl, size } = state;
 
       // Update uniforms
       uniforms.uPrevOffsets.value = offsetsFbo.read.texture;
       uniforms.uVelocity.value = velocityTexture;
+      uniforms.uScreenAspect.value = size.width / size.height;
 
       // Render to write target
       gl.setRenderTarget(offsetsFbo.write);

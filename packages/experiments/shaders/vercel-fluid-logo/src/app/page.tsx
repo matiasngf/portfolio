@@ -88,6 +88,7 @@ function TrianglePoints({
         uOffsetTexture: { value: null },
         uPointSize: { value: size * 100 },
         uColor: { value: new Color(color) },
+        uScreenAspect: { value: 1 },
       },
       transparent: true,
       depthWrite: false,
@@ -101,6 +102,10 @@ function TrianglePoints({
 
     // Update particle material with latest offset texture
     material.uniforms.uOffsetTexture.value = particleOffsets.texture;
+
+    // Update screen aspect ratio
+    const { width, height } = state.size;
+    material.uniforms.uScreenAspect.value = width / height;
   });
 
   return <points geometry={geometry} material={material} />;
