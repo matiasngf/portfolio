@@ -45,9 +45,12 @@ src/app/
     │   ├── particle-offsets.vert   # Fullscreen quad vertex shader
     │   ├── particle-offsets.frag   # Physics-based velocity + offset shader
     │   └── use-particle-offsets.ts # Hook managing double FBO + Leva controls
-    └── particles/
-        ├── particles.vert          # Particle vertex shader (applies offset)
-        └── particles.frag          # Particle fragment shader (circular shape)
+    ├── particles/
+    │   ├── particles.vert          # Particle vertex shader (offset + transition)
+    │   └── particles.frag          # Particle fragment shader (SDF channels)
+    └── blob-post/
+        ├── blob-post.vert          # Fullscreen quad vertex shader
+        └── blob-post.frag          # Blob threshold post-processing
 ```
 
 ## Data Flow
@@ -111,28 +114,42 @@ gl_FragColor = vec4(newOffset, newParticleVel);
 - `createParticleUVs(count, textureSize)` - Generates UV coordinates mapping each particle to its pixel
 - `computeTextureSize(count)` - Calculates power-of-2 texture size
 
-### 3. Particle Rendering (`page.tsx`)
+### 3. Particle Rendering & Blob Effect
 
-**Geometry attributes:**
+**Render Pipeline:**
 
-- `position` - Original XYZ position of each particle
-- `particleUv` - UV coordinate to sample from offset texture
+```
+Particles → particlesSdfFbo (AdditiveBlending, FloatType)
+    │         RGB: R=outside triangle, G=inside triangle, B=mixed SDF
+    ▼
+BlobPostProcess → screenFbo
+    │         step(threshold, B) creates blob cutoff
+    ▼
+FboDebug (displays screenFbo)
+```
 
 **Vertex shader (`particles.vert`):**
 
+- Calculates `vTransitionFactor` from offset distance using `smoothstep(uTransitionStart, uTransitionStart + uTransitionDistance, offsetDistance)`
+- Scales particle size: `uPointSize * (1.0 + vTransitionFactor)` (1x→2x when displaced)
+
+**Fragment shader (`particles.frag`) output channels:**
+
+- **R**: 1.0 if outside triangle SDF, 0.0 inside
+- **G**: 1.0 if inside triangle SDF, 0.0 outside
+- **B**: Mixed SDF based on `vTransitionFactor`:
+  - When close to origin: outputs G (inside triangle = 1.0)
+  - When displaced: circular gradient (2.0 at center → 0.0 at edge)
+
+**Blob post-process (`blob-post.frag`):**
+
 ```glsl
-vec2 offset = texture2D(uOffsetTexture, particleUv).xy;
-vec3 displaced = position + vec3(offset, 0.0);
-// Direct clip space positioning with aspect correction
-gl_Position = vec4(displaced.x / uScreenAspect, displaced.y, displaced.z, 1.0);
+float blobMask = step(uThreshold, blue);
+if (blobMask < 0.5) discard;
+gl_FragColor = vec4(1.0); // White output
 ```
 
-Particles are positioned directly in clip space (-1 to 1) without camera transforms. The `uScreenAspect` uniform corrects for screen aspect ratio.
-
-**Fragment shader (`particles.frag`):**
-
-- Renders circular points with soft edges using `gl_PointCoord`
-- Supports SDF-based shape rendering (see below)
+Additive blending causes overlapping displaced particles to accumulate B values, creating metaball-like blob shapes when thresholded.
 
 ## SDF-Based Shape Rendering
 
@@ -249,8 +266,15 @@ The `r` parameter is the triangle's half-base width. For a triangle created with
 ### Particles (`TrianglePoints`)
 
 - `spacing` - Distance between particles
-- `size` - Point size
-- `color` - Particle color
+- `size` - Point size (scales 1x→2x based on displacement)
+
+### Blob Effect (Leva-controlled)
+
+| Parameter            | Default | Description                                   |
+| -------------------- | ------- | --------------------------------------------- |
+| `transitionStart`    | 0.09    | Offset distance where transition begins       |
+| `transitionDistance` | 0.05    | Range over which transition completes         |
+| `blobThreshold`      | 1.0     | Cutoff for blob mask (higher = smaller blobs) |
 
 ## Debugging Tips
 
@@ -267,6 +291,10 @@ The `r` parameter is the triangle's half-base width. For a triangle created with
 6. **Wrong particle positions:** Verify `particleUv` attribute is correctly computed and that `uPositions` texture contains correct world positions
 
 7. **Visual artifacts:** Check texture filtering (should be `NearestFilter` for offset textures)
+
+8. **Blob not forming:** Check `particlesSdfFbo` in FboDebug - blue channel should accumulate with additive blending. Increase particle size or decrease `blobThreshold`.
+
+9. **Triangle not visible when stationary:** Ensure `transitionStart` > 0 so particles near origin output G channel (inside triangle) to B channel.
 
 ## Lib Utilities Used
 
