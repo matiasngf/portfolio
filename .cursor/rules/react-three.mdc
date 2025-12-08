@@ -1,0 +1,342 @@
+---
+description: Guidelines and patterns for efficient, high-performance ThreeJs development in React projects, focusing on minimizing re-renders, optimizing shader/material usage, and leveraging custom hooks for resource management.
+alwaysApply: false
+---
+
+A key to create performant webgl applications is to avoid re-rendering and re-creating objects.
+
+This project contains the following utilities that you can use:
+
+## useUniforms
+
+Creates a memoized uniforms object for Three.js shaders.
+
+- Object: uniforms are updated automatically on each render.
+- Function: uniforms are not updated; manually update `.value` properties.
+
+Object example (auto-updates):
+
+```tsx
+const uniforms = useUniforms({
+  time: { value: 0 },
+  color: { value: [0, 1, 0] },
+});
+```
+
+Function example (manual updates):
+
+```tsx
+const uniforms = useUniforms(() => ({
+  time: { value: 0 },
+  color: { value: new THREE.Vector3(1, 0, 0) },
+}));
+
+useFrame(() => {
+  uniforms.time.value += 0.01;
+  uniforms.color.value.set(1, 0, 0);
+});
+```
+
+You can also manually type the uniforms:
+
+```tsx
+interface MyUniforms {
+  myTexture: { value: THREE.Texture | null };
+}
+
+const myUniforms = useUniforms<MyUniforms>({
+  myTexture: { value: null },
+});
+```
+
+## useShader
+
+Features:
+
+- Is a wrapper around the `ShaderMaterial` class.
+- Adds types to the uniforms.
+- Re-creates the material if the shader code changes.
+- Creates a shader material with the given parameters and uniforms and avoid re-rendering.
+
+Basic example:
+
+```tsx
+const myShader = useShader({
+  vertexShader: /*glsl*/ `
+  void main() {
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+  `,
+  fragmentShader: /*glsl*/ `
+  void main() {
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+  }
+  `,
+  uniforms: {
+    time: { value: 0 },
+  },
+});
+
+myShader.uniforms.time.value; // type: number
+```
+
+Usage in combination with `useUniforms` hook.
+
+```tsx
+const myUniforms = useUniforms({
+  time: { value: 0 },
+});
+
+const myShader = useShader(
+  {
+    vertexShader: /*glsl*/ `
+  void main() {
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }`,
+    fragmentShader: /*glsl*/ `
+  void main() {
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+  }
+  `,
+  },
+  myUniforms
+);
+
+myShader.uniforms.time.value; // type: number
+```
+
+You can also use GLSL 300 ES.
+
+```tsx
+const myShader = useShader(
+  {
+    glslVersion: THREE.GLSL3,
+    vertexShader: /*glsl*/ `
+  void main() {
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+  `,
+    fragmentShader: /*glsl*/ `
+  out vec4 outColor;
+  void main() {
+    outColor = vec4(1.0, 0.0, 0.0, 1.0);
+  }
+  `,
+  },
+  {
+    time: { value: 0 },
+  }
+);
+```
+
+## useRawShader
+
+- Similar to `useShader` but for the class `RawShaderMaterial`.
+- Remember to declare all attributes and uniforms in the shader code.
+
+## useFbo
+
+- Wrapper arround `RenderTarget` class.
+- If width and height changes, the fbo will be resized instead of re-created.
+
+```tsx
+const TvScreen = ({width, height}: {width: number, height: number}) => {
+  const fbo = useFbo(width * 100, height * 100, {
+    type: THREE.FloatType,
+  })
+
+  return (
+    <mesh scale-x={width} scale-y={height}>
+      <planeGeometry />
+      <meshBasicMaterial map={fbo.texture} />
+    </mesh>
+  )
+```
+
+If you want to enable "antialiasing" in the fbo, you can use the `samples` parameter.
+
+```tsx
+const width = useThree((state) => state.size.width);
+const height = useThree((state) => state.size.height);
+const pixelRatio = useThree(() =>
+  Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 1.5)
+);
+
+const screenFbo = useFBO(width * pixelRatio, height * pixelRatio, {
+  type: THREE.FloatType,
+  colorSpace: THREE.LinearSRGBColorSpace,
+  samples: 8,
+});
+```
+
+## useDoubleFbo
+
+- Usefull for effects that needs a feedback loop.
+- Uses a custom `DoubleFBO` class that will swap the read and write textures.
+- If width and height changes, the fbo will be resized instead of re-created.
+
+```tsx
+const doubleFbo = useDoubleFbo(100, 100, {
+  type: THREE.FloatType,
+});
+doubleFbo.read.texture; // get the current "read" texture
+doubleFbo.write.texture; // get the current "write" texture
+doubleFbo.texture; // get the current "read" texture
+
+doubleFbo.swap(); // swap the read and write textures
+```
+
+## quads
+
+If you need to render a fullscreen shader, you can use the `quadCamera` and `quadGeometry`, they are already prepared to cover the entire target.
+
+## Rendering patters.
+
+When you need to render a shader into a texture with no models, the ideal pattern is to create a hook with a complete setup to render the shader into a target.
+
+Steps:
+
+- Create a hook that will render the shader into a target.
+- Use the hook in the required component.
+
+An example of a paint shader:
+
+```tsx
+// src/app/components/paint/programs/paint.ts
+
+import fragmentShader from "./paint.frag";
+import vertexShader from "./paint.vert";
+
+// define the uniforms
+interface FlowUniforms extends Record<string, THREE.IUniform> {
+  mousePosition: { value: THREE.Vector2 };
+  mouseActive: { value: number };
+  feedbackTexture: { value: THREE.Texture | null };
+}
+
+// create the hook
+const usePaint = () => {
+  const uniforms = useUniforms<FlowUniforms>(() => ({
+    mousePosition: { value: new THREE.Vector2(0, 0) },
+    mouseActive: { value: 0 },
+    feedbackTexture: { value: null },
+  }));
+
+  // create the swapable fbo
+  const doubleFbo = useDoubleFbo(100, 100, {
+    type: THREE.FloatType,
+  });
+
+  // create the shader material
+  const paintShader = useRawShader({
+    vertexShader,
+    fragmentShader,
+    uniforms: {
+      feedbackTexture: { value: doubleFbo.read.texture },
+    },
+  });
+
+  const mesh = useMemo(
+    () => new THREE.Mesh(quadGeometry, paintShader),
+    [paintShader]
+  );
+
+  // create the render function
+  const render = useCallback<RenderCallback>(
+    (state) => {
+      // save the current gl state
+      const restore = saveGlState(state);
+
+      const { gl } = state;
+
+      // set the feedback texture
+      uniforms.feedbackTexture.value = fbo.read.texture;
+
+      // set the render target
+      gl.setRenderTarget(fbo.write);
+
+      // render the mesh
+      gl.render(mesh, quadCamera);
+
+      // swap the read and write textures after rendering
+      fbo.swap();
+      restore();
+    },
+    [mesh, fbo, shader, uniforms]
+  );
+
+  // return the render function and the uniforms
+  return [render, uniforms] as const;
+};
+```
+
+```tsx
+import { quadCamera, quadGeometry } from "@/components/quad-shader";
+
+// src/app/components/paint/paint.tsx
+export function PaintComponent() {
+  const [renderPaint, paintUniforms] = usePaint();
+
+  const planeMaterial = useMemo(
+    () =>
+      new MeshBasicMaterial({
+        map: paintUniforms.texture.value,
+      }),
+    []
+  );
+
+  useFrame((state, delta) => {
+    // update the uniforms with some value
+    paintUniforms.mousePosition.value.set(state.mouse.x, state.mouse.y);
+
+    // render the shader
+    renderPaint(state, delta);
+
+    planeMaterial.map = paintUniforms.texture.value;
+  });
+
+  return (
+    <mesh material={planeMaterial}>
+      <planeGeometry />
+    </mesh>
+  );
+}
+```
+
+### Creating a simple shader in a hook
+
+```ts
+import { useShader } from "@/hooks/use-shader";
+import * as THREE from "three";
+
+import vertexShader from "./card-glass.vert";
+import fragmentShader from "./card-glass.frag";
+import { IUniform } from "three";
+import { useUniforms } from "@/hooks/use-uniforms";
+
+export interface CardGlassUniforms extends Record<string, IUniform<unknown>> {
+  innerMap: IUniform<THREE.Texture | null>;
+  uTime: IUniform<number>;
+  uRevealColor: IUniform<THREE.Color>;
+  uRevealDepth: IUniform<number>;
+}
+
+export const useGlassCardMaterial = () => {
+  const glassUniforms = useUniforms<CardGlassUniforms>({
+    innerMap: { value: null },
+    uTime: { value: 0 },
+    uRevealColor: { value: new THREE.Color() },
+    uRevealDepth: { value: 0 },
+  });
+
+  const mat = useShader(
+    {
+      vertexShader,
+      fragmentShader,
+    },
+    glassUniforms
+  );
+
+  return mat;
+};
+```

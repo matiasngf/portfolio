@@ -1,0 +1,96 @@
+---
+description: Instructions to setup glslify to load .glsl .vert .frag files
+alwaysApply: false
+---
+
+## Working with glsl modules
+
+To load glsl modules you should use glslify, if you find issues when parsing glsl modules, make sure to have the follwing configuration:
+
+### Loader
+
+nextjs.config:
+
+```js
+module.exports = {
+  webpack: (config, _options) => {
+    /** Add glslify loader to webpack */
+    config.module.rules.push({
+      test: /\.(glsl|vs|fs|vert|frag)$/,
+      use: ["raw-loader", "glslify-loader"],
+    });
+
+    return config;
+  },
+  turbopack: {
+    /** Add glslify loader to turbopack */
+    rules: {
+      "*.{glsl,vert,frag,vs,fs}": {
+        loaders: ["raw-loader", "glslify-loader"],
+        as: "*.js",
+      },
+    },
+  },
+};
+```
+
+You should install `raw-loader` and `glslify-loader` if not present on package.json.
+
+```bash
+pnpm add -D raw-loader glslify-loader
+```
+
+### Prettier
+
+Check to have the glsl-parser added to `.prettierrc`
+
+```json
+{
+  "plugins": ["prettier-plugin-glsl"],
+  "overrides": [
+    {
+      "files": ["*.frag", "*.vert", "*.glsl"],
+      "options": {
+        "parser": "glsl-parser"
+      }
+    }
+  ]
+}
+```
+
+Make sure to have the glsl-parser installed if not present on package.json:
+
+```bash
+pnpm add -D prettier-plugin-glsl
+```
+
+### Typescript
+
+In order for typescript to recognize the glsl files, you need to add the following to `types/glsl.d.ts`:
+
+```ts
+declare module "*.frag" {
+  const content: string;
+  export default content;
+}
+
+declare module "*.vert" {
+  const content: string;
+  export default content;
+}
+
+declare module "*.glsl" {
+  const content: string;
+  export default content;
+}
+```
+
+Make sure that the type are added into the `tsconfig.json` file:
+
+```json
+{
+  "compilerOptions": {
+    "typeRoots": ["./types", "./node_modules/@types"]
+  }
+}
+```
