@@ -13,7 +13,7 @@ import {
   WebGLRenderTarget,
   Mesh,
 } from "three";
-import { Leva, useControls, folder } from "leva";
+import { Leva, useControls } from "leva";
 import {
   generateTrianglePoints,
   createEquilateralTriangle,
@@ -209,7 +209,7 @@ function Scene() {
     "Blob Effect",
     {
       transitionStart: {
-        value: 0.09,
+        value: 0.04,
         min: 0.0,
         max: 0.2,
         step: 0.001,

@@ -7,14 +7,14 @@ function isPointInTriangle(
   p: Vector2,
   v0: Vector2,
   v1: Vector2,
-  v2: Vector2
+  v2: Vector2,
 ): boolean {
   const d00 = v0.clone().sub(p);
   const d01 = v1.clone().sub(p);
   const d02 = v2.clone().sub(p);
 
   const area = Math.abs(
-    (v1.x - v0.x) * (v2.y - v0.y) - (v2.x - v0.x) * (v1.y - v0.y)
+    (v1.x - v0.x) * (v2.y - v0.y) - (v2.x - v0.x) * (v1.y - v0.y),
   );
 
   const area0 = Math.abs(d01.x * d02.y - d02.x * d01.y);
@@ -35,7 +35,7 @@ function isPointInTriangle(
  */
 export function generateTrianglePoints(
   vertices: [Vector2, Vector2, Vector2],
-  spacing: number
+  spacing: number,
 ): Float32Array {
   const [v0, v1, v2] = vertices;
 
@@ -52,7 +52,7 @@ export function generateTrianglePoints(
 
   // Check for degenerate triangle (zero area)
   const area = Math.abs(
-    (v1.x - v0.x) * (v2.y - v0.y) - (v2.x - v0.x) * (v1.y - v0.y)
+    (v1.x - v0.x) * (v2.y - v0.y) - (v2.x - v0.x) * (v1.y - v0.y),
   );
   if (area < 1e-10) {
     return new Float32Array(0);
@@ -66,7 +66,9 @@ export function generateTrianglePoints(
     for (let y = minY; y <= maxY; y += spacing) {
       testPoint.set(x, y);
       if (isPointInTriangle(testPoint, v0, v1, v2)) {
-        points.push(x, y, 0);
+        // Add small random z offset to prevent z-fighting
+        const z = Math.random() * 0.1;
+        points.push(x, y, z);
       }
     }
   }
@@ -81,7 +83,7 @@ export function generateTrianglePoints(
  * @returns Array of three Vector2 vertices
  */
 export function createEquilateralTriangle(
-  size: number = 2
+  size: number = 2,
 ): [Vector2, Vector2, Vector2] {
   const height = size;
   const halfBase = (height * Math.sqrt(3)) / 3;
@@ -93,4 +95,3 @@ export function createEquilateralTriangle(
     new Vector2(halfBase, -height / 3), // bottom right
   ];
 }
-

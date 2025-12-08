@@ -48,7 +48,8 @@ void main() {
   // - When close to origin: 1.0 (won't get blobbed)
   // - When displaced: radial gradient from 2.0 at center to 0.0 at edge
   // Circular gradient: 2.0 at center (distFromCenter=0), 0.0 at edge (distFromCenter=0.5)
-  float circularGradient = 2.0 - 4.0 * distFromCenter;
+  float circularGradient = 1.0 - 2.0 * distFromCenter;
+  circularGradient = clamp(circularGradient, 0.0, 1.0);
 
   // Mix between 1.0 (triangle mode) and circular gradient (blob mode)
   float blue = mix(green, circularGradient, vTransitionFactor);
