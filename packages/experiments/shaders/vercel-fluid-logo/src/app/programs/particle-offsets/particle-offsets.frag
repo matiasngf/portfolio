@@ -13,7 +13,7 @@ uniform float uSnapLerpStrength; // Lerp strength when snapping
 uniform float uMinVelocity; // Minimum fluid velocity to respond to
 uniform float uScreenAspect;
 
-const float MAX_VELOCITY = 0.03;
+const float MAX_VELOCITY = 0.04;
 
 varying vec2 vUv;
 

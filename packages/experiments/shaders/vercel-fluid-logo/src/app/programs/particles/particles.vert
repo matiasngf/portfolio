@@ -32,8 +32,11 @@ void main() {
     offsetDistance
   );
 
-  // Scale particle size: 1x at origin, 2x when fully transitioned
-  float scaledPointSize = uPointSize * (1.0 + vTransitionFactor * 2.0);
+  // Calculate base point size as proportion of screen height
+  float basePointSize = uPointSize * uResolution.y;
+
+  // Scale particle size: 1x at origin, 3x when fully transitioned
+  float scaledPointSize = basePointSize * (1.0 + vTransitionFactor * 0.5);
 
   // Calculate point size in world units (NDC space is -1 to 1, so multiply by 2)
   vPointSizeWorld = scaledPointSize / uResolution.y * 2.0;

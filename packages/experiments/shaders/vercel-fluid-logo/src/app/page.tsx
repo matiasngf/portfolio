@@ -102,7 +102,7 @@ function TrianglePoints({
       fragmentShader: particlesFragmentShader,
       uniforms: {
         uOffsetTexture: { value: null },
-        uPointSize: { value: size * 100 },
+        uPointSize: { value: size }, // Proportion of screen height (e.g., 0.02 = 2% of screen height)
         uColor: { value: new Color(color) },
         uScreenAspect: { value: 1 },
         uTriangleRadius: { value: triangleRadius },
@@ -209,21 +209,21 @@ function Scene() {
     "Blob Effect",
     {
       transitionStart: {
-        value: 0.04,
+        value: 0.0,
         min: 0.0,
         max: 0.2,
         step: 0.001,
         label: "Transition Start",
       },
       transitionDistance: {
-        value: 0.05,
+        value: 0.0,
         min: 0.001,
         max: 0.5,
         step: 0.001,
         label: "Transition Distance",
       },
       blobThreshold: {
-        value: 1.0,
+        value: 1.9,
         min: 0.1,
         max: 3.0,
         step: 0.01,
@@ -233,11 +233,12 @@ function Scene() {
   );
 
   // Fluid simulation
-  const { velocity } = useFluid({
-    radius: 0.2,
-    velocityDissipation: 0.99,
-    pressureDissipation: 0.8,
-    curlStrength: 1,
+  const { velocity, density } = useFluid({
+    radius: 0.4,
+    velocityDissipation: 0.95,
+    densityDissipation: 0.92,
+    // pressureDissipation: 0.8,
+    curlStrength: 0.5,
   });
 
   // Generate particle geometry at Scene level
@@ -249,9 +250,9 @@ function Scene() {
   // Setup particle offsets system at Scene level
   const particleOffsets = useParticleOffsets({
     textureSize,
-    strength: 0.005,
-    friction: 0.2,
-    offsetDecay: 0.05,
+    strength: 0.01,
+    friction: 0.15,
+    offsetDecay: 0.08,
   });
 
   // Set positions texture in uniforms
@@ -281,7 +282,7 @@ function Scene() {
 
   // Run particle physics each frame
   useFrame((state) => {
-    particleOffsets.render(state, velocity.read.texture);
+    particleOffsets.render(state, density.read.texture);
   });
 
   return (
@@ -290,7 +291,7 @@ function Scene() {
         geometry={geometry}
         offsetTexture={particleOffsets.texture}
         particlesSdfFbo={particlesSdfFbo}
-        size={0.2}
+        size={0.04}
         color="#00ffcc"
         transitionStart={transitionStart}
         transitionDistance={transitionDistance}
@@ -305,7 +306,7 @@ function Scene() {
         textures={{
           screen: screenFbo,
           particlesSdf: particlesSdfFbo,
-          fluidVelocity: velocity.read,
+          fluidVelocity: density.read,
           particleOffsets: particleOffsets.fbo,
         }}
       />

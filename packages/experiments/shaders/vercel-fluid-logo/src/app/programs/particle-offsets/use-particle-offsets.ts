@@ -37,15 +37,15 @@ export interface ParticleOffsetsUniforms extends Record<
 
 interface UseParticleOffsetsOptions {
   textureSize: number;
+  friction: number;
   strength?: number;
-  friction?: number;
   offsetDecay?: number;
 }
 
 export function useParticleOffsets({
   textureSize,
   strength: initialStrength = 0.005,
-  friction: initialFriction = 0.98,
+  friction: initialFriction,
   offsetDecay: initialOffsetDecay = 0.002,
 }: UseParticleOffsetsOptions) {
   // Leva controls for physics parameters

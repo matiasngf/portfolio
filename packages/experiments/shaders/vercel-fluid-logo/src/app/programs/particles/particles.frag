@@ -52,7 +52,7 @@ void main() {
   circularGradient = clamp(circularGradient, 0.0, 1.0);
 
   // Mix between 1.0 (triangle mode) and circular gradient (blob mode)
-  float blue = mix(green, circularGradient, vTransitionFactor);
+  float blue = mix(green * 2.0, circularGradient, vTransitionFactor);
 
   gl_FragColor = vec4(red, green, blue, 1.0);
 }
