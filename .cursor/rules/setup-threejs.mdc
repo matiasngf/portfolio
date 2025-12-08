@@ -1,0 +1,41 @@
+---
+alwaysApply: false
+---
+
+## Setup libraries
+
+Install the following libraries, allways use @latest and pnpm to make sure you are pulling the latest version.
+
+Dependencies:
+
+- threejs
+- @react-three/drei
+- @react-three/fiber
+
+Dev-dependencies:
+
+- @types/three
+
+## Setup starter scene
+
+If the user asks to create a scene setup, you can use the followign tempalte:
+
+```tsx
+"use client";
+
+import { Canvas } from "@react-three/fiber";
+
+export default function Home() {
+  return (
+    <div className="w-full h-screen relative">
+      <Canvas>
+        <Scene />
+      </Canvas>
+    </div>
+  );
+}
+
+function Scene() {
+  return null;
+}
+```
