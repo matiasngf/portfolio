@@ -30,6 +30,9 @@ void main() {
   // Discard pixels outside the circle shape of the point
   if (distFromCenter > 0.5) discard;
 
+  // gl_FragColor = vec4(1.0, 1.0, 2.0, 1.0);
+  // return;
+
   // Convert to world space offset
   vec2 worldOffset = pointCoordOffset * vPointSizeWorld;
 

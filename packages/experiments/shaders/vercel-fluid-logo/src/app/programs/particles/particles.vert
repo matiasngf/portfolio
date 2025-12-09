@@ -16,6 +16,16 @@ varying float vPointSizeWorld;
 varying vec2 vOffset;
 varying float vTransitionFactor;
 
+float valueRemap(
+  float value,
+  float min,
+  float max,
+  float newMin,
+  float newMax
+) {
+  return newMin + (newMax - newMin) * (value - min) / (max - min);
+}
+
 void main() {
   vParticleUv = particleUv;
   vOriginalPosition = position.xy;
@@ -25,12 +35,22 @@ void main() {
   vOffset = offset;
 
   // Calculate transition factor based on offset distance
-  float offsetDistance = length(offset);
-  vTransitionFactor = smoothstep(
+  float offsetDistance = length(offset) * 10.0;
+  // vTransitionFactor = smoothstep(
+  //   uTransitionStart,
+  //   uTransitionStart + uTransitionDistance,
+  //   offsetDistance
+  // );
+
+  vTransitionFactor = valueRemap(
+    offsetDistance,
     uTransitionStart,
     uTransitionStart + uTransitionDistance,
-    offsetDistance
+    0.0,
+    1.0
   );
+
+  vTransitionFactor = clamp(vTransitionFactor, 0.0, 1.0);
 
   // Calculate base point size as proportion of screen height
   float basePointSize = uPointSize * uResolution.y;

@@ -193,7 +193,7 @@ function BlobPostProcess({
 export default function Home() {
   return (
     <div className="w-full h-screen relative bg-black">
-      <Leva collapsed={false} hidden={false} />
+      <Leva collapsed={false} hidden={true} />
       <Canvas>
         <Scene />
       </Canvas>
@@ -235,24 +235,24 @@ function Scene() {
   // Fluid simulation
   const { density } = useFluid({
     radius: 0.4,
-    velocityDissipation: 0.95,
-    densityDissipation: 0.92,
+    // velocityDissipation: 0.2,
+    // densityDissipation: 0.92,
     // pressureDissipation: 0.8,
-    curlStrength: 0.5,
+    curlStrength: 3,
   });
 
   // Generate particle geometry at Scene level
   const { geometry, textureSize, positionsTexture } = useParticleGeometry(
     undefined,
-    0.03,
+    0.02,
   );
 
   // Setup particle offsets system at Scene level
   const particleOffsets = useParticleOffsets({
     textureSize,
     strength: 0.01,
-    friction: 0.15,
-    offsetDecay: 0.08,
+    friction: 0.3,
+    offsetDecay: 0.06,
   });
 
   // Set positions texture in uniforms

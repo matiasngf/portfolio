@@ -67,7 +67,7 @@ export function generateTrianglePoints(
       testPoint.set(x, y);
       if (isPointInTriangle(testPoint, v0, v1, v2)) {
         // Add small random z offset to prevent z-fighting
-        const z = Math.random() * 0.1;
+        const z = Math.random() * 0.9;
         points.push(x, y, z);
       }
     }
