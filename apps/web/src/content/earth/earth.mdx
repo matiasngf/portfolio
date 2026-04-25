@@ -1,0 +1,445 @@
+import Image from "next/image";
+
+import lambertPreview from "./lambert-preview.png";
+import sunLight from "./sun-light-preview.png";
+import dayNight from "./day-night.png";
+import noiseFactor from "./noise-factor.png";
+import cloudsFar from "./clouds-far.png";
+import cloudsNoise from "./clouds-noise.png";
+import cloudsNormals from "./clouds-normals.png";
+import sunsetFactor from "./sunset-factor.png";
+import sunsetOnClouds from "./sunset-on-clouds.png";
+import earthWithClouds from "./earth-with-clouds.png";
+import fresnelFactor from "./fresnel-factor.png";
+import fresnelSunsetFactor from "./fresnel-sunset-factor.png";
+import finalEarthShader from "./final-earth-shader.png";
+import finalEarthShaderSunset from "./final-earth-shader-sunset.png";
+import atmosphereFresnel from "./atmosphere-fresnel.png";
+import atmosphereSunset from "./atmosphere-sunset.png";
+import earthWithAtmosphere from "./earth-with-atmosphere.png";
+import preview from "./preview.png";
+import earthSunrise from "./earth-sunrise.png";
+
+<center>
+  This experiment showcases how to create an Earth using shaders,
+  react-three-fiber, and drei.
+</center>
+
+<Image src={preview} alt="Final result" />
+
+<Image src={earthSunrise} alt="Earth sunrise" />
+
+## Creating the earth shaders
+
+The earth material uses a custom shader to switch between day and night textures based on the sun's position.
+
+### Sunlight
+
+The sun position is provided via the uniform `lightDirection` to the shader. By using that uniform, we can calculate the `lambertFactor`.
+
+```glsl
+// we will store the final result in a vec3 variable
+vec3 result = vec3(0.0);
+
+// load the 2D day texture
+vec3 dayColor = texture2D(dayMap, vUv).rgb;
+float rawLambertFactor = dot(normal, vLightDirection);
+float lambertFactor = autoClamp(rawLambertFactor);
+```
+
+If we visualize the `lambertFactor` we get something like this:
+
+<Image src={lambertPreview} alt="Lambert" />
+
+But, that light is not very convincing, so we can remap the values to get a better effect:
+
+```glsl
+// sunlight
+float rawSunLightFactor = valueRemap(rawLambertFactor, -0.1, 0.1, 0.0, 1.0);
+float sunLightFactor = autoClamp(rawSunLightFactor);
+```
+
+<Image src={sunLight} alt="Sunlight" />
+
+### Day and night textures
+
+Now that we have a better `sunLightFactor` to work with, we can use it to switch between the day and night texture:
+
+```glsl
+result = dayColor * sunLightFactor;
+
+// night map
+vec3 nightColor = texture2D(nightMap, vUv).rgb;
+float nightLightsFactor = autoClamp(valueRemap(rawSunLightFactor, 0.0, 0.15, 0.0, 1.0));
+nightColor = nightColor * (1.0 - nightLightsFactor); // lights only at night
+
+result += nightColor;
+```
+
+Note: refer to the source code to see the `valueRemap` implementation
+
+<Image src={dayNight} alt="Day night" />
+
+### Clouds
+
+The clouds on this project are a combination of procedural noise and textures. We want to switch between the two based on the distance between the camera and the Earth.
+
+We can also animate the clouds by rotating the noise texture using the `uTime` uniform.
+
+```glsl
+// noise
+float rotation = uTime * 0.005;
+vec3 wPosOffset = wPos * mat3( cos(rotation), 0, sin(rotation), 0, 1, 0, -sin(rotation), 0, cos(rotation) );
+float noiseFactor = valueRemap(simplex3d_fractal(wPosOffset * 100.0), -1.0, 1.0, 0.0, 1.0);
+float distanceFactor = autoClamp(
+  - distanceToCamera + 1.0
+);
+noiseFactor = noiseFactor * 0.5 * distanceFactor;
+```
+
+If we get close to the surface of the Earth, we can see the noise factor in action:
+
+<Image src={noiseFactor} alt="Noise factor" />
+
+We can then combine the noise and the cloud texture:
+
+```glsl
+// clouds
+float cloudFactor = length(texture2D(cloudMap, vUv).rgb);
+float cloudNoiseFactor = clamp(valueRemap(cloudFactor, 0.0, 0.5, 0.5, 1.0) * noiseFactor, 0.0, 1.0);
+cloudFactor = clamp(cloudFactor - cloudNoiseFactor, 0.0, 1.0);
+vec3 cloudColor = vec3(0.9);
+```
+
+<Image src={cloudsFar} alt="Clouds far" />
+
+If we get closer, we can see the subtle noise effect:
+
+<Image src={cloudsNoise} alt="Clouds noise" />
+
+#### Cloud normals
+
+We can also add some normals to the clouds to make them look more realistic:
+
+```glsl
+// clouds normals
+float cloudNormalScale = 0.01;
+vec3 cloudNormal = perturbNormalArb( wPos, normal, dHdxy_fwd(vUv, cloudMap, cloudNormalScale) );
+float cloudNormalFactor = dot(cloudNormal, vLightDirection);
+float cloudShadowFactor = clamp(
+  valueRemap(cloudNormalFactor, 0.0, 0.3, 0.3, 1.0),
+  0.3, 1.0
+);
+cloudShadowFactor = curveUp(cloudShadowFactor, 0.5);
+
+// clouds with shadows
+cloudColor *= cloudShadowFactor;
+```
+
+<Image src={cloudsNormals} alt="Clouds normals" />
+
+### Sunset
+
+A nice touch to add is a sunset color to the clouds. First, we need to calculate where the sunset should be:
+
+```glsl
+// sunset
+float sunsetFactor = clamp(valueRemap(rawSunLightFactor, -0.1, 0.85, -1.0, 1.0), -1.0, 1.0);
+sunsetFactor = cos(sunsetFactor * PI) * 0.5 + 0.5;
+vec3 sunsetColor = vec3(0.525, 0.273, 0.249);
+```
+
+<Image src={sunsetFactor} alt="Sunset factor" />
+
+If we then switch to the sunset color only at the sunset factor, we can get a nice sunset effect:
+
+```glsl
+// clouds with sunset
+float sunsetCloudFactor = pow(cloudFactor, 1.5) * sunsetFactor;
+cloudColor *= clamp(sunLightFactor, 0.1, 1.0);
+cloudColor = mix(cloudColor, sunsetColor, sunsetCloudFactor);
+```
+
+<Image src={sunsetOnClouds} alt="Sunset on clouds" />
+
+Finally, we can mix all together:
+
+```glsl
+// clouds on earth
+result = mix(result, cloudColor, cloudFactor);
+```
+
+<Image src={earthWithClouds} alt="Earth with clouds" />
+
+## Fresnel
+
+The final touch to our earth shader is a fresnel effect to simulate an atmosphere. We can use the `vNormal` to calculate the fresnel effect:
+
+```glsl
+// fresnel
+float fresnelBias = 0.1;
+float fresnelScale = 0.5;
+float fresnelFactor = fresnelBias + fresnelScale * pow(1.0 - dot(normal, normalize(viewDirection)), 3.0);
+vec3 athmosphereColor = vec3(0.51,0.714,1.);
+```
+
+`fresnelFactor` preview:
+
+<Image src={fresnelFactor} alt="Fresnel factor" />
+
+We can also add a bit of red if the sun is setting. To achieve that, we can use the dot product between the light direction and the view direction:
+
+```glsl
+// fresnel sunset
+vec3 athmosphereSunsetColor = vec3(1.0, 0.373, 0.349);
+float fresnelSunsetFactor = dot(-vLightDirection, viewDirection);
+fresnelSunsetFactor = valueRemap(fresnelSunsetFactor, 0.97, 1.0, 0.0, 1.0);
+fresnelSunsetFactor = autoClamp(fresnelSunsetFactor);
+athmosphereColor = mix(athmosphereColor, athmosphereSunsetColor, fresnelSunsetFactor);
+```
+
+`fresnelSunsetFactor` preview:
+
+<Image src={fresnelSunsetFactor} alt="Fresnel sunset factor" />
+
+We can use this mask to change the sunset's color based on the camera's position and the sun.
+
+Finally, we can add the fresnel effect to the result:
+
+```glsl
+result = mix(result, athmosphereColor, fresnelFactor * sunLightFactor);
+// this clamp will help us to avoid the bloom effect in the earth later
+result = clamp(result * 0.9, 0.0, 0.7);
+gl_FragColor = vec4(vec3(result), 1.0);
+```
+
+Final earth shader:
+
+<Image src={finalEarthShader} alt="Final earth shader" />
+
+<Image src={finalEarthShaderSunset} alt="Final earth shader on sunset" />
+
+## Atmosphere
+
+We can add an outer atmosphere to the Earth for better results. I added a second sphere with a bigger radius and a different shader:
+
+```glsl
+//setup
+vec3 vLightDirection = normalize(lightDirection);
+vec3 normal = normalize(vNormal);
+vec3 viewDirection = normalize(cameraPosition - wPos);
+vec3 lightColor = vec3(1.0, 1.0, 1.0);
+vec3 athmosphereColor = vec3(0.51,0.714,1.);
+vec3 sunsetColor = vec3(1.0, 0.373, 0.349);
+
+//lambert
+float rawLambert = dot(normal, vLightDirection);
+float lambert = clamp(rawLambert, 0.0, 1.0);
+
+// sunlight
+float rawSunLight = valueRemap(rawLambert, 0.0, 0.2, 0.0, 1.0);
+float sunLight = clamp(rawSunLight, 0.0, 1.0);
+
+// athmosphere
+float fresnel = dot(-normal, viewDirection);
+fresnel = clamp(valueRemap(fresnel, 0.0, 0.25, 0.0, 1.0), 0.0, 1.0);
+fresnel = pow(fresnel, 4.0);
+```
+
+If we preview `fresnel * sunLight`, this is what we get:
+
+<Image src={atmosphereFresnel} alt="Atmosphere fresnel" />
+
+### Sunset on the atmosphere
+
+We can add a bit of sunset color to the atmosphere like we did with the Earth:
+
+```glsl
+// calculate sunset using dot product of sun direction and view direction
+float sunsetFactor = dot(-vLightDirection, viewDirection);
+sunsetFactor = valueRemap(sunsetFactor, 0.97, 1.0, 0.0, 1.0);
+sunsetFactor = autoClamp(sunsetFactor);
+
+vec3 result = mix(athmosphereColor, sunsetColor, sunsetFactor);
+```
+
+Preview of `result * sunLight`:
+
+<Image src={atmosphereSunset} alt="Atmosphere sunset" />
+
+Then we can finally use the sunLight to set the alpha of the atmosphere. We do this because we do not want to add atmosphere on the dark side of the Earth:
+
+```glsl
+gl_FragColor = vec4(vec3(result), 1.0);
+gl_FragColor.a = fresnel * sunLight;
+```
+
+Result of the atmosphere shader with the Earth:
+
+<Image src={earthWithAtmosphere} alt="Final Earth with atmosphere" />
+
+## Enviroment
+
+Of course, we are not finished. We need to add the sun and stars. For that we can create the `BackgroundScene` and `Sun` components:
+
+```tsx
+// Sun/index.tsx
+import { MeshProps } from "@react-three/fiber";
+
+export const Sun = (props: MeshProps) => {
+  return (
+    <mesh {...props}>
+      <sphereGeometry args={[0.2, 32, 32]} />
+      <meshStandardMaterial
+        color="#ffffff"
+        emissive="orange"
+        emissiveIntensity={10}
+        toneMapped={false}
+      />
+    </mesh>
+  );
+};
+```
+
+```tsx
+// BackgroundScene/index.tsx
+import { useEffect, useState } from "react";
+import { useThree } from "@react-three/fiber";
+import {
+  SRGBColorSpace,
+  TextureLoader,
+  Vector3,
+  WebGLCubeRenderTarget,
+} from "three";
+import { Sun } from "../Sun";
+
+interface BackgroundSceneProps {
+  lightDirection: Vector3;
+}
+
+export const BackgroundScene = ({ lightDirection }: BackgroundSceneProps) => {
+  const [cubeTexture, setCubeTexture] = useState(null);
+
+  const { gl, scene } = useThree();
+
+  useEffect(() => {
+    const loader = new TextureLoader();
+    loader.load("/experiment-earth-assets/starmap_g4k.jpg", (texture) => {
+      texture.colorSpace = SRGBColorSpace;
+      const cubeRenderTarget = new WebGLCubeRenderTarget(texture.image.height);
+      cubeRenderTarget.fromEquirectangularTexture(gl, texture);
+      setCubeTexture(cubeRenderTarget.texture);
+    });
+  }, [gl]);
+
+  useEffect(() => {
+    if (cubeTexture) {
+      scene.background = cubeTexture;
+    }
+  }, [cubeTexture]);
+
+  return (
+    <>
+      <Sun position={lightDirection.clone().multiplyScalar(15)} />
+    </>
+  );
+};
+```
+
+We want to render the background and the Earth in separate scenes because we dont want the sun to move if we move around the Earth, that will create the illusion that the sun is infinitely far away.
+
+```tsx
+// PrimaryScene/index.tsx
+import { createPortal, useFrame, useThree } from "@react-three/fiber";
+import { OrbitControls, PerspectiveCamera, useFBO } from "@react-three/drei";
+import { Earth } from "../Earth";
+import { BackgroundScene } from "../BackgroundScene";
+import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
+import { Scene, RGBAFormat, Camera } from "three";
+import { useLightDirection } from "./useLightDirection";
+
+export interface PrimarySceneProps {}
+
+export const PrimaryScene = ({
+  children,
+}: PropsWithChildren<PrimarySceneProps>) => {
+  const { scene } = useThree();
+
+  const lightDirection = useLightDirection();
+
+  const cam = useRef<Camera | null>(null);
+
+  const target = useFBO({
+    samples: 8,
+    stencilBuffer: false,
+    format: RGBAFormat,
+  });
+
+  const backgroundScene = useMemo(() => {
+    const bgScene = new Scene();
+    return bgScene;
+  }, []);
+
+  useFrame((state) => {
+    cam.current.rotation.copy(state.camera.rotation);
+    state.gl.setRenderTarget(target);
+    state.gl.render(backgroundScene, cam.current);
+    state.gl.setRenderTarget(null);
+  });
+
+  useEffect(() => {
+    scene.background = target.texture;
+  }, [target.texture]);
+
+  return (
+    <>
+      <PerspectiveCamera fov={40} ref={cam} />
+      {/*Render the background scene but attach it to the backgroundScene*/}
+      {createPortal(
+        <BackgroundScene lightDirection={lightDirection} />,
+        backgroundScene as any
+      )}
+      {children}
+      <Earth lightDirection={lightDirection} />
+      <OrbitControls />
+      <ambientLight />
+    </>
+  );
+};
+```
+
+Finally, we can add some post-processing effects to the scene. I used the `@react-three/postprocessing` library to add a vignette, noise, and bloom:
+
+```tsx
+// Effects.tsx
+import {
+  Bloom,
+  EffectComposer,
+  Noise,
+  Vignette,
+} from "@react-three/postprocessing";
+
+export function Effects() {
+  return (
+    <>
+      <EffectComposer multisampling={8}>
+        <Noise opacity={0.025} />
+        <Vignette eskil={false} offset={0.1} darkness={1.1} />
+        <Bloom mipmapBlur luminanceThreshold={0.71} levels={6} intensity={10} />
+      </EffectComposer>
+    </>
+  );
+}
+```
+
+## Final result
+
+<Image src={preview} alt="Final result" />
+
+<Image src={earthSunrise} alt="Earth sunrise" />
+
+## Resources
+
+- [Source code](https://github.com/matiasngf/portfolio/blob/main/packages/experiments/earth)
+- [Sky texture](https://svs.gsfc.nasa.gov/3895)
+- [Earth textures](https://www.solarsystemscope.com/textures/)
