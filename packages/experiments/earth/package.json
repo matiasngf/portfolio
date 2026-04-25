@@ -22,7 +22,7 @@
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@types/react": "^18.0.22",
     "@types/three": "^0.152.0",
-    "@vitejs/plugin-react": "^4.0.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
     "framer-motion": "^10.12.10",
@@ -36,7 +36,7 @@
     "tsconfig": "workspace:*",
     "tslib": "^2.4.1",
     "typescript": "^5.4.5",
-    "vite": "^7.1.12"
+    "vite": "^8.0.10"
   },
   "peerDependencies": {
     "@react-three/drei": "^9.66.4",

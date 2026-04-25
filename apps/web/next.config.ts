@@ -1,20 +1,16 @@
 import type { NextConfig } from "next";
 import createMDX from '@next/mdx'
-import remarkGfm from "remark-gfm";
-import rehypePrism from "@mapbox/rehype-prism";
-
 
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-
 }
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [rehypePrism],
+    remarkPlugins: ['remark-gfm'],
+    rehypePlugins: ['@mapbox/rehype-prism'],
     providerImportSource: "@mdx-js/react",
-  }
+  } as any,
 })
 
 // Merge MDX config with Next.js config

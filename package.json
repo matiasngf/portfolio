@@ -22,7 +22,7 @@
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
     "prettier": "latest",
-    "turbo": "^2.5.2"
+    "turbo": "^2.9.6"
   },
   "engines": {
     "node": "20.x"

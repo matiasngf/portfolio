@@ -16,11 +16,18 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="flex flex-col gap-4 items-center w-full h-full text-center">
+    <div className="relative flex items-center justify-center h-screen">
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 70%)",
+        }}
+      />
+      <div className="flex flex-col items-center w-full h-full gap-4 text-center">
         <div className="flex-1" />
         <Name />
-        <div className="flex flex-col flex-1 gap-8 justify-center items-center">
+        <div className="flex flex-col items-center justify-center flex-1 gap-8">
           <p className="font-serif italic font-bold text-center text-md">
             developer & designer
           </p>
@@ -50,14 +57,14 @@ function Name() {
   return (
     <h1
       ref={root}
-      className="relative flex-1 text-7xl tracking-wide leading-none font-display"
+      className="relative flex-1 leading-none tracking-wide text-7xl font-display"
       style={
         {
           "font-variation-settings": '"wght" 663',
         } as React.CSSProperties
       }
     >
-      <span className="block relative">
+      <span className="relative block">
         {name.split(" ").map((word, index) => (
           <span
             key={index}
@@ -70,7 +77,7 @@ function Name() {
                     <Eye key={index}>{letter}</Eye>
                   ) : (
                     <span
-                      className="inline-block relative letter-content"
+                      className="relative inline-block letter-content"
                       key={index}
                     >
                       {letter}
