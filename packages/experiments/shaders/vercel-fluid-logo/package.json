@@ -6,7 +6,8 @@
     "dev": "next dev",
     "experiment-build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "screenshot": "capture-screenshot --dist out"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -29,6 +30,7 @@
     "prettier-plugin-glsl": "^0.2.2",
     "raw-loader": "^4.0.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "experiment-screenshot": "workspace:*"
   }
 }

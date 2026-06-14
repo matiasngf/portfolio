@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { ExperimentConfigExtended } from './experiment-config-schema';
-// import { ExperimentConfigExtended } from "./experiment-config-schema";
+import { screenshotFileName } from './constants';
 
 export function createVercelFolder() {
 
@@ -38,9 +38,17 @@ export function createVercelConfig() {
 export function generateExperimentsManifest(experiments: ExperimentConfigExtended[]) {
   const date = new Date().toISOString();
 
+  // Expose a `preview` URL (relative to the deployment root) for experiments
+  // that ship a screenshot, so consumers can render a thumbnail.
+  const manifestExperiments = experiments.map((experiment) =>
+    experiment.hasScreenshot
+      ? { ...experiment, preview: `/${experiment.name}/${screenshotFileName}` }
+      : experiment
+  )
+
   const manifest = {
     generatedAt: date,
-    experiments
+    experiments: manifestExperiments
   }
 
   const vercelOutputPath = path.resolve(process.cwd(), '.vercel', 'output', 'static');

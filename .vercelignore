@@ -1,0 +1,15 @@
+node_modules
+**/node_modules
+.turbo
+**/.turbo
+.next
+**/.next
+.vercel
+**/.vercel
+dist
+**/dist
+out
+**/out
+.git
+**/*.log
+.DS_Store

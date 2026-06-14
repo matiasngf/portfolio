@@ -11,7 +11,8 @@
   "scripts": {
     "experiment-build": "vite build",
     "lint": "eslint *.ts*",
-    "preview": "vite --port 3001"
+    "preview": "vite --port 3001",
+    "screenshot": "capture-screenshot"
   },
   "devDependencies": {
     "@react-three/drei": "^9.66.4",
@@ -39,7 +40,8 @@
     "tslib": "^2.4.1",
     "typescript": "^4.6.4",
     "vite": "^8.0.10",
-    "zustand": "^4.3.8"
+    "zustand": "^4.3.8",
+    "experiment-screenshot": "workspace:*"
   },
   "peerDependencies": {
     "@react-three/drei": "^9.66.4",

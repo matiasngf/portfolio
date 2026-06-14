@@ -16,6 +16,9 @@ export const experimentConfigSchemaExtended = experimentConfigSchema.extend({
   includePath: z
     .string()
     .describe('The path to the experiment folder, relative to the project root'),
+  hasScreenshot: z
+    .boolean()
+    .describe('Whether a standardized screenshot.png exists next to the experiment config'),
 })
 
 export type ExperimentConfigExtended = z.infer<typeof experimentConfigSchemaExtended>

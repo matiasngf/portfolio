@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
 import { ExperimentConfigExtended, experimentConfigSchema } from './experiment-config-schema.js'
-import { experimentsPath } from './constants.js'
+import { experimentsPath, screenshotFileName } from './constants.js'
 
 export async function getExperiments() {
 
@@ -50,11 +50,15 @@ export async function getExperiments() {
 
           console.log(`└─ ${chalk.bold(experimentConfig.name)}`)
 
+          // Detect a standardized screenshot next to the experiment config
+          const hasScreenshot = fs.existsSync(path.join(dirPath, screenshotFileName))
+
           // Create extendend configuration
           const experimentConfigExtended: ExperimentConfigExtended = {
             ...experimentConfig,
             rootPath: path.relative(path.resolve(process.cwd(), '../../'), dirPath),
             includePath: includePath,
+            hasScreenshot,
           }
 
           experiments.push(experimentConfigExtended)

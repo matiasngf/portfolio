@@ -1,6 +1,6 @@
 import { TagKey } from "./tags";
 
-import { Posts, Previews } from "@/content";
+import { Posts, Previews, Tocs, Heading } from "@/content";
 import { MDXComponent } from "@/components/posts/types";
 import { StaticImageData } from "next/image";
 
@@ -9,6 +9,7 @@ export interface PostConfig {
   description: string;
   tags: TagKey[];
   post: MDXComponent;
+  toc: Heading[];
   preview: StaticImageData;
   noIdex?: boolean;
 }
@@ -25,6 +26,7 @@ export const projectsConfig: Projects = {
     description: "Exploring the art of digital gardening in Three.js. Grow branches along paths using vertex shaders, and generate procedural branchlets along the way.",
     preview: Previews.ShadersPlants,
     post: Posts.ShadersPlants,
+    toc: Tocs.ShadersPlants,
     tags: ["shaders", "rtf", "procedural"],
   },
   'shaders-basement-logo': {
@@ -32,6 +34,7 @@ export const projectsConfig: Projects = {
     description: "Dissolve effect with shaders.",
     preview: Previews.ShadersBasementLogo,
     post: Posts.ShadersBasementLogo,
+    toc: Tocs.ShadersBasementLogo,
     tags: ["shaders", "rtf"],
   },
   earth: {
@@ -40,6 +43,7 @@ export const projectsConfig: Projects = {
       "3D Earth composed with shaders created with @three/fiber and @react-three/drei.",
     preview: Previews.Earth,
     post: Posts.Earth,
+    toc: Tocs.Earth,
     tags: ["shaders", "rtf"],
   },
   "creating-ray-marching-renderer": {
@@ -48,6 +52,7 @@ export const projectsConfig: Projects = {
       "How to create a ray-marching renderer from scratch using ThreeJs.",
     preview: Previews.CreatingRayMarchingRenderer,
     post: Posts.CreatingRayMarchingRenderer,
+    toc: Tocs.CreatingRayMarchingRenderer,
     tags: ["shaders", "ray-marching"],
   },
   "ray-marching-voxels": {
@@ -55,6 +60,7 @@ export const projectsConfig: Projects = {
     description: "Voxels renderer made with ray-marching.",
     preview: Previews.RayMarchingVoxels,
     post: Posts.RayMarchingVoxels,
+    toc: Tocs.RayMarchingVoxels,
     tags: ["shaders", "ray-marching"],
   },
 };

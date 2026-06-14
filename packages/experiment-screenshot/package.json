@@ -1,0 +1,22 @@
+{
+  "name": "experiment-screenshot",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Playwright-based screenshot capture for experiments (WebGL/WebGPU capable).",
+  "license": "MIT",
+  "bin": {
+    "capture-screenshot": "./bin/capture-screenshot.mjs"
+  },
+  "main": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "scripts": {
+    "install-browser": "playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0",
+    "sirv": "^3.0.0"
+  }
+}

@@ -111,7 +111,7 @@ export function Eye({ children }: { children: React.ReactNode }) {
     <span
       ref={scope}
       className={cn(
-        "inline-block relative letter-content w-[0.72em]",
+        "inline-block relative letter-content w-[0.72em] cursor-pointer",
         s["letter-container"]
       )}
       style={
