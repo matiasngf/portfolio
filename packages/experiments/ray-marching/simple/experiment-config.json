@@ -1,6 +1,7 @@
 {
   "name": "ray-marching-simple",
-  "description": "A ray marching renderer",
+  "title": "A ray marching renderer",
+  "description": "",
   "tags": ["three.js", "ray-marching"],
   "list": true,
   "include": "dist"

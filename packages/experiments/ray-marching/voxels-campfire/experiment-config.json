@@ -1,6 +1,7 @@
 {
   "name": "voxels-campfire",
-  "description": "A raymarching campfire scene",
+  "title": "A raymarching campfire scene",
+  "description": "",
   "tags": ["three.js", "ray-marching"],
   "list": true,
   "include": "dist"

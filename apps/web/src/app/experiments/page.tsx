@@ -49,7 +49,7 @@ export default async function ExperimentsPage() {
                 {experiment.preview ? (
                   <Image
                     src={experiment.preview}
-                    alt={experiment.name}
+                    alt={experiment.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-opacity duration-300 group-hover:opacity-80"
@@ -57,7 +57,7 @@ export default async function ExperimentsPage() {
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
                     <span className="font-sans text-xs tracking-widest uppercase text-foreground/30">
-                      {experiment.name}
+                      {experiment.title}
                     </span>
                   </div>
                 )}
@@ -65,7 +65,7 @@ export default async function ExperimentsPage() {
 
               {/* Meta */}
               <h2 className="mt-4 font-serif text-2xl leading-tight">
-                {experiment.name}
+                {experiment.title}
               </h2>
               <p className="mt-1 font-serif text-sm text-foreground/60 leading-snug">
                 {experiment.description}

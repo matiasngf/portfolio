@@ -1,6 +1,7 @@
 {
   "name": "ray-marching-reflections",
-  "description": "A ray marching renderer with reflections",
+  "title": "A ray marching renderer with reflections",
+  "description": "",
   "tags": ["three.js", "ray-marching"],
   "list": true,
   "include": "dist"

@@ -13,7 +13,10 @@ export const EXPERIMENTS_BASE = (
 
 /** Raw entry shape as emitted by experiments-server `generateExperimentsManifest`. */
 interface ManifestEntry {
+  /** Unique identifier/slug, used for the folder name and URL (e.g. "earth"). */
   name: string;
+  /** Human-readable display name. Optional for backwards-compat with older manifests. */
+  title?: string;
   description: string;
   tags: string[];
   list: boolean;
@@ -28,7 +31,10 @@ interface Manifest {
 
 /** Normalized experiment used across the web app. */
 export interface Experiment {
+  /** Unique identifier/slug, e.g. "earth". */
   name: string;
+  /** Human-readable display name, e.g. "Earth with a realistic atmosphere". */
+  title: string;
   description: string;
   tags: string[];
   /** Joined tags for display, e.g. "three.js · webgl". */
@@ -42,6 +48,8 @@ export interface Experiment {
 function normalize(entry: ManifestEntry): Experiment {
   return {
     name: entry.name,
+    // Fall back to the slug if an older manifest has no title yet.
+    title: entry.title || entry.name,
     description: entry.description,
     tags: entry.tags ?? [],
     tagsLabel: (entry.tags ?? []).join(" · "),

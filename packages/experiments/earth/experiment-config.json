@@ -1,6 +1,7 @@
 {
   "name": "earth",
-  "description": "Earth with a realistic atmosphere",
+  "title": "Earth with a realistic atmosphere",
+  "description": "",
   "tags": ["three.js", "webgl"],
   "list": true,
   "include": "dist"
