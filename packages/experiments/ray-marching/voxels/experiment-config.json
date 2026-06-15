@@ -1,6 +1,7 @@
 {
   "name": "voxels",
-  "description": "A voxel raymarching renderer",
+  "title": "A voxel raymarching renderer",
+  "description": "",
   "tags": ["three.js", "ray-marching"],
   "list": true,
   "include": "dist"

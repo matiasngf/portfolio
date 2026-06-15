@@ -1,6 +1,7 @@
 {
   "name": "voxels-lava-lamp",
-  "description": "A raymarching lava lamp",
+  "title": "A raymarching lava lamp",
+  "description": "",
   "tags": ["three.js", "ray-marching"],
   "list": true,
   "include": "dist"

@@ -1,6 +1,7 @@
 {
   "name": "ray-marching-boolean-operations",
-  "description": "A ray marching renderer with boolean operations",
+  "title": "A ray marching renderer with boolean operations",
+  "description": "",
   "tags": ["three.js", "ray-marching"],
   "list": true,
   "include": "dist"

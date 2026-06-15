@@ -43,13 +43,13 @@ export function ExperimentsList({ items }: { items: Experiment[] }) {
               target="_blank"
               rel="noopener noreferrer"
               className="absolute inset-0 z-10"
-              aria-label={experiment.name}
+              aria-label={experiment.title}
             />
 
             {/* Text content */}
             <div className="flex-1 py-6 px-6 flex flex-col gap-2 min-w-0">
               <h3 className="font-serif text-4xl xl:text-5xl leading-tight">
-                {experiment.name}
+                {experiment.title}
               </h3>
               <p className="font-serif text-sm text-foreground/60 leading-snug">
                 {experiment.description}
@@ -66,14 +66,14 @@ export function ExperimentsList({ items }: { items: Experiment[] }) {
               {experiment.preview ? (
                 <Image
                   src={experiment.preview}
-                  alt={experiment.name}
+                  alt={experiment.title}
                   fill
                   sizes="(max-width: 1280px) 192px, 256px"
                   className="object-cover"
                   unoptimized
                 />
               ) : (
-                <PreviewFallback label={experiment.name} />
+                <PreviewFallback label={experiment.title} />
               )}
             </div>
           </div>
