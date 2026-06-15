@@ -70,7 +70,6 @@ export function ExperimentsList({ items }: { items: Experiment[] }) {
                   fill
                   sizes="(max-width: 1280px) 192px, 256px"
                   className="object-cover"
-                  unoptimized
                 />
               ) : (
                 <PreviewFallback label={experiment.name} />
