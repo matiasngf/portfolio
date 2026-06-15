@@ -9,6 +9,7 @@
     "packages/experiments/ray-marching/*"
   ],
   "scripts": {
+    "preinstall": "node scripts/check-node-version.mjs",
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
@@ -25,6 +26,6 @@
     "turbo": "^2.9.6"
   },
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   }
 }
