@@ -30,7 +30,14 @@ const DEFAULTS = {
   headed: false,
   // Debug control panels common in these experiments — hidden so they don't
   // pollute the thumbnail. Override per-experiment via screenshot.config.
-  hideSelectors: ["#leva__root", ".lil-gui", ".dg.main", ".dg.ac", ".tp-dfwv"],
+  hideSelectors: [
+    "#leva__root",
+    '[class*="leva-c-"]', // some builds render Leva without the #leva__root wrapper
+    ".lil-gui",
+    ".dg.main",
+    ".dg.ac",
+    ".tp-dfwv",
+  ],
 };
 
 /**
@@ -101,6 +108,11 @@ function serveStatic(root, base) {
  * @param {number} [options.delayMs] Settle time before capture.
  * @param {string|null} [options.waitSelector] Optional selector to await.
  * @param {string} [options.route] Path to open under the served root.
+ * @param {string} [options.url] Capture this URL directly instead of serving the
+ *   local build (use for experiments whose built assets don't resolve locally).
+ * @param {(page: import('playwright').Page) => Promise<void>} [options.prepare]
+ *   Hook run after load (and after hiding debug panels) but before the settle +
+ *   screenshot — e.g. move the pointer to drive an interaction-based scene.
  * @param {boolean} [options.webgpu] Hint (flags are always passed; kept for config clarity).
  * @param {boolean} [options.headed] Run headed (reliable GPU fallback on macOS).
  */
@@ -108,17 +120,27 @@ export async function capture(options) {
   const fileConfig = await loadConfig(options.dir);
   const opts = { ...DEFAULTS, ...fileConfig, ...options };
 
-  const distPath = path.resolve(opts.dir, opts.dist);
-  if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Build output not found at ${distPath}. Run the experiment build first (e.g. "pnpm experiment-build").`
-    );
+  const outputPath = path.resolve(opts.dir, opts.output);
+
+  // Either capture a remote URL directly, or serve the local build.
+  let target;
+  let closeServer = async () => {};
+  if (opts.url) {
+    target = opts.url;
+  } else {
+    const distPath = path.resolve(opts.dir, opts.dist);
+    if (!fs.existsSync(distPath)) {
+      throw new Error(
+        `Build output not found at ${distPath}. Run the experiment build first (e.g. "pnpm experiment-build").`
+      );
+    }
+    const base = readBasePath(opts.dir);
+    const server = await serveStatic(distPath, base);
+    closeServer = server.close;
+    // base has no trailing slash; route starts with "/".
+    target = `${server.url}${base}${opts.route}`;
   }
 
-  const outputPath = path.resolve(opts.dir, opts.output);
-  const base = readBasePath(opts.dir);
-
-  const { url, close: closeServer } = await serveStatic(distPath, base);
   const browser = await chromium.launch({
     headless: !opts.headed,
     args: MACOS_GPU_ARGS,
@@ -130,8 +152,6 @@ export async function capture(options) {
       deviceScaleFactor: opts.deviceScaleFactor,
     });
 
-    // base has no trailing slash; route starts with "/".
-    const target = `${url}${base}${opts.route}`;
     await page.goto(target, { waitUntil: "networkidle" });
 
     if (opts.waitSelector) {
@@ -145,6 +165,11 @@ export async function capture(options) {
           .map((sel) => `${sel}{display:none !important;}`)
           .join("\n"),
       });
+    }
+
+    // Per-experiment interactions (pointer movement, clicks, etc.).
+    if (typeof opts.prepare === "function") {
+      await opts.prepare(page);
     }
 
     // Let the scene paint a few frames, then settle.

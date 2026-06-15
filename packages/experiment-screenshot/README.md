@@ -53,6 +53,29 @@ export default {
 };
 ```
 
+Two extra options for tricky experiments:
+
+- `url` — capture this URL directly instead of serving the local build. Use when
+  an experiment's built assets don't resolve under the local base path (e.g. a
+  model that 404s locally but loads on the deployed site).
+- `prepare(page)` — an async hook (Playwright `page`) run after load and after
+  hiding debug panels, before the capture. Use it to drive interaction-based
+  scenes, e.g. move the pointer to energize a pointer-driven shader:
+
+```js
+export default {
+  delayMs: 1500,
+  async prepare(page) {
+    const box = await page.locator("canvas").boundingBox();
+    const cx = box.x + box.width / 2, cy = box.y + box.height / 2;
+    for (let i = 0; i <= 48; i++) {
+      const a = (i / 48) * Math.PI * 4;
+      await page.mouse.move(cx + Math.cos(a) * box.width * 0.22, cy + Math.sin(a) * 120, { steps: 2 });
+    }
+  },
+};
+```
+
 ## macOS GPU notes
 
 Headless Chromium renders WebGL/WebGPU to a black frame unless GPU acceleration
