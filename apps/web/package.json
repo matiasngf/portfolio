@@ -45,5 +45,8 @@
     "rehype-prism": "link:@types/@mapbox/rehype-prism",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }
